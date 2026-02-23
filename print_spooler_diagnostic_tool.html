@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print Spooler 服务诊断工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #5e72e4 0%, #825ee4 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .diagnostic-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #5e72e4;
+        }
+        
+        .diagnostic-card h3 {
+            color: #5e72e4;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .diagnostic-card h3 .step-number {
+            background: #5e72e4;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+        
+        .command-box {
+            background: #2d3436;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            position: relative;
+            overflow-x: auto;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #5e72e4;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .copy-btn:hover {
+            background: #4c63d2;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .warning-box strong {
+            color: #856404;
+        }
+        
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .error-box {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: #5e72e4;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #4c63d2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(94,114,228,0.4);
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+        }
+        
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+        
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            color: #6c757d;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            color: #5e72e4;
+            border-bottom: 3px solid #5e72e4;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .progress-indicator {
+            display: none;
+            align-items: center;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #5e72e4;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .checklist {
+            list-style: none;
+            margin: 15px 0;
+        }
+        
+        .checklist li {
+            padding: 8px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        .checklist li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 22px;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- 统一工具栏组件 - AI知识库文档系统 -->
+<style>
+  /* ===== 工具栏CSS变量（与doc-center.html保持一致）===== */
+  :root {
+    /* Linear-inspired Dark Theme Colors */
+    --bg-primary: #0e0e10;
+    --bg-secondary: #121214;
+    --bg-tertiary: #1a1a1e;
+    --bg-elevated: #1f1f23;
+    --bg-hover: #27272a;
+    
+    /* Linear Gradients */
+    --accent-purple: #8b5cf6;
+    --accent-blue: #3b82f6;
+    --accent-cyan: #06b6d4;
+    --accent-pink: #ec4899;
+    --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+    --gradient-glow: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.1) 100%);
+    --gradient-border: linear-gradient(135deg, rgba(99, 102, 241, 0.5), rgba(139, 92, 246, 0.3));
+    
+    /* Text Colors */
+    --text-primary: #fafafa;
+    --text-secondary: #a1a1aa;
+    --text-muted: #71717a;
+    --text-tertiary: #52525b;
+    
+    /* Border & Shadow */
+    --border-subtle: rgba(255, 255, 255, 0.06);
+    --border-default: rgba(255, 255, 255, 0.1);
+    --border-hover: rgba(255, 255, 255, 0.15);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+    --shadow-glow: 0 0 40px rgba(139, 92, 246, 0.15);
+    
+    /* Spacing - Notion Style */
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    
+    /* Toolbar specific */
+    --toolbar-height: 56px;
+    
+    /* Transitions */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Light Theme */
+  [data-theme="light"] {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --bg-tertiary: #f3f4f6;
+    --bg-elevated: #ffffff;
+    --bg-hover: #e5e7eb;
+    
+    --text-primary: #111827;
+    --text-secondary: #4b5563;
+    --text-muted: #9ca3af;
+    --text-tertiary: #d1d5db;
+    
+    --border-subtle: rgba(0, 0, 0, 0.04);
+    --border-default: rgba(0, 0, 0, 0.08);
+    --border-hover: rgba(0, 0, 0, 0.12);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  /* ===== 统一工具栏样式 ===== */
+  #unified-toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--toolbar-height);
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-subtle);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* 为页面内容添加顶部间距 */
+  body.has-unified-toolbar {
+    padding-top: var(--toolbar-height);
+  }
+
+  /* 左侧区域 */
+  .toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* 返回文档中心链接 */
+  .toolbar-back-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .toolbar-back-link:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+  }
+
+  .toolbar-back-link svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  /* 分隔线 */
+  .toolbar-divider {
+    width: 1px;
+    height: 20px;
+    background: var(--border-default);
+    flex-shrink: 0;
+  }
+
+  /* 当前文档标题 */
+  .toolbar-doc-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    max-width: 300px;
+  }
+
+  /* 中间区域 - 搜索框 */
+  .toolbar-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    max-width: 400px;
+  }
+
+  .toolbar-search {
+    position: relative;
+    width: 100%;
+  }
+
+  .toolbar-search-input {
+    width: 100%;
+    padding: 8px 12px 8px 36px;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    font-size: 14px;
+    transition: all var(--transition-fast);
+    font-family: inherit;
+  }
+
+  .toolbar-search-input:focus {
+    outline: none;
+    border-color: var(--accent-purple);
+    background: var(--bg-elevated);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+  }
+
+  .toolbar-search-input::placeholder {
+    color: var(--text-muted);
+  }
+
+  .toolbar-search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+
+  .toolbar-search-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* 右侧区域 */
+  .toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    justify-content: flex-end;
+  }
+
+  /* 工具栏按钮 */
+  .toolbar-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: inherit;
+  }
+
+  .toolbar-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+    border-color: var(--border-hover);
+  }
+
+  .toolbar-btn:active {
+    transform: scale(0.96);
+  }
+
+  .toolbar-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* 图标按钮 */
+  .toolbar-btn-icon {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+  }
+
+  /* 字体大小控制组 */
+  .toolbar-fontsize-group {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    padding: 2px;
+  }
+
+  .toolbar-fontsize-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: inherit;
+  }
+
+  .toolbar-fontsize-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+  }
+
+  .toolbar-fontsize-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .toolbar-fontsize-value {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    height: 28px;
+    padding: 0 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: var(--bg-elevated);
+    border-radius: var(--radius-sm);
+  }
+
+  /* 主题切换按钮 */
+  .toolbar-theme-btn {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .toolbar-theme-btn .icon-sun,
+  .toolbar-theme-btn .icon-moon {
+    transition: transform var(--transition-normal), opacity var(--transition-normal);
+  }
+
+  [data-theme="light"] .toolbar-theme-btn .icon-moon,
+  .toolbar-theme-btn .icon-sun {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+  }
+
+  [data-theme="light"] .toolbar-theme-btn .icon-sun,
+  .toolbar-theme-btn .icon-moon {
+    opacity: 0;
+    transform: rotate(90deg) scale(0.5);
+    position: absolute;
+  }
+
+  /* 响应式适配 */
+  @media (max-width: 768px) {
+    #unified-toolbar {
+      padding: 0 12px;
+    }
+
+    .toolbar-doc-title {
+      max-width: 150px;
+      font-size: 13px;
+    }
+
+    .toolbar-center {
+      max-width: 200px;
+    }
+
+    .toolbar-back-link span {
+      display: none;
+    }
+
+    .toolbar-fontsize-group {
+      display: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .toolbar-center {
+      display: none;
+    }
+  }
+</style>
+
+<!-- 工具栏HTML结构 -->
+<div id="unified-toolbar">
+  <!-- 左侧：返回链接 + 文档标题 -->
+  <div class="toolbar-left">
+    <a href="doc-center.html" class="toolbar-back-link" title="返回文档中心">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      <span>文档中心</span>
+    </a>
+    <div class="toolbar-divider"></div>
+    <div class="toolbar-doc-title" id="toolbar-doc-title">文档标题</div>
+  </div>
+
+  <!-- 中间：搜索框 -->
+  <div class="toolbar-center">
+    <div class="toolbar-search">
+      <div class="toolbar-search-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.35-4.35"/>
+        </svg>
+      </div>
+      <input 
+        type="text" 
+        class="toolbar-search-input" 
+        id="toolbar-search-input"
+        placeholder="搜索文档..."
+        autocomplete="off"
+      />
+    </div>
+  </div>
+
+  <!-- 右侧：主题切换 + 字体大小调节 -->
+  <div class="toolbar-right">
+    <!-- 字体大小控制组 -->
+    <div class="toolbar-fontsize-group">
+      <button class="toolbar-fontsize-btn" id="toolbar-fontsize-minus" title="减小字体">A-</button>
+      <div class="toolbar-fontsize-value" id="toolbar-fontsize-value">100%</div>
+      <button class="toolbar-fontsize-btn" id="toolbar-fontsize-plus" title="增大字体">A+</button>
+    </div>
+
+    <!-- 主题切换按钮 -->
+    <button class="toolbar-btn toolbar-btn-icon toolbar-theme-btn" id="toolbar-theme-toggle" title="切换主题">
+      <!-- 太阳图标（亮色模式） -->
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"/>
+        <line x1="12" y1="1" x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/>
+        <line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+      <!-- 月亮图标（暗色模式） -->
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script>
+  /**
+   * 统一工具栏组件脚本
+   * 功能：字体大小调节、主题切换、搜索跳转
+   * 所有状态保存到localStorage
+   */
+  (function() {
+    'use strict';
+
+    // ===== 配置常量 =====
+    const CONFIG = {
+      // localStorage键名
+      STORAGE_KEYS: {
+        FONT_SIZE: 'ai-kb-font-size',
+        THEME: 'ai-kb-theme'
+      },
+      // 字体大小设置
+      FONT_SIZE: {
+        BASE: 14,           // 基准字体大小(px)
+        MIN_PERCENT: 80,    // 最小百分比
+        MAX_PERCENT: 150,   // 最大百分比
+        STEP: 10,           // 每次调节步长(%)
+        DEFAULT: 100        // 默认百分比
+      },
+      // 主题设置
+      THEME: {
+        DARK: 'dark',
+        LIGHT: 'light',
+        DEFAULT: 'dark'
+      },
+      // 文档中心路径
+      DOC_CENTER_PATH: 'doc-center.html'
+    };
+
+    // ===== 工具函数 =====
+    
+    /**
+     * 获取localStorage值
+     */
+    function getStorage(key, defaultValue) {
+      try {
+        const value = localStorage.getItem(key);
+        return value !== null ? value : defaultValue;
+      } catch (e) {
+        return defaultValue;
+      }
+    }
+
+    /**
+     * 设置localStorage值
+     */
+    function setStorage(key, value) {
+      try {
+        localStorage.setItem(key, value);
+      } catch (e) {
+        console.warn('无法保存到localStorage:', e);
+      }
+    }
+
+    /**
+     * 计算并应用字体大小
+     */
+    function applyFontSize(percent) {
+      // 限制在有效范围内
+      percent = Math.max(CONFIG.FONT_SIZE.MIN_PERCENT, 
+               Math.min(CONFIG.FONT_SIZE.MAX_PERCENT, percent));
+      
+      // 计算实际字体大小
+      const fontSize = (CONFIG.FONT_SIZE.BASE * percent / 100).toFixed(2);
+      
+      // 应用到html元素
+      document.documentElement.style.fontSize = fontSize + 'px';
+      
+      // 更新显示
+      updateFontSizeDisplay(percent);
+      
+      // 保存到localStorage
+      setStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, percent.toString());
+      
+      return percent;
+    }
+
+    /**
+     * 更新字体大小显示
+     */
+    function updateFontSizeDisplay(percent) {
+      const valueEl = document.getElementById('toolbar-fontsize-value');
+      const minusBtn = document.getElementById('toolbar-fontsize-minus');
+      const plusBtn = document.getElementById('toolbar-fontsize-plus');
+      
+      if (valueEl) {
+        valueEl.textContent = percent + '%';
+      }
+      
+      // 更新按钮禁用状态
+      if (minusBtn) {
+        minusBtn.disabled = percent <= CONFIG.FONT_SIZE.MIN_PERCENT;
+      }
+      if (plusBtn) {
+        plusBtn.disabled = percent >= CONFIG.FONT_SIZE.MAX_PERCENT;
+      }
+    }
+
+    /**
+     * 应用主题
+     */
+    function applyTheme(theme) {
+      // 验证主题值
+      if (theme !== CONFIG.THEME.DARK && theme !== CONFIG.THEME.LIGHT) {
+        theme = CONFIG.THEME.DEFAULT;
+      }
+      
+      // 设置data-theme属性
+      document.documentElement.setAttribute('data-theme', theme);
+      
+      // 保存到localStorage
+      setStorage(CONFIG.STORAGE_KEYS.THEME, theme);
+      
+      return theme;
+    }
+
+    /**
+     * 切换主题
+     */
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme') || CONFIG.THEME.DEFAULT;
+      const newTheme = currentTheme === CONFIG.THEME.DARK ? CONFIG.THEME.LIGHT : CONFIG.THEME.DARK;
+      applyTheme(newTheme);
+    }
+
+    /**
+     * 执行搜索
+     */
+    function performSearch(query) {
+      if (!query || !query.trim()) return;
+      
+      // 构建跳转URL
+      const currentPath = window.location.pathname;
+      const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+      const targetUrl = basePath + CONFIG.DOC_CENTER_PATH + '#search=' + encodeURIComponent(query.trim());
+      
+      // 跳转到文档中心
+      window.location.href = targetUrl;
+    }
+
+    /**
+     * 设置文档标题
+     */
+    function setDocumentTitle(title) {
+      const titleEl = document.getElementById('toolbar-doc-title');
+      if (titleEl && title) {
+        titleEl.textContent = title;
+      }
+    }
+
+    /**
+     * 从页面自动获取文档标题
+     */
+    function autoDetectDocumentTitle() {
+      // 优先级：1. h1标题 2. title标签 3. 文件名
+      let title = '';
+      
+      // 尝试获取h1标题
+      const h1 = document.querySelector('h1');
+      if (h1 && h1.textContent.trim()) {
+        title = h1.textContent.trim();
+      } else {
+        // 尝试从title标签获取
+        const titleTag = document.querySelector('title');
+        if (titleTag && titleTag.textContent.trim()) {
+          title = titleTag.textContent.trim();
+          // 移除常见的后缀
+          title = title.replace(/[-_].*?(?:知识库|文档|AI)/i, '').trim();
+        } else {
+          // 从文件名获取
+          const path = window.location.pathname;
+          const filename = path.substring(path.lastIndexOf('/') + 1);
+          title = filename.replace(/\.html?$/i, '').replace(/[_-]/g, ' ');
+        }
+      }
+      
+      setDocumentTitle(title);
+    }
+
+    // ===== 事件处理 =====
+
+    /**
+     * 初始化事件监听
+     */
+    function initEventListeners() {
+      // 字体大小减小按钮
+      const minusBtn = document.getElementById('toolbar-fontsize-minus');
+      if (minusBtn) {
+        minusBtn.addEventListener('click', function() {
+          const currentPercent = parseInt(getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString()));
+          applyFontSize(currentPercent - CONFIG.FONT_SIZE.STEP);
+        });
+      }
+
+      // 字体大小增大按钮
+      const plusBtn = document.getElementById('toolbar-fontsize-plus');
+      if (plusBtn) {
+        plusBtn.addEventListener('click', function() {
+          const currentPercent = parseInt(getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString()));
+          applyFontSize(currentPercent + CONFIG.FONT_SIZE.STEP);
+        });
+      }
+
+      // 主题切换按钮
+      const themeBtn = document.getElementById('toolbar-theme-toggle');
+      if (themeBtn) {
+        themeBtn.addEventListener('click', toggleTheme);
+      }
+
+      // 搜索框
+      const searchInput = document.getElementById('toolbar-search-input');
+      if (searchInput) {
+        // 回车键搜索
+        searchInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            performSearch(this.value);
+          }
+        });
+      }
+    }
+
+    /**
+     * 从URL参数初始化搜索框
+     */
+    function initSearchFromURL() {
+      const hash = window.location.hash;
+      if (hash && hash.startsWith('#search=')) {
+        const query = decodeURIComponent(hash.substring(8));
+        const searchInput = document.getElementById('toolbar-search-input');
+        if (searchInput) {
+          searchInput.value = query;
+        }
+      }
+    }
+
+    // ===== 初始化 =====
+
+    /**
+     * 主初始化函数
+     */
+    function init() {
+      // 1. 恢复保存的字体大小
+      const savedFontSize = getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString());
+      applyFontSize(parseInt(savedFontSize));
+
+      // 2. 恢复保存的主题
+      const savedTheme = getStorage(CONFIG.STORAGE_KEYS.THEME, CONFIG.THEME.DEFAULT);
+      applyTheme(savedTheme);
+
+      // 3. 为body添加工具栏标识类
+      document.body.classList.add('has-unified-toolbar');
+
+      // 4. 自动检测文档标题
+      autoDetectDocumentTitle();
+
+      // 5. 初始化事件监听
+      initEventListeners();
+
+      // 6. 从URL初始化搜索框
+      initSearchFromURL();
+    }
+
+    // ===== 公共API =====
+
+    // 将工具栏API暴露到全局命名空间
+    window.UnifiedToolbar = {
+      // 设置文档标题
+      setTitle: setDocumentTitle,
+      
+      // 获取/设置字体大小
+      getFontSize: function() {
+        return parseInt(getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString()));
+      },
+      setFontSize: applyFontSize,
+      
+      // 获取/设置主题
+      getTheme: function() {
+        return document.documentElement.getAttribute('data-theme') || CONFIG.THEME.DEFAULT;
+      },
+      setTheme: applyTheme,
+      toggleTheme: toggleTheme,
+      
+      // 执行搜索
+      search: performSearch,
+      
+      // 配置常量
+      config: CONFIG
+    };
+
+    // 启动初始化
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+</script>
+
+    <div class="container">
+        <div class="header">
+            <h1>🖨️ Print Spooler 服务诊断工具</h1>
+            <p>Windows 11 打印服务问题快速解决方案</p>
+        </div>
+        
+        <div class="content">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('quick-fix')">快速修复</button>
+                <button class="tab" onclick="showTab('manual-fix')">手动修复</button>
+                <button class="tab" onclick="showTab('advanced')">高级选项</button>
+                <button class="tab" onclick="showTab('troubleshoot')">故障排查</button>
+            </div>
+            
+            <!-- 快速修复标签 -->
+            <div id="quick-fix" class="tab-content active">
+                <div class="warning-box">
+                    <strong>⚠️ 重要提示：</strong>所有操作都需要管理员权限！
+                </div>
+                
+                <div class="diagnostic-card">
+                    <h3><span class="step-number">1</span>下载并运行自动修复脚本</h3>
+                    <p>这是最简单快速的解决方案，适合大多数用户。</p>
+                    <div class="btn-group">
+                        <a href="#" class="btn btn-primary" onclick="alert('请使用生成的 fix_print_spooler.bat 文件')">
+                            下载批处理脚本 (.bat)
+                        </a>
+                        <a href="#" class="btn btn-success" onclick="alert('请使用生成的 Fix-PrintSpooler.ps1 文件')">
+                            下载 PowerShell 脚本 (.ps1)
+                        </a>
+                    </div>
+                    <p><small>下载后，右键点击脚本文件，选择"以管理员身份运行"</small></p>
+                </div>
+                
+                <div class="diagnostic-card">
+                    <h3><span class="step-number">2</span>快速命令行修复</h3>
+                    <p>以管理员身份打开命令提示符，依次执行以下命令：</p>
+                    <div class="command-box">
+                        net stop spooler
+                        <button class="copy-btn" onclick="copyToClipboard('net stop spooler')">复制</button>
+                    </div>
+                    <div class="command-box">
+                        del /F /Q %SystemRoot%\System32\spool\PRINTERS\*.*
+                        <button class="copy-btn" onclick="copyToClipboard('del /F /Q %SystemRoot%\\System32\\spool\\PRINTERS\\*.*')">复制</button>
+                    </div>
+                    <div class="command-box">
+                        net start spooler
+                        <button class="copy-btn" onclick="copyToClipboard('net start spooler')">复制</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 手动修复标签 -->
+            <div id="manual-fix" class="tab-content">
+                <div class="diagnostic-card">
+                    <h3><span class="step-number">1</span>打开服务管理器</h3>
+                    <p>按 <kbd>Win</kbd> + <kbd>R</kbd>，输入以下命令：</p>
+                    <div class="command-box">
+                        services.msc
+                        <button class="copy-btn" onclick="copyToClipboard('services.msc')">复制</button>
+                    </div>
+                </div>
+                
+                <div class="diagnostic-card">
+                    <h3><span class="step-number">2</span>停止 Print Spooler 服务</h3>
+                    <ul class="checklist">
+                        <li>在服务列表中找到 "Print Spooler"</li>
+                        <li>右键点击，选择"停止"</li>
+                        <li>等待服务完全停止</li>
+                    </ul>
+                </div>
+                
+                <div class="diagnostic-card">
+                    <h3><span class="step-number">3</span>清理打印队列文件</h3>
+                    <p>打开文件资源管理器，导航到：</p>
+                    <div class="command-box">
+                        C:\Windows\System32\spool\PRINTERS
+                        <button class="copy-btn" onclick="copyToClipboard('C:\\Windows\\System32\\spool\\PRINTERS')">复制</button>
+                    </div>
+                    <p>删除该文件夹内的<strong>所有文件</strong>（保留文件夹本身）</p>
+                </div>
+                
+                <div class="diagnostic-card">
+                    <h3><span class="step-number">4</span>重启服务</h3>
+                    <ul class="checklist">
+                        <li>返回服务管理器</li>
+                        <li>右键点击 "Print Spooler"</li>
+                        <li>选择"启动"</li>
+                        <li>检查服务状态是否为"正在运行"</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 高级选项标签 -->
+            <div id="advanced" class="tab-content">
+                <div class="diagnostic-card">
+                    <h3><span class="step-number">1</span>检查依赖服务</h3>
+                    <p>确保以下服务正在运行：</p>
+                    <div class="command-box">
+                        sc query RpcSs
+                        <button class="copy-btn" onclick="copyToClipboard('sc query RpcSs')">复制</button>
+                    </div>
+                    <div class="command-box">
+                        sc query HTTP
+                        <button class="copy-btn" onclick="copyToClipboard('sc query HTTP')">复制</button>
+                    </div>
+                </div>
+                
+                <div class="diagnostic-card">
+                    <h3><span class="step-number">2</span>重新注册系统DLL</h3>
+                    <p>以管理员身份运行以下命令：</p>
+                    <div class="command-box">
+                        regsvr32 printui.dll<br>
+                        regsvr32 oleaut32.dll<br>
+                        regsvr32 ole32.dll<br>
+                        regsvr32 spoolss.dll
+                        <button class="copy-btn" onclick="copyToClipboard('regsvr32 printui.dll\nregsvr32 oleaut32.dll\nregsvr32 ole32.dll\nregsvr32 spoolss.dll')">复制全部</button>
+                    </div>
+                </div>
+                
+                <div class="diagnostic-card">
+                    <h3><span class="step-number">3</span>系统文件检查</h3>
+                    <p>运行系统文件检查器修复损坏的系统文件：</p>
+                    <div class="command-box">
+                        sfc /scannow
+                        <button class="copy-btn" onclick="copyToClipboard('sfc /scannow')">复制</button>
+                    </div>
+                    <div class="command-box">
+                        DISM /Online /Cleanup-Image /RestoreHealth
+                        <button class="copy-btn" onclick="copyToClipboard('DISM /Online /Cleanup-Image /RestoreHealth')">复制</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 故障排查标签 -->
+            <div id="troubleshoot" class="tab-content">
+                <div class="diagnostic-card">
+                    <h3><span class="step-number">1</span>查看事件日志</h3>
+                    <p>打开事件查看器查看错误详情：</p>
+                    <div class="command-box">
+                        eventvwr.msc
+                        <button class="copy-btn" onclick="copyToClipboard('eventvwr.msc')">复制</button>
+                    </div>
+                    <p>导航到：Windows日志 → 系统，查找 Print Spooler 相关错误</p>
+                </div>
+                
+                <div class="diagnostic-card">
+                    <h3><span class="step-number">2</span>常见错误代码</h3>
+                    <table style="width: 100%; margin-top: 15px;">
+                        <tr style="background: #f8f9fa;">
+                            <th style="padding: 10px; text-align: left;">错误代码</th>
+                            <th style="padding: 10px; text-align: left;">解决方案</th>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px;"><strong>1068</strong></td>
+                            <td style="padding: 10px;">启动依赖服务 (RPC, HTTP)</td>
+                        </tr>
+                        <tr style="background: #f8f9fa;">
+                            <td style="padding: 10px;"><strong>1053</strong></td>
+                            <td style="padding: 10px;">清理打印队列，重启服务</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px;"><strong>1067</strong></td>
+                            <td style="padding: 10px;">运行 SFC 扫描修复系统文件</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="diagnostic-card">
+                    <h3><span class="step-number">3</span>检查防病毒软件</h3>
+                    <ul class="checklist">
+                        <li>临时禁用防病毒软件进行测试</li>
+                        <li>将 spoolsv.exe 添加到例外列表</li>
+                        <li>检查防火墙设置</li>
+                    </ul>
+                </div>
+                
+                <div class="error-box">
+                    <strong>如果所有方法都失败：</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>尝试系统还原到正常工作的还原点</li>
+                        <li>使用 Windows 11 修复安装</li>
+                        <li>联系 Microsoft 技术支持</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="success-box" id="success-message" style="display: none;">
+                <strong>✅ 修复成功！</strong>
+                <p>Print Spooler 服务应该已经正常运行。您可以尝试添加打印机或打印测试页。</p>
+            </div>
+            
+            <div class="btn-group" style="margin-top: 30px;">
+                <button class="btn btn-warning" onclick="window.print()">
+                    📄 打印此页面
+                </button>
+                <button class="btn btn-primary" onclick="checkService()">
+                    🔍 检查服务状态
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showTab(tabName) {
+            // 隐藏所有标签内容
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // 移除所有标签的活动状态
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 显示选中的标签内容
+            document.getElementById(tabName).classList.add('active');
+            
+            // 设置选中的标签为活动状态
+            event.target.classList.add('active');
+        }
+        
+        function copyToClipboard(text) {
+            // 创建临时文本区域
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'absolute';
+            textarea.style.left = '-9999px';
+            document.body.appendChild(textarea);
+            
+            // 选择并复制文本
+            textarea.select();
+            document.execCommand('copy');
+            
+            // 移除临时文本区域
+            document.body.removeChild(textarea);
+            
+            // 显示提示
+            const button = event.target;
+            const originalText = button.textContent;
+            button.textContent = '已复制！';
+            button.style.background = '#28a745';
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.style.background = '#5e72e4';
+            }, 2000);
+        }
+        
+        function checkService() {
+            alert('请在命令提示符中运行：sc query spooler\n\n查看 Print Spooler 服务的当前状态。');
+        }
+        
+        // 页面加载时的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Print Spooler 诊断工具已加载');
+            
+            // 检测操作系统
+            if (navigator.userAgent.indexOf('Windows') === -1) {
+                alert('注意：此工具专为 Windows 系统设计。');
+            }
+        });
+    </script>
+</body>
+</html>

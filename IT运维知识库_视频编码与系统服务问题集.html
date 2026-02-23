@@ -1,0 +1,1940 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT杩愮淮知ヨ瘑应?- 瑙嗛缂栫爜中庣郴缁熸湇功￠棶题橀泦</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Microsoft YaHei", "Segoe UI", Tahoma, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .header .meta {
+            margin-top: 20px;
+            font-size: 0.95em;
+            opacity: 0.8;
+        }
+        
+        .nav {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 3px solid #667eea;
+            position: sticky;
+            top: 56px;
+            z-index: 100;
+        }
+        
+        .nav h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .nav ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+        }
+        
+        .nav a {
+            color: #555;
+            text-decoration: none;
+            padding: 8px 15px;
+            display: block;
+            border-radius: 5px;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+        
+        .nav a:hover {
+            background: white;
+            color: #667eea;
+            border-left-color: #667eea;
+            transform: translateX(5px);
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 60px;
+            padding-bottom: 40px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .section:last-child {
+            border-bottom: none;
+        }
+        
+        .section-title {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .section-title::before {
+            content: "馃搵";
+            font-size: 1.2em;
+        }
+        
+        .subsection {
+            margin: 30px 0;
+        }
+        
+        .subsection-title {
+            color: #495057;
+            font-size: 1.5em;
+            margin: 25px 0 15px 0;
+            padding-left: 15px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .problem-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .problem-box h4 {
+            color: #856404;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        .solution-box {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .solution-box h4 {
+            color: #155724;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        .info-box {
+            background: #d1ecf1;
+            border-left: 5px solid #17a2b8;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .info-box h4 {
+            color: #0c5460;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        .warning-box {
+            background: #f8d7da;
+            border-left: 5px solid #dc3545;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .warning-box h4 {
+            color: #721c24;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: "Consolas", "Monaco", monospace;
+            color: #e83e8c;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+        
+        .command {
+            background: #1e1e1e;
+            color: #4ec9b0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: "Consolas", "Monaco", monospace;
+            margin: 15px 0;
+            border-left: 4px solid #4ec9b0;
+        }
+        
+        .step-list {
+            counter-reset: step-counter;
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .step-list li {
+            counter-increment: step-counter;
+            margin: 20px 0;
+            padding: 15px 15px 15px 60px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            position: relative;
+        }
+        
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .comparison-item {
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-good {
+            background: #d4edda;
+            border-top: 4px solid #28a745;
+        }
+        
+        .comparison-bad {
+            background: #f8d7da;
+            border-top: 4px solid #dc3545;
+        }
+        
+        .tag {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin: 5px 5px 5px 0;
+            font-weight: 500;
+        }
+        
+        .tag-success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .tag-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .tag-danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .tag-info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .footer {
+            background: #2d3748;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .footer p {
+            margin: 10px 0;
+            opacity: 0.8;
+        }
+        
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+            }
+            
+            .nav {
+                display: none;
+            }
+            
+            .section {
+                page-break-inside: avoid;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .nav ul {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- 缁熶竴宸ュ叿鏍忕粍浠?- AI知ヨ瘑应撴枃妗ｇ郴缁?-->
+<style>
+  /* ===== 宸ュ叿鏍廋SS可橀噺，堜笌doc-center.html启濇寔中€鑷达級===== */
+  :root {
+    /* Linear-inspired Dark Theme Colors */
+    --bg-primary: #0e0e10;
+    --bg-secondary: #121214;
+    --bg-tertiary: #1a1a1e;
+    --bg-elevated: #1f1f23;
+    --bg-hover: #27272a;
+    
+    /* Linear Gradients */
+    --accent-purple: #8b5cf6;
+    --accent-blue: #3b82f6;
+    --accent-cyan: #06b6d4;
+    --accent-pink: #ec4899;
+    --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+    --gradient-glow: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.1) 100%);
+    --gradient-border: linear-gradient(135deg, rgba(99, 102, 241, 0.5), rgba(139, 92, 246, 0.3));
+    
+    /* Text Colors */
+    --text-primary: #fafafa;
+    --text-secondary: #a1a1aa;
+    --text-muted: #71717a;
+    --text-tertiary: #52525b;
+    
+    /* Border & Shadow */
+    --border-subtle: rgba(255, 255, 255, 0.06);
+    --border-default: rgba(255, 255, 255, 0.1);
+    --border-hover: rgba(255, 255, 255, 0.15);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+    --shadow-glow: 0 0 40px rgba(139, 92, 246, 0.15);
+    
+    /* Spacing - Notion Style */
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    
+    /* Toolbar specific */
+    --toolbar-height: 56px;
+    
+    /* Transitions */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Light Theme */
+  [data-theme="light"] {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --bg-tertiary: #f3f4f6;
+    --bg-elevated: #ffffff;
+    --bg-hover: #e5e7eb;
+    
+    --text-primary: #111827;
+    --text-secondary: #4b5563;
+    --text-muted: #9ca3af;
+    --text-tertiary: #d1d5db;
+    
+    --border-subtle: rgba(0, 0, 0, 0.04);
+    --border-default: rgba(0, 0, 0, 0.08);
+    --border-hover: rgba(0, 0, 0, 0.12);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  /* ===== 缁熶竴宸ュ叿鏍忔牱寮?===== */
+  #unified-toolbar {
+    position: fixed;
+    top: 56px;
+    left: 0;
+    right: 0;
+    height: var(--toolbar-height);
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-subtle);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* 中洪〉面㈠唴实规坊功犻《閮ㄩ棿璺?*/
+  body.has-unified-toolbar {
+    padding-top: var(--toolbar-height);
+  }
+
+  /* 宸︿晶鍖哄煙 */
+  .toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* 杩斿洖新团。中績閾炬帴 */
+  .toolbar-back-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .toolbar-back-link:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+  }
+
+  .toolbar-back-link svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  /* 到嗛殧绾?*/
+  .toolbar-divider {
+    width: 1px;
+    height: 20px;
+    background: var(--border-default);
+    flex-shrink: 0;
+  }
+
+  /* 褰撳前新团。鏍囬 */
+  .toolbar-doc-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    max-width: 300px;
+  }
+
+  /* 中棿鍖哄煙 - 排滅储妗?*/
+  .toolbar-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    max-width: 400px;
+  }
+
+  .toolbar-search {
+    position: relative;
+    width: 100%;
+  }
+
+  .toolbar-search-input {
+    width: 100%;
+    padding: 8px 12px 8px 36px;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    font-size: 14px;
+    transition: all var(--transition-fast);
+    font-family: inherit;
+  }
+
+  .toolbar-search-input:focus {
+    outline: none;
+    border-color: var(--accent-purple);
+    background: var(--bg-elevated);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+  }
+
+  .toolbar-search-input::placeholder {
+    color: var(--text-muted);
+  }
+
+  .toolbar-search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+
+  .toolbar-search-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* 可充晶鍖哄煙 */
+  .toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    justify-content: flex-end;
+  }
+
+  /* 宸ュ叿鏍忔寜閽?*/
+  .toolbar-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: inherit;
+  }
+
+  .toolbar-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+    border-color: var(--border-hover);
+  }
+
+  .toolbar-btn:active {
+    transform: scale(0.96);
+  }
+
+  .toolbar-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* 国炬标鎸夐挳 */
+  .toolbar-btn-icon {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+  }
+
+  /* 瀛椾綋澶у皬接у埗缁?*/
+  .toolbar-fontsize-group {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    padding: 2px;
+  }
+
+  .toolbar-fontsize-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: inherit;
+  }
+
+  .toolbar-fontsize-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+  }
+
+  .toolbar-fontsize-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .toolbar-fontsize-value {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    height: 28px;
+    padding: 0 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: var(--bg-elevated);
+    border-radius: var(--radius-sm);
+  }
+
+  /* 中婚到团崲鎸夐挳 */
+  .toolbar-theme-btn {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .toolbar-theme-btn .icon-sun,
+  .toolbar-theme-btn .icon-moon {
+    transition: transform var(--transition-normal), opacity var(--transition-normal);
+  }
+
+  [data-theme="light"] .toolbar-theme-btn .icon-moon,
+  .toolbar-theme-btn .icon-sun {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+  }
+
+  [data-theme="light"] .toolbar-theme-btn .icon-sun,
+  .toolbar-theme-btn .icon-moon {
+    opacity: 0;
+    transform: rotate(90deg) scale(0.5);
+    position: absolute;
+  }
+
+  /* 鍝嶅簲寮忛€傞厤 */
+  @media (max-width: 768px) {
+    #unified-toolbar {
+      padding: 0 12px;
+    }
+
+    .toolbar-doc-title {
+      max-width: 150px;
+      font-size: 13px;
+    }
+
+    .toolbar-center {
+      max-width: 200px;
+    }
+
+    .toolbar-back-link span {
+      display: none;
+    }
+
+    .toolbar-fontsize-group {
+      display: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .toolbar-center {
+      display: none;
+    }
+  }
+</style>
+
+<!-- 宸ュ叿鏍廐TML缁撴瀯 -->
+<div id="unified-toolbar">
+  <!-- 宸︿晶，氳繑国為摼接?+ 新团。鏍囬 -->
+  <div class="toolbar-left">
+    <a href="doc-center.html" class="toolbar-back-link" title="杩斿洖新团。中績">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      <span>新团。中績</span>
+    </a>
+    <div class="toolbar-divider"></div>
+    <div class="toolbar-doc-title" id="toolbar-doc-title">新团。鏍囬</div>
+  </div>
+
+  <!-- 中棿，氭悳绱㈡ -->
+  <div class="toolbar-center">
+    <div class="toolbar-search">
+      <div class="toolbar-search-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.35-4.35"/>
+        </svg>
+      </div>
+      <input 
+        type="text" 
+        class="toolbar-search-input" 
+        id="toolbar-search-input"
+        placeholder="排滅储新团。..."
+        autocomplete="off"
+      />
+    </div>
+  </div>
+
+  <!-- 可充晶，氫富题樺垏收?+ 瀛椾綋澶у皬璋冭妭 -->
+  <div class="toolbar-right">
+    <!-- 瀛椾綋澶у皬接у埗缁?-->
+    <div class="toolbar-fontsize-group">
+      <button class="toolbar-fontsize-btn" id="toolbar-fontsize-minus" title="发忓皬瀛椾綋">A-</button>
+      <div class="toolbar-fontsize-value" id="toolbar-fontsize-value">100%</div>
+      <button class="toolbar-fontsize-btn" id="toolbar-fontsize-plus" title="澧炲ぇ瀛椾綋">A+</button>
+    </div>
+
+    <!-- 中婚到团崲鎸夐挳 -->
+    <button class="toolbar-btn toolbar-btn-icon toolbar-theme-btn" id="toolbar-theme-toggle" title="到团崲中婚">
+      <!-- 澶槼国炬标，堜寒鑹叉ā寮忥級 -->
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"/>
+        <line x1="12" y1="1" x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/>
+        <line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+      <!-- 有堜寒国炬标，堟殫鑹叉ā寮忥級 -->
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script>
+  /**
+   * 缁熶竴宸ュ叿鏍忕粍浠惰剼有?
+   * 功熻能，氬字浣撳ぇ灏忚皟花傘€佷富题樺垏收€佹悳绱㈣烦杞?
+   * 家€有夌姸性佷繚瀛樺到localStorage
+   */
+  (function() {
+    'use strict';
+
+    // ===== 閰嶇疆甯搁噺 =====
+    const CONFIG = {
+      // localStorage閿悕
+      STORAGE_KEYS: {
+        FONT_SIZE: 'ai-kb-font-size',
+        THEME: 'ai-kb-theme'
+      },
+      // 瀛椾綋澶у皬认剧疆
+      FONT_SIZE: {
+        BASE: 14,           // 鍩哄噯瀛椾綋澶у皬(px)
+        MIN_PERCENT: 80,    // 有€灏忕櫨到嗘瘮
+        MAX_PERCENT: 150,   // 有€澶х櫨到嗘瘮
+        STEP: 10,           // 姣忔璋冭妭姝ラ暱(%)
+        DEFAULT: 100        // 榛樿鐧惧垎姣?
+      },
+      // 中婚认剧疆
+      THEME: {
+        DARK: 'dark',
+        LIGHT: 'light',
+        DEFAULT: 'dark'
+      },
+      // 新团。中績璺緞
+      DOC_CENTER_PATH: 'doc-center.html'
+    };
+
+    // ===== 宸ュ叿发界暟 =====
+    
+    /**
+     * 鑾峰彇localStorage鍊?
+     */
+    function getStorage(key, defaultValue) {
+      try {
+        const value = localStorage.getItem(key);
+        return value !== null ? value : defaultValue;
+      } catch (e) {
+        return defaultValue;
+      }
+    }
+
+    /**
+     * 认剧疆localStorage鍊?
+     */
+    function setStorage(key, value) {
+      try {
+        localStorage.setItem(key, value);
+      } catch (e) {
+        console.warn('时犳硶启项瓨到發ocalStorage:', e);
+      }
+    }
+
+    /**
+     * 认＄畻骞跺簲鐢ㄥ字浣撳ぇ灏?
+     */
+    function applyFontSize(percent) {
+      // 闄愬埗地ㄦ湁数堣寖国村唴
+      percent = Math.max(CONFIG.FONT_SIZE.MIN_PERCENT, 
+               Math.min(CONFIG.FONT_SIZE.MAX_PERCENT, percent));
+      
+      // 认＄畻实為檯瀛椾綋澶у皬
+      const fontSize = (CONFIG.FONT_SIZE.BASE * percent / 100).toFixed(2);
+      
+      // 应旂敤到癶tml共冪礌
+      document.documentElement.style.fontSize = fontSize + 'px';
+      
+      // 鏇存柊鏄剧ず
+      updateFontSizeDisplay(percent);
+      
+      // 启项瓨到發ocalStorage
+      setStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, percent.toString());
+      
+      return percent;
+    }
+
+    /**
+     * 鏇存柊瀛椾綋澶у皬鏄剧ず
+     */
+    function updateFontSizeDisplay(percent) {
+      const valueEl = document.getElementById('toolbar-fontsize-value');
+      const minusBtn = document.getElementById('toolbar-fontsize-minus');
+      const plusBtn = document.getElementById('toolbar-fontsize-plus');
+      
+      if (valueEl) {
+        valueEl.textContent = percent + '%';
+      }
+      
+      // 鏇存柊鎸夐挳绂佺敤鐘舵€?
+      if (minusBtn) {
+        minusBtn.disabled = percent <= CONFIG.FONT_SIZE.MIN_PERCENT;
+      }
+      if (plusBtn) {
+        plusBtn.disabled = percent >= CONFIG.FONT_SIZE.MAX_PERCENT;
+      }
+    }
+
+    /**
+     * 应旂敤中婚
+     */
+    function applyTheme(theme) {
+      // 楠岃瘉中婚鍊?
+      if (theme !== CONFIG.THEME.DARK && theme !== CONFIG.THEME.LIGHT) {
+        theme = CONFIG.THEME.DEFAULT;
+      }
+      
+      // 认剧疆data-theme业映€?
+      document.documentElement.setAttribute('data-theme', theme);
+      
+      // 启项瓨到發ocalStorage
+      setStorage(CONFIG.STORAGE_KEYS.THEME, theme);
+      
+      return theme;
+    }
+
+    /**
+     * 到团崲中婚
+     */
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme') || CONFIG.THEME.DEFAULT;
+      const newTheme = currentTheme === CONFIG.THEME.DARK ? CONFIG.THEME.LIGHT : CONFIG.THEME.DARK;
+      applyTheme(newTheme);
+    }
+
+    /**
+     * 家ц排滅储
+     */
+    function performSearch(query) {
+      if (!query || !query.trim()) return;
+      
+      // 鏋勫缓璺宠浆URL
+      const currentPath = window.location.pathname;
+      const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+      const targetUrl = basePath + CONFIG.DOC_CENTER_PATH + '#search=' + encodeURIComponent(query.trim());
+      
+      // 璺宠浆到版枃妗ｄ腑蹇?
+      window.location.href = targetUrl;
+    }
+
+    /**
+     * 认剧疆新团。鏍囬
+     */
+    function setDocumentTitle(title) {
+      const titleEl = document.getElementById('toolbar-doc-title');
+      if (titleEl && title) {
+        titleEl.textContent = title;
+      }
+    }
+
+    /**
+     * 浠庨〉面㈣嚜功ㄨ幏可栨枃妗ｆ标题?
+     */
+    function autoDetectDocumentTitle() {
+      // 浼樺厛绾э细1. h1鏍囬 2. title鏍元 3. 新囦欢鍚?
+      let title = '';
+      
+      // 灏濊瘯鑾峰彇h1鏍囬
+      const h1 = document.querySelector('h1');
+      if (h1 && h1.textContent.trim()) {
+        title = h1.textContent.trim();
+      } else {
+        // 灏濊瘯浠巘itle鏍元鑾峰彇
+        const titleTag = document.querySelector('title');
+        if (titleTag && titleTag.textContent.trim()) {
+          title = titleTag.textContent.trim();
+          // 绉婚櫎甯歌的勫悗缂€
+          title = title.replace(/[-_].*?(?:知ヨ瘑应搢新团。|AI)/i, '').trim();
+        } else {
+          // 浠庢枃浠跺悕鑾峰彇
+          const path = window.location.pathname;
+          const filename = path.substring(path.lastIndexOf('/') + 1);
+          title = filename.replace(/\.html?$/i, '').replace(/[_-]/g, ' ');
+        }
+      }
+      
+      setDocumentTitle(title);
+    }
+
+    // ===== 浜嬩欢澶勭悊 =====
+
+    /**
+     * 到项鍖栦簨浠剁洃鍚?
+     */
+    function initEventListeners() {
+      // 瀛椾綋澶у皬发忓皬鎸夐挳
+      const minusBtn = document.getElementById('toolbar-fontsize-minus');
+      if (minusBtn) {
+        minusBtn.addEventListener('click', function() {
+          const currentPercent = parseInt(getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString()));
+          applyFontSize(currentPercent - CONFIG.FONT_SIZE.STEP);
+        });
+      }
+
+      // 瀛椾綋澶у皬澧炲ぇ鎸夐挳
+      const plusBtn = document.getElementById('toolbar-fontsize-plus');
+      if (plusBtn) {
+        plusBtn.addEventListener('click', function() {
+          const currentPercent = parseInt(getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString()));
+          applyFontSize(currentPercent + CONFIG.FONT_SIZE.STEP);
+        });
+      }
+
+      // 中婚到团崲鎸夐挳
+      const themeBtn = document.getElementById('toolbar-theme-toggle');
+      if (themeBtn) {
+        themeBtn.addEventListener('click', toggleTheme);
+      }
+
+      // 排滅储妗?
+      const searchInput = document.getElementById('toolbar-search-input');
+      if (searchInput) {
+        // 国炶溅閿悳绱?
+        searchInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            performSearch(this.value);
+          }
+        });
+      }
+    }
+
+    /**
+     * 浠嶶RL可容暟到项鍖栨悳绱㈡
+     */
+    function initSearchFromURL() {
+      const hash = window.location.hash;
+      if (hash && hash.startsWith('#search=')) {
+        const query = decodeURIComponent(hash.substring(8));
+        const searchInput = document.getElementById('toolbar-search-input');
+        if (searchInput) {
+          searchInput.value = query;
+        }
+      }
+    }
+
+    // ===== 到项鍖?=====
+
+    /**
+     * 中诲垵濮嬪寲发界暟
+     */
+    function init() {
+      // 1. 鎭㈠启项瓨的勫字浣撳ぇ灏?
+      const savedFontSize = getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString());
+      applyFontSize(parseInt(savedFontSize));
+
+      // 2. 鎭㈠启项瓨的勪富题?
+      const savedTheme = getStorage(CONFIG.STORAGE_KEYS.THEME, CONFIG.THEME.DEFAULT);
+      applyTheme(savedTheme);
+
+      // 3. 中篵ody娣诲姞宸ュ叿鏍忔标璇嗙被
+      document.body.classList.add('has-unified-toolbar');
+
+      // 4. 鑷姩妫€娴嬫枃妗ｆ标题?
+      autoDetectDocumentTitle();
+
+      // 5. 到项鍖栦簨浠剁洃鍚?
+      initEventListeners();
+
+      // 6. 浠嶶RL到项鍖栨悳绱㈡
+      initSearchFromURL();
+    }
+
+    // ===== 共叡API =====
+
+    // 灏嗗伐共锋爮API鏆撮湶到板叏业€鍛藉悕绌洪棿
+    window.UnifiedToolbar = {
+      // 认剧疆新团。鏍囬
+      setTitle: setDocumentTitle,
+      
+      // 鑾峰彇/认剧疆瀛椾綋澶у皬
+      getFontSize: function() {
+        return parseInt(getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString()));
+      },
+      setFontSize: applyFontSize,
+      
+      // 鑾峰彇/认剧疆中婚
+      getTheme: function() {
+        return document.documentElement.getAttribute('data-theme') || CONFIG.THEME.DEFAULT;
+      },
+      setTheme: applyTheme,
+      toggleTheme: toggleTheme,
+      
+      // 家ц排滅储
+      search: performSearch,
+      
+      // 閰嶇疆甯搁噺
+      config: CONFIG
+    };
+
+    // 鍚姩到项鍖?
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+</script>
+
+    <div class="container">
+        <div class="header">
+            <h1>IT杩愮淮知ヨ瘑应?/h1>
+            <div class="subtitle">瑙嗛缂栫爜中庣郴缁熸湇功″父瑙侀棶题樿В鍐虫柟妗?/div>
+            <div class="meta">
+                数寸悊时堕棿，?024骞?1有?| 閫傜敤地烘櫙，氳题戠洃接с€佺郴缁熺淮搜ゃ€佹晠闅滄帓鏌?            </div>
+        </div>
+
+        <nav class="nav">
+            <h3>馃搼 蹇€熷鑸?/h3>
+            <ul>
+                <li><a href="#video-encoding">问1，氳题戠紪鐮佹牸寮忓姣斾笌娴忚鍣ㄥ吋实规€?/a></li>
+                <li><a href="#ivms-fisheye">问2，歩VMS-4200楸肩溂业曞紑纯В鐮侀棶题?/a></li>
+                <li><a href="#print-service">问3，歐indows家撳嵃有嶅姟璺緞閰嶇疆</a></li>
+            </ul>
+        </nav>
+
+        <div class="content">
+            <!-- 问1，氳题戠紪鐮佹牸寮?-->
+            <section id="video-encoding" class="section">
+                <h2 class="section-title">问1，氳题戠紪鐮佹牸寮忓姣斾笌娴忚鍣ㄥ吋实规€?/h2>
+
+                <div class="problem-box">
+                    <h4>馃敶 问鐜拌薄</h4>
+                    <p>浣跨敤褰曞睆杞欢褰曞埗的勮题戯任閫夋嫨MPEG-4缂栫爜鍚庝笂浼犲到Chrome娴忚鍣ㄦ棤娉曢瑙样任浣嗘敼鐢℉.264(CPU)缂栫爜我栫敤鏍煎紡宸ュ巶杞崲鍚庡氨功界甯告挱鏀俱€?/p>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">瑙嗛缂栫爜鏍煎紡瀵规瘮琛?/h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>特规€?/th>
+                                <th>MPEG-4</th>
+                                <th>H.264 (CPU)</th>
+                                <th>H.264 (NVENC)</th>
+                                <th>HEVC (NVENC)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>缂栫爜鏍囧噯</strong></td>
+                                <td>MPEG-4 Part 2</td>
+                                <td>H.264/AVC</td>
+                                <td>H.264/AVC</td>
+                                <td>H.265/HEVC</td>
+                            </tr>
+                            <tr>
+                                <td><strong>可戝竷骞翠唬</strong></td>
+                                <td>1999骞?/td>
+                                <td>2003骞?/td>
+                                <td>2003骞?/td>
+                                <td>2013骞?/td>
+                            </tr>
+                            <tr>
+                                <td><strong>鍘嬬缉数堢巼</strong></td>
+                                <td>杈冧綆</td>
+                                <td>楂?/td>
+                                <td>楂?/td>
+                                <td>鏋侀珮</td>
+                            </tr>
+                            <tr>
+                                <td><strong>新囦欢澶у皬</strong></td>
+                                <td>杈冨ぇ</td>
+                                <td>中瓑</td>
+                                <td>中瓑</td>
+                                <td>有€灏?/td>
+                            </tr>
+                            <tr>
+                                <td><strong>缂栫爜閫熷害</strong></td>
+                                <td>蹇?/td>
+                                <td>鎱?/td>
+                                <td>寰堝揩</td>
+                                <td>蹇?/td>
+                            </tr>
+                            <tr>
+                                <td><strong>纯欢功犻€?/strong></td>
+                                <td>鍚?/td>
+                                <td>鍚︼紙绾疌PU，?/td>
+                                <td>鏄紙NVIDIA鏄惧崱，?/td>
+                                <td>鏄紙NVIDIA鏄惧崱，?/td>
+                            </tr>
+                            <tr>
+                                <td><strong>娴忚鍣ㄦ敮鎸?/strong></td>
+                                <td><span class="tag tag-warning">閮ㄥ垎鏀寔</span></td>
+                                <td><span class="tag tag-success">共ㄩ潰鏀寔</span></td>
+                                <td><span class="tag tag-success">共ㄩ潰鏀寔</span></td>
+                                <td><span class="tag tag-warning">閮ㄥ垎鏀寔</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>CPU单犵敤</strong></td>
+                                <td>浣?/td>
+                                <td>楂?/td>
+                                <td>鏋佷綆</td>
+                                <td>浣?/td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">鏍规湰鍘熷洜到嗘瀽</h3>
+                    
+                    <div class="info-box">
+                        <h4>馃挕 鏍稿績问，歁P4实瑰櫒灏佽宸紓</h4>
+                        <p><strong>1. Fast Start有惎鐢?/strong></p>
+                        <ul>
+                            <li>MPEG-4可能灏唌oov atom，堝厓数版嵁，夋斁地ㄦ枃浠舵湯灏?/li>
+                            <li>Chrome闇€瑕佸湪瑙嗛寮€澶磋可栧厓数版嵁家嶈能鎾斁</li>
+                            <li>H.264榛樿鍚敤Fast Start，屽厓数版嵁地ㄥ紑澶?/li>
+                        </ul>
+                        
+                        <p><strong>2. 缂栫爜閰嶇疆新囦欢中嶅吋实?/strong></p>
+                        <ul>
+                            <li>MPEG-4浣跨敤Simple Profile/Advanced Simple Profile</li>
+                            <li>Chrome中嶅畬共ㄦ敮鎸佽繖浜涢厤网?/li>
+                            <li>H.264浣跨敤Baseline/Main/High Profile</li>
+                            <li>Chrome实屽叏鏀寔H.264的勬标发嗛厤网?/li>
+                        </ul>
+                        
+                        <p><strong>3. 鍍忕礌鏍煎紡问</strong></p>
+                        <ul>
+                            <li>MPEG-4可能浣跨敤特瑰畾的刌UV 4:2:0可樼</li>
+                            <li>Chrome的凥TML5鎾斁鍣ㄥ彧鏀寔鏍囧噯鏍煎紡</li>
+                            <li>H.264浣跨敤鏍囧噯鍖栫殑鍍忕礌鏍煎紡</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">中轰粈涔圓VI实瑰櫒可互鎾斁，?/h3>
+                    
+                    <div class="comparison">
+                        <div class="comparison-item">
+                            <h4>馃敀 MP4实瑰櫒，堜弗鏍硷級</h4>
+                            <ul>
+                                <li>蹇呴]绗﹀悎ISO Base Media File Format</li>
+                                <li>蹇呴]有夊畬数寸殑绱㈠紩琛?/li>
+                                <li>共冩暟收綅网弗鏍?/li>
+                                <li>瀵圭紪鐮侀厤网姹備弗鏍?/li>
+                                <li>Chrome浼氫弗鏍兼鏌ュ吋实规€?/li>
+                            </ul>
+                        </div>
+                        <div class="comparison-item">
+                            <h4>馃摝 AVI实瑰櫒，堝条撅級</h4>
+                            <ul>
+                                <li>缁撴瀯绠€单曪任1992骞存标发?/li>
+                                <li>绱㈠紩可€夛紙可互杈逛笅杈规挱，?/li>
+                                <li>瀵圭紪鐮佹牸寮忛檺到跺皯</li>
+                                <li>娴忚鍣ㄥ彧妫€鏌ュ基有粨鏋?/li>
+                                <li>功借В灏辨挱，屼笉功借В家嶆姤閿?/li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <h4>鈿狅笍 中嶆帹鑽愪娇鐢ˋVI的勫師国?/h4>
+                        <ul>
+                            <li><strong>璺ㄥ钩可板吋实规€у樊，?/strong>Windows Chrome可能鏀寔，宮acOS/Linux/绉诲姩绔彲功藉け璐?/li>
+                            <li><strong>新囦欢浣撶Н澶э细</strong>娌℃湁鐜颁唬鍘嬬缉浼樺寲</li>
+                            <li><strong>娴佸獟浣撴敮鎸佸樊，?/strong>中嶉€合悎网戦〉娓愯繘寮忓姞杞?/li>
+                            <li><strong>缂哄皯鐜颁唬特规€э细</strong>瀛楀箷，佸闊宠建，佸厓数版嵁鏀寔有夐檺</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="solution-box">
+                    <h4>鉁?接ㄨ崘瑙ｅ喅新规</h4>
+                    
+                    <p><strong>新规A，氫慨鏀瑰綍到惰蒋浠惰网紙有€浣筹級</strong></p>
+                    <ul class="step-list">
+                        <li><strong>瑙嗛鏍煎紡，?/strong>閫夋嫨 H.264 (NVENC) - 閫熷害蹇笖共煎性уソ</li>
+                        <li><strong>实瑰櫒鏍煎紡，?/strong>閫夋嫨 MP4</li>
+                        <li><strong>鍚敤认剧疆，?/strong>Fast Start / Web Optimized</li>
+                        <li><strong>閰嶇疆新囦欢，?/strong>Baseline 我?Main Profile</li>
+                        <li><strong>鍍忕礌鏍煎紡，?/strong>YUV 4:2:0 (standard)</li>
+                    </ul>
+
+                    <p><strong>新规B，氫娇鐢‵Fmpeg家归噺杞崲</strong></p>
+                    <div class="command">
+                        ffmpeg -i input.mp4 -c:v libx264 -preset fast -profile:v baseline -movflags +faststart -c:a aac output.mp4
+                    </div>
+                    <p>可容暟璇存槑，?/p>
+                    <ul>
+                        <li><code>-c:v libx264</code>: 浣跨敤H.264缂栫爜</li>
+                        <li><code>-profile:v baseline</code>: 有€澶у吋实规€?/li>
+                        <li><code>-movflags +faststart</code>: 鍚敤Fast Start</li>
+                        <li><code>-c:a aac</code>: 闊抽杞负AAC，堟渶共煎，?/li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">中嶅悓地烘櫙接ㄨ崘</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>浣跨敤地烘櫙</th>
+                                <th>接ㄨ崘鏍煎紡</th>
+                                <th>鍘熷洜</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>中婁紶到扮綉项?/td>
+                                <td>MP4 + H.264 (NVENC)</td>
+                                <td>共煎性ф渶濂斤任閫熷害蹇?/td>
+                            </tr>
+                            <tr>
+                                <td>蹇€熷綍到?/td>
+                                <td>MP4 + H.264 (NVENC)</td>
+                                <td>纯欢功犻€燂任閫熷害蹇?/td>
+                            </tr>
+                            <tr>
+                                <td>楂樿川閲忓瓨妗?/td>
+                                <td>MP4 + HEVC (NVENC)</td>
+                                <td>新囦欢灏忥任鐢昏川濂?/td>
+                            </tr>
+                            <tr>
+                                <td>到嗕韩到扮ぞ浜ゅ獟浣?/td>
+                                <td>MP4 + H.264 Baseline</td>
+                                <td>家€有夎澶囬能鏀寔</td>
+                            </tr>
+                            <tr>
+                                <td>4K/8K瑙嗛</td>
+                                <td>MP4 + HEVC</td>
+                                <td>新囦欢澶у皬鍚堢悊</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 问2，歩VMS楸肩溂业曞紑 -->
+            <section id="ivms-fisheye" class="section">
+                <h2 class="section-title">问2，歩VMS-4200楸肩溂业曞紑纯В鐮侀棶题?/h2>
+
+                <div class="problem-box">
+                    <h4>馃敶 问鐜拌薄</h4>
+                    <p>閫氳繃iVMS-4200题勮楸肩溂鎽勫儚澶存椂，屽師濮嬬敾面㈠彲浠ユ甯告樉绀猴任浣嗙偣发诲睍寮€鍚庢棤娉曟煡鐪嬪睍寮€鐢婚潰，合彇娑堝嬀閫?鍚敤纯В鐮?鍚庨噸鍚蒋浠讹任楸肩溂业曞紑功熻能鎭㈠姝ｅ父，?/p>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">问有川到嗘瀽</h3>
+                    
+                    <div class="info-box">
+                        <h4>馃挕 鏍稿績鍘熷洜，氱‖浠惰В鐮佸櫒中嶥ewarp绠楁硶中嶅吋实?/h4>
+                        
+                        <p><strong>纯欢瑙ｇ爜鍣ㄧ殑闄愬埗，?/strong></p>
+                        <ul>
+                            <li>GPU纯欢瑙ｇ爜鍣紙NVDEC/Quick Sync，夋槸中撶敤花片</li>
+                            <li>可能实屾垚H.264/H.265瑙嗛瑙ｇ爜</li>
+                            <li>瑙ｇ爜鍚庣殑数版嵁瀛樺偍地℅PU鏄惧瓨中?/li>
+                            <li>iVMS杞欢时犳硶目存帴认块棶GPU鏄惧瓨数版嵁</li>
+                            <li>时犳硶瀵笹PU鏄惧瓨中殑数版嵁杩涜dewarp澶勭悊</li>
+                        </ul>
+
+                        <p><strong>Dewarp，堥奔鐪煎睍寮€，夐渶瑕侊细</strong></p>
+                        <ul>
+                            <li>认块棶鍘熷YUV甯ф暟收?/li>
+                            <li>家ц澶嶆潅的勫儚绱犻噸鏄犲皠绠楁硶</li>
+                            <li>杩涜鐣稿彉知认＄畻</li>
+                            <li>实映椂閫忚可樻崲澶勭悊</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">纯В vs 杞В澶勭悊娴佺▼瀵规瘮</h3>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>澶勭悊鐜妭</th>
+                                <th>纯欢瑙ｇ爜</th>
+                                <th>杞欢瑙ｇ爜</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>瑙嗛瑙ｇ爜</strong></td>
+                                <td>GPU中撶敤花片实屾垚</td>
+                                <td>CPU浣跨敤FFmpeg实屾垚</td>
+                            </tr>
+                            <tr>
+                                <td><strong>数版嵁浣嶇疆</strong></td>
+                                <td>GPU鏄惧瓨</td>
+                                <td>CPU鍐呭瓨</td>
+                            </tr>
+                            <tr>
+                                <td><strong>数版嵁认块棶</strong></td>
+                                <td>iVMS时犳硶目存帴认块棶</td>
+                                <td>iVMS可互目存帴认块棶</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Dewarp澶勭悊</strong></td>
+                                <td><span class="tag tag-danger">时犳硶家ц</span></td>
+                                <td><span class="tag tag-success">可互家ц</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>CPU单犵敤</strong></td>
+                                <td>5-8%</td>
+                                <td>20-30%</td>
+                            </tr>
+                            <tr>
+                                <td><strong>鍘熷楸肩溂题勮</strong></td>
+                                <td><span class="tag tag-success">姝ｅ父</span></td>
+                                <td><span class="tag tag-success">姝ｅ父</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>楸肩溂业曞紑</strong></td>
+                                <td><span class="tag tag-danger">澶辫触</span></td>
+                                <td><span class="tag tag-success">姝ｅ父</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">中轰粈涔堝師濮嬮奔鐪煎彲浠ョ‖瑙ｄ絾业曞紑中嶈，?/h3>
+                    
+                    <div class="comparison">
+                        <div class="comparison-item comparison-good">
+                            <h4>鉁?鍘熷楸肩溂题勮，堢‖瑙ｅ彲鐢級</h4>
+                            <ol>
+                                <li>H.264瑙嗛娴?/li>
+                                <li>GPU纯欢瑙ｇ爜鍣ㄨВ鐮?/li>
+                                <li>瑙ｇ爜鍚庡抚数版嵁地℅PU鏄惧瓨</li>
+                                <li>GPU目存帴YUV鈫扲GB杞崲，堢‖浠惰嚜甯︼級</li>
+                                <li>GPU娓叉煋鏄剧ず</li>
+                            </ol>
+                            <p><strong>中嶉渶瑕佷换浣曡嚜实氫箟澶勭悊 鉁?/strong></p>
+                        </div>
+                        <div class="comparison-item comparison-bad">
+                            <h4>鉂?楸肩溂业曞紑，堢‖瑙ｄ笉可敤，?/h4>
+                            <ol>
+                                <li>H.264瑙嗛娴?/li>
+                                <li>GPU纯欢瑙ｇ爜鍣ㄨВ鐮?/li>
+                                <li>瑙ｇ爜鍚庡抚数版嵁地℅PU鏄惧瓨</li>
+                                <li><strong>鉂?iVMS闇€瑕佽问師濮嬫暟收?/strong></li>
+                                <li><strong>鉂?数版嵁地℅PU，屾棤娉曠洿接ュ鐞?/strong></li>
+                                <li><strong>鉂?GPU鈫扖PU国炰紶有夌摱题?/strong></li>
+                                <li>闇€瑕丆PU家цDewarp绠楁硶</li>
+                            </ol>
+                            <p><strong>数版嵁浼犺緭鐡堕 + 绠楁硶鍐茬獊 = 澶辫触</strong></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">中轰粈涔坕VMS中嶅疄鐜癎PU Dewarp，?/h3>
+                    
+                    <div class="warning-box">
+                        <h4>馃挵 寮€可戞垚有垎鏋?/h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>搜€有姹?/th>
+                                    <th>宸ヤ綔閲?/th>
+                                    <th>闅惧害</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>CUDA/OpenCL缂栫▼</td>
+                                    <td>閲嶅啓数翠釜dewarp绠楁硶</td>
+                                    <td>猸愨瓙猸愨瓙猸?/td>
+                                </tr>
+                                <tr>
+                                    <td>GPU鍐呭瓨绠＄悊</td>
+                                    <td>澶勭悊澶氫釜鏄惧瓨缂撳啿鍖?/td>
+                                    <td>猸愨瓙猸愨瓙</td>
+                                </tr>
+                                <tr>
+                                    <td>寮容认＄畻绠￠亾</td>
+                                    <td>GPU瑙ｇ爜鍜岃绠楀苟琛?/td>
+                                    <td>猸愨瓙猸愨瓙猸?/td>
+                                </tr>
+                                <tr>
+                                    <td>澶欸PU共煎</td>
+                                    <td>鏀寔NVIDIA/AMD/Intel</td>
+                                    <td>猸愨瓙猸愨瓙猸?/td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p><strong>浼扮畻寮€可戞椂问达细</strong>3-6中湀，堜笓中氬洟闃燂級</p>
+                        <p><strong>浼扮畻我愭湰，?/strong>50-100中囦汉姘戝竵</p>
+                        <p><strong>娴峰悍濞佽的勫喅绛栵细</strong>认╃敤我风鐢ㄧ‖瑙ｇ爜，堟垚有负闆讹級鉁?/p>
+                    </div>
+                </div>
+
+                <div class="solution-box">
+                    <h4>鉁?瑙ｅ喅新规</h4>
+                    
+                    <p><strong>新规A，氱鐢ㄧ‖瑙ｇ爜，堟帹鑽愶級</strong></p>
+                    <ol class="step-list">
+                        <li>家撳紑iVMS-4200杞欢</li>
+                        <li>鐐瑰嚮宸︿笂瑙?绯荤粺閰嶇疆"</li>
+                        <li>閫夋嫨"閲元敤"閫夐」单?/li>
+                        <li>可栨秷鍕鹃€?鍚敤纯В鐮?</li>
+                        <li>鐐瑰嚮"启项瓨"鎸夐挳</li>
+                        <li>实屽叏共抽棴骞堕噸新版墦寮€iVMS-4200</li>
+                        <li>娴嬭瘯楸肩溂业曞紑功熻能</li>
+                    </ol>
+
+                    <p><strong>浼樼偣，?/strong></p>
+                    <ul>
+                        <li>家€有夊姛功介能姝ｅ父宸ヤ綔</li>
+                        <li>楸肩溂业曞紑实岀編鏀寔</li>
+                        <li>中€娆¤网案涔呮湁数?/li>
+                    </ul>
+
+                    <p><strong>褰卞搷，?/strong></p>
+                    <ul>
+                        <li>CPU单犵敤澧炲姞10-20%</li>
+                        <li>瀵筰5可婁互中婂鐞嗗櫒褰卞搷寰堝皬</li>
+                        <li>Dell Latitude 5400实屽叏可互家垮彈</li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">性ц能瀵规瘮，?璺?080P瑙嗛，?/h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>地烘櫙</th>
+                                <th>纯В鐮丆PU单犵敤</th>
+                                <th>杞В鐮丆PU单犵敤</th>
+                                <th>宸紓</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>鏅€氶瑙?/td>
+                                <td>5-8%</td>
+                                <td>15-25%</td>
+                                <td>+15%</td>
+                            </tr>
+                            <tr>
+                                <td>楸肩溂鍘熷</td>
+                                <td>8-12%</td>
+                                <td>20-30%</td>
+                                <td>+18%</td>
+                            </tr>
+                            <tr>
+                                <td>楸肩溂业曞紑</td>
+                                <td><span class="tag tag-danger">澶辫触</span></td>
+                                <td>25-40%</td>
+                                <td>蹇呴]杞В</td>
+                            </tr>
+                            <tr>
+                                <td>褰曞儚国映斁</td>
+                                <td>10-15%</td>
+                                <td>30-45%</td>
+                                <td>+25%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box">
+                    <h4>馃搶 共抽敭瑕佺偣</h4>
+                    <ul>
+                        <li><strong>杩欎笉鏄痓ug，?/strong>鏄‖浠惰В鐮佸櫒时犳硶鏀寔实映椂dewarp绠楁硶的勬妧有檺到?/li>
+                        <li><strong>时犻厤网彲瑙ｅ喅，?/strong>单充娇RTX 4090涔熸棤娉曞湪纯В妯″紡中嬪睍寮€楸肩溂</li>
+                        <li><strong>杞欢功熻能缂哄け，?/strong>iVMS有紑可慓PU dewarp功熻能，堟垚有師国狅級</li>
+                        <li><strong>接ㄨ崘新规，?/strong>姘镐箙绂佺敤纯В鐮侊任Dell Latitude 5400性ц能实屽叏澶熺敤</li>
+                        <li><strong>琛屼笟鐜扮姸，?/strong>可湁楂樼VMS杞欢，堝敭浠?-20中囷級鏀寔GPU dewarp</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 问3，氭墦单版湇功?-->
+            <section id="print-service" class="section">
+                <h2 class="section-title">问3，歐indows家撳嵃有嶅姟璺緞閰嶇疆问</h2>
+
+                <div class="problem-box">
+                    <h4>馃敶 问鐜拌薄</h4>
+                    <p>鏌愬彴Win10鐢佃剳的勬墦单版湇功℃棤娉曡嚜功ㄥ惎功任妫€鏌ユ敞鍐岃〃可戠幇ImagePath閰嶇疆可能有夎，傝€學in11鐢佃剳的勯厤网娇鐢ㄧ幆澧冨彉閲忔牸寮忎絾杩愯姝ｅ父，?/p>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">璺緞鏍煎紡瀵规瘮</h3>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>璺緞绫诲瀷</th>
+                                <th>绀轰緥</th>
+                                <th>实為檯鎸囧悜</th>
+                                <th>鏍囧噯性?/th>
+                                <th>共煎性?/th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>鐜可橀噺璺緞</strong></td>
+                                <td><code>%SystemRoot%\System32\spoolsv.exe</code></td>
+                                <td><code>C:\Windows\System32\spoolsv.exe</code></td>
+                                <td><span class="tag tag-success">接ㄨ崘</span></td>
+                                <td><span class="tag tag-success">有€濂?/span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>缁项璺緞</strong></td>
+                                <td><code>C:\Windows\System32\spoolsv.exe</code></td>
+                                <td><code>C:\Windows\System32\spoolsv.exe</code></td>
+                                <td><span class="tag tag-warning">可敤</span></td>
+                                <td><span class="tag tag-warning">中€鑸?/span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>閿欒璺緞</strong></td>
+                                <td><code>C:\Windows\spoolsv.exe</code></td>
+                                <td>新囦欢中嶅瓨地?/td>
+                                <td><span class="tag tag-danger">閿欒</span></td>
+                                <td><span class="tag tag-danger">时犳硶鍚姩</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">鐜可橀噺璺緞的勪紭功?/h3>
+                    
+                    <div class="info-box">
+                        <h4>馃挕 中轰粈涔堜娇鐢?%SystemRoot% 鏇村ソ，?/h4>
+                        
+                        <p><strong>1. 绯荤粺璺緞可樺寲时惰嚜功ㄩ€傞厤</strong></p>
+                        <p>鍋囪Windows实夎地―目橈细</p>
+                        <ul>
+                            <li>鐜可橀噺，?code>%SystemRoot%\System32\spoolsv.exe</code> 鈫?鑷姩璇嗗埆中?<code>D:\Windows\System32\spoolsv.exe</code> 鉁?/li>
+                            <li>缁项璺緞，?code>C:\Windows\System32\spoolsv.exe</code> 鈫?新囦欢中嶅瓨地?鉁?/li>
+                        </ul>
+
+                        <p><strong>2. 澶氳瑷€绯荤粺共煎</strong></p>
+                        <ul>
+                            <li>鏌愪簺国藉/地板尯的刉indows绯荤粺新囦欢澶瑰彲功界湁中嶅悓鍚嶇О</li>
+                            <li>%SystemRoot%浼氳嚜功ㄦ寚鍚戞纯綅网?/li>
+                            <li>缁项璺緞可能澶辨晥</li>
+                        </ul>
+
+                        <p><strong>3. 渚夸簬绯荤粺缁存姢</strong></p>
+                        <ul>
+                            <li>绯荤粺绠＄悊鍛樹竴鐪煎氨功借瘑到标发嗛厤网?/li>
+                            <li>实规样家归噺妫€鏌ュ拰启</li>
+                            <li>绗﹀悎寰蒋的勬渶浣冲疄璺?/li>
+                        </ul>
+
+                        <p><strong>4. 实夊叏性ф洿濂?/strong></p>
+                        <ul>
+                            <li>鐜可橀噺鐢辩郴缁熺鐞嗭任中嶅鏄撹璇敼</li>
+                            <li>鎭舵剰杞欢启敼鍚庡鏄撹可戠幇</li>
+                            <li>缁项璺緞琚敼我愭伓鎰忚矾寰勪笉鏄撳療瑙?/li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">Win10数呴殰可能鍘熷洜</h3>
+                    
+                    <div class="warning-box">
+                        <h4>鈿狅笍 甯歌鍘熷洜到嗘瀽</h4>
+                        
+                        <p><strong>鍘熷洜1，氳矾寰勮绡℃敼，堟渶甯歌，?/strong></p>
+                        <ul>
+                            <li>姝ｅ父璺緞，?code>C:\Windows\System32\spoolsv.exe</code> 鉁?/li>
+                            <li>琚敼我愶细<code>C:\Windows\spoolsv.exe</code> 鉁楋紙缂哄皯System32，?/li>
+                            <li>我栬€咃细<code>C:\Windows\System\spoolsv.exe</code> 鉁楋紙报煎啓閿欒，?/li>
+                        </ul>
+
+                        <p><strong>鍘熷洜2，氱梾姣?鎭舵剰杞欢启敼</strong></p>
+                        <ul>
+                            <li>鏌愪簺鎭舵剰杞欢浼氫慨鏀圭郴缁熸湇功¤矾寰?/li>
+                            <li>鎸囧悜鐥呮瘨鑷繁的勭▼应?/li>
+                            <li>我栨晠鎰忕牬鍧忔湇功?/li>
+                        </ul>
+
+                        <p><strong>鍘熷洜3，氶敊璇殑绯荤粺浼樺寲宸ュ叿</strong></p>
+                        <ul>
+                            <li>鏌愪簺"浼樺寲杞欢"澹扮О浼樺寲绯荤粺有嶅姟</li>
+                            <li>实為檯中婁贡鏀规敞鍐岃〃</li>
+                            <li>瀵艰嚧有嶅姟璺緞閿欒</li>
+                        </ul>
+
+                        <p><strong>鍘熷洜4，氭墜功ㄤ慨鏀归敊璇?/strong></p>
+                        <ul>
+                            <li>有変汉鏇惧皾璇曟墜功ㄤ慨澶嶆墦单伴棶题?/li>
+                            <li>地ㄦ敞鍐岃〃中贡鏀硅矾寰?/li>
+                            <li>鏀归敊浜嗕絾娌″发鐜?/li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="solution-box">
+                    <h4>鉁?鏍囧噯启姝ラ</h4>
+                    
+                    <p><strong>PowerShell鑴氭湰，堢鐞嗗憳条冮檺，夛细</strong></p>
+                    <pre><code># 1. 鍋滄家撳嵃有嶅姟
+Stop-Service -Name Spooler -Force
+
+# 2. 娓呯悊家撳嵃闃熷垪
+Remove-Item -Path "C:\Windows\System32\spool\PRINTERS\*" -Force
+
+# 3. 启娉ㄥ唽琛ㄨ矾寰勶紙濡容灉閿欒，?$RegPath = "HKLM:\SYSTEM\CurrentControlSet\Services\Spooler"
+Set-ItemProperty -Path $RegPath -Name "ImagePath" -Value "%SystemRoot%\System32\spoolsv.exe"
+
+# 4. 閲嶅惎有嶅姟
+Start-Service -Name Spooler
+
+# 5. 楠岃瘉
+Get-Service -Name Spooler</code></pre>
+
+                    <p><strong>家嬪姩启姝ラ，?/strong></p>
+                    <ol class="step-list">
+                        <li>浠ョ鐞嗗憳韬唤家撳紑CMD我朠owerShell</li>
+                        <li>家ц <code>net stop spooler</code> 鍋滄家撳嵃有嶅姟</li>
+                        <li>家撳紑新囦欢澶?<code>C:\Windows\System32\spool\PRINTERS</code></li>
+                        <li>到犻櫎璇ユ枃浠跺す鍐呯殑家€有夋枃浠?/li>
+                        <li>鎸塛in+R，岃緭共?<code>regedit</code> 家撳紑娉ㄥ唽琛ㄧ紪杈戝櫒</li>
+                        <li>瀵艰埅到?<code>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Spooler</code></li>
+                        <li>妫€鏌ュ彸渚?ImagePath 的勫€?/li>
+                        <li>濡容灉中嶆槸 <code>%SystemRoot%\System32\spoolsv.exe</code>，屽弻发讳慨鏀逛负姝ゅ€?/li>
+                        <li>共抽棴娉ㄥ唽琛ㄧ紪杈戝櫒</li>
+                        <li>家ц <code>net start spooler</code> 鍚姩有嶅姟</li>
+                    </ol>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">Win11閰嶇疆璇存槑</h3>
+                    
+                    <div class="info-box">
+                        <h4>鉁?Win11的勯厤网畬共ㄦ甯?/h4>
+                        <p><strong>ImagePath閰嶇疆，?/strong></p>
+                        <ul>
+                            <li>鍊硷细<code>%SystemRoot%\System32\spoolsv.exe</code></li>
+                            <li>绫诲瀷，?code>REG_EXPAND_SZ</code>，堝彲家╁睍瀛楃中诧級</li>
+                            <li>杩欐槸实屽叏姝ｇ‘的勬标发嗛厤网?/li>
+                        </ul>
+
+                        <p><strong>中轰粈涔圵in11娌℃湁问，?/strong></p>
+                        <ul>
+                            <li>Win11共ㄦ柊实夎榛樿浣跨敤鐜可橀噺鏍煎紡</li>
+                            <li>绯荤粺有嶅姟閰嶇疆鏇村姞瑙勮寖鍖?/li>
+                            <li>发忓皯纯紪鐮佽矾寰勭殑浣跨敤</li>
+                            <li>家€有夐厤网」閮界鍚堝井杞渶浣冲疄璺?/li>
+                        </ul>
+
+                        <p><strong>浣犱笉闇€瑕佸仛浠讳綍鎿嶄綔，?/strong></p>
+                        <ul>
+                            <li>閰嶇疆宸茬粡鏄渶浣虫牸寮?/li>
+                            <li>有嶅姟杩愯实屽叏姝ｅ父</li>
+                            <li>中嶉渶瑕佷慨澶嶆垨璋冩暣</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">题勯槻接柦</h3>
+                    
+                    <div class="info-box">
+                        <h4>馃洝锔?时ュ父缁存姢寤鸿</h4>
+                        
+                        <p><strong>实氭湡妫€鏌ユ湇功￠厤网紙PowerShell，夛细</strong></p>
+                        <pre><code>$RegPath = "HKLM:\SYSTEM\CurrentControlSet\Services\Spooler"
+$ImagePath = Get-ItemProperty -Path $RegPath -Name "ImagePath"
+
+if ($ImagePath.ImagePath -ne "%SystemRoot%\System32\spoolsv.exe") {
+    Write-Warning "家撳嵃有嶅姟璺緞寮合父，?
+    Write-Host "褰撳前璺緞: $($ImagePath.ImagePath)"
+    Write-Host "鏍囧噯璺緞: %SystemRoot%\System32\spoolsv.exe"
+}</code></pre>
+
+                        <p><strong>閬垮厤浣跨敤的勮蒋浠跺姛功斤细</strong></p>
+                        <ul>
+                            <li>鉂?绯荤粺有嶅姟"浼樺寲"</li>
+                            <li>鉂?娉ㄥ唽琛?娣卞害娓呯悊"</li>
+                            <li>鉂?中€閿?功犻€?</li>
+                            <li>鉂?杩囦簬婵€杩涚殑鍨冨溇娓呯悊</li>
+                        </ul>
+
+                        <p><strong>接ㄨ崘的勫畨共ㄧ淮搜わ细</strong></p>
+                        <ul>
+                            <li>鉁?浣跨敤Windows鑷甫纾佺洏娓呯悊</li>
+                            <li>鉁?家嬪姩娓呯悊中存椂新囦欢</li>
+                            <li>鉁?实氭湡鏇存柊绯荤粺</li>
+                            <li>鉁?浣跨敤实樻柟缁存姢宸ュ叿</li>
+                        </ul>
+
+                        <p><strong>实氭湡娓呯悊家撳嵃闃熷垪，堟瘡有堜竴娆★級，?/strong></p>
+                        <pre><code>Stop-Service -Name Spooler -Force
+Remove-Item -Path "C:\Windows\System32\spool\PRINTERS\*" -Force
+Start-Service -Name Spooler</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 性荤粨 -->
+            <section class="section">
+                <h2 class="section-title">知ヨ瘑瑕佺偣性荤粨</h2>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">共抽敭搜€有師鐞?/h3>
+                    
+                    <div class="info-box">
+                        <h4>馃摎 鏍稿績姒合康</h4>
+                        
+                        <p><strong>1. 瑙嗛缂栫爜共煎性?/strong></p>
+                        <ul>
+                            <li>实瑰櫒鏍煎紡，圡P4/AVI，夆墵 缂栫爜鏍煎紡，圚.264/MPEG-4，?/li>
+                            <li>娴忚鍣ㄥMP4实瑰櫒瑕佹眰中ユ牸，屽AVI实瑰櫒实界澗</li>
+                            <li>H.264鏄綋鍓峎eb瑙嗛的勬标发嗙紪鐮?/li>
+                            <li>FastStart瀵筗eb瑙嗛鑷冲叧閲嶈</li>
+                        </ul>
+
+                        <p><strong>2. 纯欢瑙ｇ爜闄愬埗</strong></p>
+                        <ul>
+                            <li>GPU纯欢瑙ｇ爜鍣ㄦ槸中撶敤花片，屽彧功借В鐮佷笉功藉仛国惧儚澶勭悊</li>
+                            <li>楸肩溂业曞紑闇€瑕佽问師濮嬪抚数版嵁骞舵墽琛屽条傜畻娉?/li>
+                            <li>GPU瑙ｇ爜的勬暟收湪鏄惧瓨中任杞欢时犳硶目存帴认块棶</li>
+                            <li>实炵幇GPU dewarp闇€瑕佺櫨中元骇寮€可戞垚有?/li>
+                        </ul>
+
+                        <p><strong>3. 绯荤粺閰嶇疆瑙勮寖</strong></p>
+                        <ul>
+                            <li>鐜可橀噺璺緞姣旂粷瀵硅矾寰勬洿鏍囧噯，佹洿实夊叏</li>
+                            <li>Win11榛樿浣跨敤鐜可橀噺鏍煎紡鏄渶浣冲疄璺?/li>
+                            <li>绯荤粺有嶅姟閰嶇疆应旈伩共嶄娇鐢?浼樺寲杞欢"启敼</li>
+                            <li>实氭湡澶囦唤姝ｇ‘閰嶇疆可揩閫熸仮澶嶆晠闅?/li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">有€浣冲疄璺靛缓认?/h3>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>地烘櫙</th>
+                                <th>接ㄨ崘新规</th>
+                                <th>共抽敭閰嶇疆</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>褰曞埗Web瑙嗛</td>
+                                <td>MP4 + H.264 (NVENC)</td>
+                                <td>鍚敤FastStart, Baseline Profile</td>
+                            </tr>
+                            <tr>
+                                <td>目戞帶楸肩溂业曞紑</td>
+                                <td>绂佺敤纯В鐮?/td>
+                                <td>绯荤粺閰嶇疆鈫掗噰鐢ㄢ啋可栨秷纯В鐮?/td>
+                            </tr>
+                            <tr>
+                                <td>家撳嵃有嶅姟閰嶇疆</td>
+                                <td>浣跨敤鐜可橀噺</td>
+                                <td>%SystemRoot%\System32\spoolsv.exe</td>
+                            </tr>
+                            <tr>
+                                <td>绯荤粺缁存姢</td>
+                                <td>閬垮厤绗笁新逛紭鍖?/td>
+                                <td>浣跨敤Windows鑷甫宸ュ叿</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">蹇€熷弬话?/h3>
+                    
+                    <div class="info-box">
+                        <h4>馃敡 甯哥敤鍛戒护閫熸煡</h4>
+                        
+                        <p><strong>瑙嗛杞崲，團Fmpeg，夛细</strong></p>
+                        <div class="command">
+                            ffmpeg -i input.mp4 -c:v libx264 -preset fast -profile:v baseline -movflags +faststart -c:a aac output.mp4
+                        </div>
+
+                        <p><strong>家撳嵃有嶅姟閲嶅惎，?/strong></p>
+                        <div class="command">
+                            net stop spooler && net start spooler
+                        </div>
+
+                        <p><strong>娓呯悊家撳嵃闃熷垪，?/strong></p>
+                        <div class="command">
+                            Stop-Service Spooler -Force<br>
+                            Remove-Item "C:\Windows\System32\spool\PRINTERS\*" -Force<br>
+                            Start-Service Spooler
+                        </div>
+
+                        <p><strong>妫€鏌ユ湇功￠厤网细</strong></p>
+                        <div class="command">
+                            Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\Spooler" -Name ImagePath
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <footer class="footer">
+            <p><strong>IT杩愮淮知ヨ瘑应?/strong></p>
+            <p>数寸悊时堕棿，?024骞?1有?| 閫傜敤鑼冨洿，歐indows 10/11, 瑙嗛目戞帶绯荤粺, 绯荤粺有嶅姟缁存姢</p>
+            <p>寤鸿实氭湡鏇存柊知ヨ瘑应撳唴实癸任共虫敞新版妧有发业曞拰有€浣冲疄璺靛彉鍖?/p>
+        </footer>
+    </div>
+</body>
+</html>

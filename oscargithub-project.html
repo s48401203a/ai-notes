@@ -1,0 +1,1216 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Oscar 的 GitHub 项目整理</title>
+  <style>
+
+    :root {
+      --bg: #f6f5f4;
+      --ink: #1f1f1f;
+      --muted: #6b6b6b;
+      --card: #ffffff;
+      --accent: #2f6feb;
+      --accent-soft: #eaf0ff;
+      --border: #e6e4e2;
+      --divider: #efeeed;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Noto Sans SC", "Source Han Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.6;
+    }
+    header {
+      padding: 22px 20px 10px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      margin: 0 0 6px;
+      font-size: clamp(20px, 2.6vw, 30px);
+      font-weight: 700;
+    }
+    .subtitle { color: var(--muted); margin: 0; font-size: 13px; }
+    main { max-width: 1200px; margin: 0 auto; padding: 10px 20px 48px; }
+    .layout { display: grid; grid-template-columns: 260px 1fr 220px; gap: 16px; }
+    .nav-left, .nav-right { position: sticky; top: 16px; align-self: start; max-height: calc(100vh - 32px); overflow: auto; padding-right: 6px; }
+    .content { min-width: 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 12px 10px;
+      box-shadow: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .card-header { display: flex; align-items: center; gap: 8px; }
+    .card h2 { margin: 0; font-size: 16px; font-weight: 600; }
+    .tag {
+      display: inline-block;
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: #f3f3f2;
+      color: #555;
+      border: 1px solid var(--divider);
+      white-space: nowrap;
+    }
+    .desc { color: var(--muted); margin: 0; font-size: 13px; }
+    .usage { background: #fafafa; border-left: 2px solid #d6d3d1; padding: 8px 10px; font-size: 13px; color: #4b4b4b; }
+    .links a { color: var(--accent); text-decoration: none; font-weight: 600; font-size: 13px; }
+    .links a:hover { text-decoration: underline; }
+    .toc, .index, .search { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-bottom: 12px; }
+    .toc h2, .index h2 { margin: 0 0 6px; font-size: 13px; color: #3b3b3b; }
+    .toc ul { margin: 0; padding-left: 18px; font-size: 13px; }
+    .index-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
+    .index-group h3, .index-alpha h3 { margin: 0 0 6px; font-size: 12px; color: #606060; }
+    .index-group ul, .alpha-list { margin: 0; padding-left: 18px; font-size: 12px; }
+    .search label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 12px; color: #3b3b3b; }
+    .search input { width: 100%; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); font-size: 13px; background: #fff; color: var(--ink); }
+    .search input::placeholder { color: #9a9a9a; }
+    .search-hint { margin: 6px 0 0; color: var(--muted); font-size: 11px; }
+    #back-to-top { position: fixed; right: 18px; bottom: 18px; border: 1px solid var(--border); background: #ffffff; color: var(--accent); border-radius: 8px; width: 36px; height: 36px; font-size: 14px; cursor: pointer; box-shadow: none; display: none; }
+    @media (max-width: 1100px) { .layout { grid-template-columns: 220px 1fr; } .nav-right { display: none; } }
+    @media (max-width: 780px) { .layout { grid-template-columns: 1fr; } .nav-left { position: static; max-height: none; } }
+  </style>
+</head>
+<body>
+<!-- 统一工具栏组件 - AI知识库文档系统 -->
+<style>
+  /* ===== 工具栏CSS变量（与doc-center.html保持一致）===== */
+  :root {
+    /* Linear-inspired Dark Theme Colors */
+    --bg-primary: #0e0e10;
+    --bg-secondary: #121214;
+    --bg-tertiary: #1a1a1e;
+    --bg-elevated: #1f1f23;
+    --bg-hover: #27272a;
+    
+    /* Linear Gradients */
+    --accent-purple: #8b5cf6;
+    --accent-blue: #3b82f6;
+    --accent-cyan: #06b6d4;
+    --accent-pink: #ec4899;
+    --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+    --gradient-glow: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.1) 100%);
+    --gradient-border: linear-gradient(135deg, rgba(99, 102, 241, 0.5), rgba(139, 92, 246, 0.3));
+    
+    /* Text Colors */
+    --text-primary: #fafafa;
+    --text-secondary: #a1a1aa;
+    --text-muted: #71717a;
+    --text-tertiary: #52525b;
+    
+    /* Border & Shadow */
+    --border-subtle: rgba(255, 255, 255, 0.06);
+    --border-default: rgba(255, 255, 255, 0.1);
+    --border-hover: rgba(255, 255, 255, 0.15);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+    --shadow-glow: 0 0 40px rgba(139, 92, 246, 0.15);
+    
+    /* Spacing - Notion Style */
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    
+    /* Toolbar specific */
+    --toolbar-height: 56px;
+    
+    /* Transitions */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Light Theme */
+  [data-theme="light"] {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --bg-tertiary: #f3f4f6;
+    --bg-elevated: #ffffff;
+    --bg-hover: #e5e7eb;
+    
+    --text-primary: #111827;
+    --text-secondary: #4b5563;
+    --text-muted: #9ca3af;
+    --text-tertiary: #d1d5db;
+    
+    --border-subtle: rgba(0, 0, 0, 0.04);
+    --border-default: rgba(0, 0, 0, 0.08);
+    --border-hover: rgba(0, 0, 0, 0.12);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  /* ===== 统一工具栏样式 ===== */
+  #unified-toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--toolbar-height);
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-subtle);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* 为页面内容添加顶部间距 */
+  body.has-unified-toolbar {
+    padding-top: var(--toolbar-height);
+  }
+
+  /* 左侧区域 */
+  .toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* 返回文档中心链接 */
+  .toolbar-back-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .toolbar-back-link:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+  }
+
+  .toolbar-back-link svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  /* 分隔线 */
+  .toolbar-divider {
+    width: 1px;
+    height: 20px;
+    background: var(--border-default);
+    flex-shrink: 0;
+  }
+
+  /* 当前文档标题 */
+  .toolbar-doc-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    max-width: 300px;
+  }
+
+  /* 中间区域 - 搜索框 */
+  .toolbar-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    max-width: 400px;
+  }
+
+  .toolbar-search {
+    position: relative;
+    width: 100%;
+  }
+
+  .toolbar-search-input {
+    width: 100%;
+    padding: 8px 12px 8px 36px;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    font-size: 14px;
+    transition: all var(--transition-fast);
+    font-family: inherit;
+  }
+
+  .toolbar-search-input:focus {
+    outline: none;
+    border-color: var(--accent-purple);
+    background: var(--bg-elevated);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+  }
+
+  .toolbar-search-input::placeholder {
+    color: var(--text-muted);
+  }
+
+  .toolbar-search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+
+  .toolbar-search-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* 右侧区域 */
+  .toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    justify-content: flex-end;
+  }
+
+  /* 工具栏按钮 */
+  .toolbar-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: inherit;
+  }
+
+  .toolbar-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+    border-color: var(--border-hover);
+  }
+
+  .toolbar-btn:active {
+    transform: scale(0.96);
+  }
+
+  .toolbar-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* 图标按钮 */
+  .toolbar-btn-icon {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+  }
+
+  /* 字体大小控制组 */
+  .toolbar-fontsize-group {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    padding: 2px;
+  }
+
+  .toolbar-fontsize-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: inherit;
+  }
+
+  .toolbar-fontsize-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+  }
+
+  .toolbar-fontsize-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .toolbar-fontsize-value {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    height: 28px;
+    padding: 0 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: var(--bg-elevated);
+    border-radius: var(--radius-sm);
+  }
+
+  /* 主题切换按钮 */
+  .toolbar-theme-btn {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .toolbar-theme-btn .icon-sun,
+  .toolbar-theme-btn .icon-moon {
+    transition: transform var(--transition-normal), opacity var(--transition-normal);
+  }
+
+  [data-theme="light"] .toolbar-theme-btn .icon-moon,
+  .toolbar-theme-btn .icon-sun {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+  }
+
+  [data-theme="light"] .toolbar-theme-btn .icon-sun,
+  .toolbar-theme-btn .icon-moon {
+    opacity: 0;
+    transform: rotate(90deg) scale(0.5);
+    position: absolute;
+  }
+
+  /* 响应式适配 */
+  @media (max-width: 768px) {
+    #unified-toolbar {
+      padding: 0 12px;
+    }
+
+    .toolbar-doc-title {
+      max-width: 150px;
+      font-size: 13px;
+    }
+
+    .toolbar-center {
+      max-width: 200px;
+    }
+
+    .toolbar-back-link span {
+      display: none;
+    }
+
+    .toolbar-fontsize-group {
+      display: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .toolbar-center {
+      display: none;
+    }
+  }
+</style>
+
+<!-- 工具栏HTML结构 -->
+<div id="unified-toolbar">
+  <!-- 左侧：返回链接 + 文档标题 -->
+  <div class="toolbar-left">
+    <a href="doc-center.html" class="toolbar-back-link" title="返回文档中心">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      <span>文档中心</span>
+    </a>
+    <div class="toolbar-divider"></div>
+    <div class="toolbar-doc-title" id="toolbar-doc-title">文档标题</div>
+  </div>
+
+  <!-- 中间：搜索框 -->
+  <div class="toolbar-center">
+    <div class="toolbar-search">
+      <div class="toolbar-search-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.35-4.35"/>
+        </svg>
+      </div>
+      <input 
+        type="text" 
+        class="toolbar-search-input" 
+        id="toolbar-search-input"
+        placeholder="搜索文档..."
+        autocomplete="off"
+      />
+    </div>
+  </div>
+
+  <!-- 右侧：主题切换 + 字体大小调节 -->
+  <div class="toolbar-right">
+    <!-- 字体大小控制组 -->
+    <div class="toolbar-fontsize-group">
+      <button class="toolbar-fontsize-btn" id="toolbar-fontsize-minus" title="减小字体">A-</button>
+      <div class="toolbar-fontsize-value" id="toolbar-fontsize-value">100%</div>
+      <button class="toolbar-fontsize-btn" id="toolbar-fontsize-plus" title="增大字体">A+</button>
+    </div>
+
+    <!-- 主题切换按钮 -->
+    <button class="toolbar-btn toolbar-btn-icon toolbar-theme-btn" id="toolbar-theme-toggle" title="切换主题">
+      <!-- 太阳图标（亮色模式） -->
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"/>
+        <line x1="12" y1="1" x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/>
+        <line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+      <!-- 月亮图标（暗色模式） -->
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script>
+  /**
+   * 统一工具栏组件脚本
+   * 功能：字体大小调节、主题切换、搜索跳转
+   * 所有状态保存到localStorage
+   */
+  (function() {
+    'use strict';
+
+    // ===== 配置常量 =====
+    const CONFIG = {
+      // localStorage键名
+      STORAGE_KEYS: {
+        FONT_SIZE: 'ai-kb-font-size',
+        THEME: 'ai-kb-theme'
+      },
+      // 字体大小设置
+      FONT_SIZE: {
+        BASE: 14,           // 基准字体大小(px)
+        MIN_PERCENT: 80,    // 最小百分比
+        MAX_PERCENT: 150,   // 最大百分比
+        STEP: 10,           // 每次调节步长(%)
+        DEFAULT: 100        // 默认百分比
+      },
+      // 主题设置
+      THEME: {
+        DARK: 'dark',
+        LIGHT: 'light',
+        DEFAULT: 'dark'
+      },
+      // 文档中心路径
+      DOC_CENTER_PATH: 'doc-center.html'
+    };
+
+    // ===== 工具函数 =====
+    
+    /**
+     * 获取localStorage值
+     */
+    function getStorage(key, defaultValue) {
+      try {
+        const value = localStorage.getItem(key);
+        return value !== null ? value : defaultValue;
+      } catch (e) {
+        return defaultValue;
+      }
+    }
+
+    /**
+     * 设置localStorage值
+     */
+    function setStorage(key, value) {
+      try {
+        localStorage.setItem(key, value);
+      } catch (e) {
+        console.warn('无法保存到localStorage:', e);
+      }
+    }
+
+    /**
+     * 计算并应用字体大小
+     */
+    function applyFontSize(percent) {
+      // 限制在有效范围内
+      percent = Math.max(CONFIG.FONT_SIZE.MIN_PERCENT, 
+               Math.min(CONFIG.FONT_SIZE.MAX_PERCENT, percent));
+      
+      // 计算实际字体大小
+      const fontSize = (CONFIG.FONT_SIZE.BASE * percent / 100).toFixed(2);
+      
+      // 应用到html元素
+      document.documentElement.style.fontSize = fontSize + 'px';
+      
+      // 更新显示
+      updateFontSizeDisplay(percent);
+      
+      // 保存到localStorage
+      setStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, percent.toString());
+      
+      return percent;
+    }
+
+    /**
+     * 更新字体大小显示
+     */
+    function updateFontSizeDisplay(percent) {
+      const valueEl = document.getElementById('toolbar-fontsize-value');
+      const minusBtn = document.getElementById('toolbar-fontsize-minus');
+      const plusBtn = document.getElementById('toolbar-fontsize-plus');
+      
+      if (valueEl) {
+        valueEl.textContent = percent + '%';
+      }
+      
+      // 更新按钮禁用状态
+      if (minusBtn) {
+        minusBtn.disabled = percent <= CONFIG.FONT_SIZE.MIN_PERCENT;
+      }
+      if (plusBtn) {
+        plusBtn.disabled = percent >= CONFIG.FONT_SIZE.MAX_PERCENT;
+      }
+    }
+
+    /**
+     * 应用主题
+     */
+    function applyTheme(theme) {
+      // 验证主题值
+      if (theme !== CONFIG.THEME.DARK && theme !== CONFIG.THEME.LIGHT) {
+        theme = CONFIG.THEME.DEFAULT;
+      }
+      
+      // 设置data-theme属性
+      document.documentElement.setAttribute('data-theme', theme);
+      
+      // 保存到localStorage
+      setStorage(CONFIG.STORAGE_KEYS.THEME, theme);
+      
+      return theme;
+    }
+
+    /**
+     * 切换主题
+     */
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme') || CONFIG.THEME.DEFAULT;
+      const newTheme = currentTheme === CONFIG.THEME.DARK ? CONFIG.THEME.LIGHT : CONFIG.THEME.DARK;
+      applyTheme(newTheme);
+    }
+
+    /**
+     * 执行搜索
+     */
+    function performSearch(query) {
+      if (!query || !query.trim()) return;
+      
+      // 构建跳转URL
+      const currentPath = window.location.pathname;
+      const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+      const targetUrl = basePath + CONFIG.DOC_CENTER_PATH + '#search=' + encodeURIComponent(query.trim());
+      
+      // 跳转到文档中心
+      window.location.href = targetUrl;
+    }
+
+    /**
+     * 设置文档标题
+     */
+    function setDocumentTitle(title) {
+      const titleEl = document.getElementById('toolbar-doc-title');
+      if (titleEl && title) {
+        titleEl.textContent = title;
+      }
+    }
+
+    /**
+     * 从页面自动获取文档标题
+     */
+    function autoDetectDocumentTitle() {
+      // 优先级：1. h1标题 2. title标签 3. 文件名
+      let title = '';
+      
+      // 尝试获取h1标题
+      const h1 = document.querySelector('h1');
+      if (h1 && h1.textContent.trim()) {
+        title = h1.textContent.trim();
+      } else {
+        // 尝试从title标签获取
+        const titleTag = document.querySelector('title');
+        if (titleTag && titleTag.textContent.trim()) {
+          title = titleTag.textContent.trim();
+          // 移除常见的后缀
+          title = title.replace(/[-_].*?(?:知识库|文档|AI)/i, '').trim();
+        } else {
+          // 从文件名获取
+          const path = window.location.pathname;
+          const filename = path.substring(path.lastIndexOf('/') + 1);
+          title = filename.replace(/\.html?$/i, '').replace(/[_-]/g, ' ');
+        }
+      }
+      
+      setDocumentTitle(title);
+    }
+
+    // ===== 事件处理 =====
+
+    /**
+     * 初始化事件监听
+     */
+    function initEventListeners() {
+      // 字体大小减小按钮
+      const minusBtn = document.getElementById('toolbar-fontsize-minus');
+      if (minusBtn) {
+        minusBtn.addEventListener('click', function() {
+          const currentPercent = parseInt(getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString()));
+          applyFontSize(currentPercent - CONFIG.FONT_SIZE.STEP);
+        });
+      }
+
+      // 字体大小增大按钮
+      const plusBtn = document.getElementById('toolbar-fontsize-plus');
+      if (plusBtn) {
+        plusBtn.addEventListener('click', function() {
+          const currentPercent = parseInt(getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString()));
+          applyFontSize(currentPercent + CONFIG.FONT_SIZE.STEP);
+        });
+      }
+
+      // 主题切换按钮
+      const themeBtn = document.getElementById('toolbar-theme-toggle');
+      if (themeBtn) {
+        themeBtn.addEventListener('click', toggleTheme);
+      }
+
+      // 搜索框
+      const searchInput = document.getElementById('toolbar-search-input');
+      if (searchInput) {
+        // 回车键搜索
+        searchInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            performSearch(this.value);
+          }
+        });
+      }
+    }
+
+    /**
+     * 从URL参数初始化搜索框
+     */
+    function initSearchFromURL() {
+      const hash = window.location.hash;
+      if (hash && hash.startsWith('#search=')) {
+        const query = decodeURIComponent(hash.substring(8));
+        const searchInput = document.getElementById('toolbar-search-input');
+        if (searchInput) {
+          searchInput.value = query;
+        }
+      }
+    }
+
+    // ===== 初始化 =====
+
+    /**
+     * 主初始化函数
+     */
+    function init() {
+      // 1. 恢复保存的字体大小
+      const savedFontSize = getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString());
+      applyFontSize(parseInt(savedFontSize));
+
+      // 2. 恢复保存的主题
+      const savedTheme = getStorage(CONFIG.STORAGE_KEYS.THEME, CONFIG.THEME.DEFAULT);
+      applyTheme(savedTheme);
+
+      // 3. 为body添加工具栏标识类
+      document.body.classList.add('has-unified-toolbar');
+
+      // 4. 自动检测文档标题
+      autoDetectDocumentTitle();
+
+      // 5. 初始化事件监听
+      initEventListeners();
+
+      // 6. 从URL初始化搜索框
+      initSearchFromURL();
+    }
+
+    // ===== 公共API =====
+
+    // 将工具栏API暴露到全局命名空间
+    window.UnifiedToolbar = {
+      // 设置文档标题
+      setTitle: setDocumentTitle,
+      
+      // 获取/设置字体大小
+      getFontSize: function() {
+        return parseInt(getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString()));
+      },
+      setFontSize: applyFontSize,
+      
+      // 获取/设置主题
+      getTheme: function() {
+        return document.documentElement.getAttribute('data-theme') || CONFIG.THEME.DEFAULT;
+      },
+      setTheme: applyTheme,
+      toggleTheme: toggleTheme,
+      
+      // 执行搜索
+      search: performSearch,
+      
+      // 配置常量
+      config: CONFIG
+    };
+
+    // 启动初始化
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+</script>
+
+  <header>
+    <h1>Oscar 的 GitHub 开源项目整理</h1>
+    <p class="subtitle">用途 + 使用方法 + 直达链接（基于项目 README）</p>
+  </header>
+  <main>
+    <div class="layout">
+      <aside class="nav-left">
+        <section class="search">
+          <label for="project-search">搜索项目</label>
+          <input id="project-search" type="search" placeholder="输入项目名 / 标签 / 关键描述" autocomplete="off" />
+          <p class="search-hint">模糊匹配，过滤项目卡片。</p>
+        </section>
+        <section class="index">
+          <h2>索引</h2>
+          <div class="index-grid">
+            <div class="index-group"><h3>AI 浏览器</h3><ul><li><a href="#proj-browser-use">browser-use</a></li></ul></div><div class="index-group"><h3>CLI</h3><ul><li><a href="#proj-ccusage">ccusage</a></li></ul></div><div class="index-group"><h3>Claude Code</h3><ul><li><a href="#proj-claude-code-router">claude-code-router</a></li></ul></div><div class="index-group"><h3>Claude Skills</h3><ul><li><a href="#proj-skills">skills</a></li></ul></div><div class="index-group"><h3>GUI 工具</h3><ul><li><a href="#proj-claudia">claudia</a></li></ul></div><div class="index-group"><h3>Kubernetes</h3><ul><li><a href="#proj-k3sup">k3sup</a></li></ul></div><div class="index-group"><h3>MCP 服务</h3><ul><li><a href="#proj-context7">context7</a></li></ul></div><div class="index-group"><h3>PWA</h3><ul><li><a href="#proj-primary-task-pwa">primary-task-pwa</a></li></ul></div><div class="index-group"><h3>Python UI</h3><ul><li><a href="#proj-nicegui">nicegui</a></li></ul></div><div class="index-group"><h3>专注 / 白噪声</h3><ul><li><a href="#proj-moodist">moodist</a></li></ul></div><div class="index-group"><h3>代理 / 自动化</h3><ul><li><a href="#proj-Auto-GPT">Auto-GPT</a></li></ul></div><div class="index-group"><h3>前端 / 图标</h3><ul><li><a href="#proj-jdenticon">jdenticon</a></li></ul></div><div class="index-group"><h3>图像翻译</h3><ul><li><a href="#proj-manga-image-translator">manga-image-translator</a></li></ul></div><div class="index-group"><h3>大模型</h3><ul><li><a href="#proj-GLM-4-5">GLM-4.5</a></li></ul></div><div class="index-group"><h3>影视聚合</h3><ul><li><a href="#proj-MoonTV">MoonTV</a></li></ul></div><div class="index-group"><h3>效率工具</h3><ul><li><a href="#proj-Catime">Catime</a></li></ul></div><div class="index-group"><h3>教育 / AI</h3><ul><li><a href="#proj-skid-homework">skid-homework</a></li></ul></div><div class="index-group"><h3>文件列表 / WebDAV</h3><ul><li><a href="#proj-alist">alist</a></li></ul></div><div class="index-group"><h3>文件同步</h3><ul><li><a href="#proj-syncthing">syncthing</a></li></ul></div><div class="index-group"><h3>文档站点</h3><ul><li><a href="#proj-docs">docs</a></li></ul></div><div class="index-group"><h3>监控 / CLI</h3><ul><li><a href="#proj-Claude-Code-Usage-Monitor">Claude-Code-Usage-Monitor</a></li></ul></div><div class="index-group"><h3>监控 / Prometheus</h3><ul><li><a href="#proj-bandwagon-exporter">bandwagon-exporter</a></li></ul></div><div class="index-group"><h3>研究代理</h3><ul><li><a href="#proj-MiroThinker">MiroThinker</a></li></ul></div><div class="index-group"><h3>硬件 / ESPHome</h3><ul><li><a href="#proj-eink-desk-display">eink-desk-display</a></li></ul></div><div class="index-group"><h3>系统优化</h3><ul><li><a href="#proj-optimizer">optimizer</a></li><li><a href="#proj-RyTuneX">RyTuneX-</a></li></ul></div><div class="index-group"><h3>翻译 / OCR</h3><ul><li><a href="#proj-LunaTranslator">LunaTranslator</a></li></ul></div><div class="index-group"><h3>语音助手</h3><ul><li><a href="#proj-mi-gpt">mi-gpt</a></li></ul></div><div class="index-group"><h3>资源清单</h3><ul><li><a href="#proj-awesome-claude-skills">awesome-claude-skills</a></li></ul></div><div class="index-group"><h3>运维脚本</h3><ul><li><a href="#proj-Rent-PL">Rent-PL</a></li></ul></div>
+          </div>
+          <div class="index-alpha">
+            <h3>按名称</h3>
+            <ul class="alpha-list"><li><a href="#proj-alist">alist</a></li><li><a href="#proj-Auto-GPT">Auto-GPT</a></li><li><a href="#proj-awesome-claude-skills">awesome-claude-skills</a></li><li><a href="#proj-bandwagon-exporter">bandwagon-exporter</a></li><li><a href="#proj-browser-use">browser-use</a></li><li><a href="#proj-Catime">Catime</a></li><li><a href="#proj-ccusage">ccusage</a></li><li><a href="#proj-claude-code-router">claude-code-router</a></li><li><a href="#proj-Claude-Code-Usage-Monitor">Claude-Code-Usage-Monitor</a></li><li><a href="#proj-claudia">claudia</a></li><li><a href="#proj-context7">context7</a></li><li><a href="#proj-docs">docs</a></li><li><a href="#proj-eink-desk-display">eink-desk-display</a></li><li><a href="#proj-GLM-4-5">GLM-4.5</a></li><li><a href="#proj-jdenticon">jdenticon</a></li><li><a href="#proj-k3sup">k3sup</a></li><li><a href="#proj-LunaTranslator">LunaTranslator</a></li><li><a href="#proj-manga-image-translator">manga-image-translator</a></li><li><a href="#proj-mi-gpt">mi-gpt</a></li><li><a href="#proj-MiroThinker">MiroThinker</a></li><li><a href="#proj-moodist">moodist</a></li><li><a href="#proj-MoonTV">MoonTV</a></li><li><a href="#proj-nicegui">nicegui</a></li><li><a href="#proj-optimizer">optimizer</a></li><li><a href="#proj-primary-task-pwa">primary-task-pwa</a></li><li><a href="#proj-Rent-PL">Rent-PL</a></li><li><a href="#proj-RyTuneX">RyTuneX-</a></li><li><a href="#proj-skid-homework">skid-homework</a></li><li><a href="#proj-skills">skills</a></li><li><a href="#proj-syncthing">syncthing</a></li></ul>
+          </div>
+        </section>
+      </aside>
+      <section class="content">
+        <div class="grid">
+
+      <section class="card" id="proj-alist">
+        <div class="card-header">
+          <span class="tag">文件列表 / WebDAV</span>
+          <h2>alist</h2>
+        </div>
+        <p class="desc">多存储文件列表与 WebDAV 服务，支持多种云盘与本地存储。</p>
+        <div class="usage">使用方法：按官方指南部署，推荐文档站点或 Docker 方式。</div>
+        <div class="links"><a href="https://github.com/s48401203a/alist" target="_blank" rel="noreferrer">仓库</a> · <a href="https://alist.nn.ci" target="_blank" rel="noreferrer">文档</a></div>
+      </section>
+
+      <section class="card" id="proj-Auto-GPT">
+        <div class="card-header">
+          <span class="tag">代理 / 自动化</span>
+          <h2>Auto-GPT</h2>
+        </div>
+        <p class="desc">让 GPT 模型执行多步骤任务的自治代理实验项目。</p>
+        <div class="usage">使用方法：准备 API Key，下载 release，按官方安装配置运行。</div>
+        <div class="links"><a href="https://github.com/s48401203a/Auto-GPT" target="_blank" rel="noreferrer">仓库</a></div>
+      </section>
+
+      <section class="card" id="proj-awesome-claude-skills">
+        <div class="card-header">
+          <span class="tag">资源清单</span>
+          <h2>awesome-claude-skills</h2>
+        </div>
+        <p class="desc">Claude Skills / 工具 / 资源精选列表。</p>
+        <div class="usage">使用方法：浏览清单，按 README 的插件/技能方式安装使用。</div>
+        <div class="links"><a href="https://github.com/s48401203a/awesome-claude-skills" target="_blank" rel="noreferrer">仓库</a></div>
+      </section>
+
+      <section class="card" id="proj-bandwagon-exporter">
+        <div class="card-header">
+          <span class="tag">监控 / Prometheus</span>
+          <h2>bandwagon-exporter</h2>
+        </div>
+        <p class="desc">Bandwagon KiwiVM 的 Prometheus 指标导出器（Rust）。</p>
+        <div class="usage">使用方法：准备配置文件，指定 --config-path 启动或用 Docker。</div>
+        <div class="links"><a href="https://github.com/s48401203a/bandwagon-exporter" target="_blank" rel="noreferrer">仓库</a></div>
+      </section>
+
+      <section class="card" id="proj-browser-use">
+        <div class="card-header">
+          <span class="tag">AI 浏览器</span>
+          <h2>browser-use</h2>
+        </div>
+        <p class="desc">让 AI 代理可控制浏览器访问网页。</p>
+        <div class="usage">使用方法：pip 安装 + playwright install，然后按示例创建 Agent。</div>
+        <div class="links"><a href="https://github.com/s48401203a/browser-use" target="_blank" rel="noreferrer">仓库</a></div>
+      </section>
+
+      <section class="card" id="proj-Catime">
+        <div class="card-header">
+          <span class="tag">效率工具</span>
+          <h2>Catime</h2>
+        </div>
+        <p class="desc">Windows 倒计时与番茄钟工具，透明界面可自定义。</p>
+        <div class="usage">使用方法：下载 release 运行；托盘图标设置时间。</div>
+        <div class="links"><a href="https://github.com/s48401203a/Catime" target="_blank" rel="noreferrer">仓库</a></div>
+      </section>
+
+      <section class="card" id="proj-ccusage">
+        <div class="card-header">
+          <span class="tag">CLI</span>
+          <h2>ccusage</h2>
+        </div>
+        <p class="desc">分析 Claude Code 本地 JSONL 用量的 CLI。</p>
+        <div class="usage">使用方法：用 bunx 或 npx 直接运行，常用 daily / blocks --live。</div>
+        <div class="links"><a href="https://github.com/s48401203a/ccusage" target="_blank" rel="noreferrer">仓库</a> · <a href="https://ccusage.com/" target="_blank" rel="noreferrer">文档</a></div>
+      </section>
+
+      <section class="card" id="proj-claude-code-router">
+        <div class="card-header">
+          <span class="tag">Claude Code</span>
+          <h2>claude-code-router</h2>
+        </div>
+        <p class="desc">让 Claude Code 通过路由层接入多种交互方式。</p>
+        <div class="usage">使用方法：安装 Claude Code 与 Router，运行 ccr code。</div>
+        <div class="links"><a href="https://github.com/s48401203a/claude-code-router" target="_blank" rel="noreferrer">仓库</a></div>
+      </section>
+
+      <section class="card" id="proj-Claude-Code-Usage-Monitor">
+        <div class="card-header">
+          <span class="tag">监控 / CLI</span>
+          <h2>Claude-Code-Usage-Monitor</h2>
+        </div>
+        <p class="desc">Claude Code 实时用量监控与预测。</p>
+        <div class="usage">使用方法：uv tool install claude-monitor 或 pip 安装后运行。</div>
+        <div class="links"><a href="https://github.com/s48401203a/Claude-Code-Usage-Monitor" target="_blank" rel="noreferrer">仓库</a></div>
+      </section>
+
+      <section class="card" id="proj-claudia">
+        <div class="card-header">
+          <span class="tag">GUI 工具</span>
+          <h2>claudia</h2>
+        </div>
+        <p class="desc">Claude Code 的 GUI 工具箱与会话管理。</p>
+        <div class="usage">使用方法：先安装 Claude Code；当前以源码构建为主（Rust + Bun）。</div>
+        <div class="links"><a href="https://github.com/s48401203a/claudia" target="_blank" rel="noreferrer">仓库</a></div>
+      </section>
+
+      <section class="card" id="proj-context7">
+        <div class="card-header">
+          <span class="tag">MCP 服务</span>
+          <h2>context7</h2>
+        </div>
+        <p class="desc">提供最新文档上下文的 MCP Server。</p>
+        <div class="usage">使用方法：npm 全局安装 @upstash/context7-mcp 后运行。</div>
+        <div class="links"><a href="https://github.com/s48401203a/context7" target="_blank" rel="noreferrer">仓库</a></div>
+      </section>
+
+      <section class="card" id="proj-docs">
+        <div class="card-header">
+          <span class="tag">文档站点</span>
+          <h2>docs</h2>
+        </div>
+        <p class="desc">AList 文档站点源码（文档与指南）。</p>
+        <div class="usage">使用方法：用于阅读/部署文档站点，非业务服务本体。</div>
+        <div class="links"><a href="https://github.com/s48401203a/docs" target="_blank" rel="noreferrer">仓库</a></div>
+      </section>
+
+      <section class="card" id="proj-eink-desk-display">
+        <div class="card-header">
+          <span class="tag">硬件 / ESPHome</span>
+          <h2>eink-desk-display</h2>
+        </div>
+        <p class="desc">E-ink 桌面信息屏，依赖 Home Assistant + ESPHome。</p>
+        <div class="usage">使用方法：按 README 准备 LilyGo T5 硬件与 HA 集成。</div>
+        <div class="links"><a href="https://github.com/s48401203a/eink-desk-display" target="_blank" rel="noreferrer">仓库</a></div>
+      </section>
+
+      <section class="card" id="proj-GLM-4-5">
+        <div class="card-header">
+          <span class="tag">大模型</span>
+          <h2>GLM-4.5</h2>
+        </div>
+        <p class="desc">面向智能体的开源模型系列。</p>
+        <div class="usage">使用方法：按 requirements.txt 安装依赖；可通过 API 或 HF 使用。</div>
+        <div class="links"><a href="https://github.com/s48401203a/GLM-4.5" target="_blank" rel="noreferrer">仓库</a></div>
+      </section>
+
+      <section class="card" id="proj-jdenticon">
+        <div class="card-header">
+          <span class="tag">前端 / 图标</span>
+          <h2>jdenticon</h2>
+        </div>
+        <p class="desc">浏览器与 Node.js 端生成 identicon 的 JS 库。</p>
+        <div class="usage">使用方法：浏览器用 CDN 脚本或 Node 端 npm 引入。</div>
+        <div class="links"><a href="https://github.com/s48401203a/jdenticon" target="_blank" rel="noreferrer">仓库</a></div>
+      </section>
+
+      <section class="card" id="proj-k3sup">
+        <div class="card-header">
+          <span class="tag">Kubernetes</span>
+          <h2>k3sup</h2>
+        </div>
+        <p class="desc">通过 SSH 一键安装 K3s。</p>
+        <div class="usage">使用方法：安装后运行 k3sup install（远程或 --local）。</div>
+        <div class="links"><a href="https://github.com/s48401203a/k3sup" target="_blank" rel="noreferrer">仓库</a></div>
+      </section>
+
+      <section class="card" id="proj-LunaTranslator">
+        <div class="card-header">
+          <span class="tag">翻译 / OCR</span>
+          <h2>LunaTranslator</h2>
+        </div>
+        <p class="desc">视觉小说翻译器，支持 HOOK/OCR/剪贴板。</p>
+        <div class="usage">使用方法：按官方文档下载、启动与更新。</div>
+        <div class="links"><a href="https://github.com/s48401203a/LunaTranslator" target="_blank" rel="noreferrer">仓库</a> · <a href="https://docs.lunatranslator.org/zh/README.html" target="_blank" rel="noreferrer">文档</a></div>
+      </section>
+
+      <section class="card" id="proj-manga-image-translator">
+        <div class="card-header">
+          <span class="tag">图像翻译</span>
+          <h2>manga-image-translator</h2>
+        </div>
+        <p class="desc">图片/漫画文字一键翻译。</p>
+        <div class="usage">使用方法：pip 安装 requirements 或使用 Docker 镜像运行。</div>
+        <div class="links"><a href="https://github.com/s48401203a/manga-image-translator" target="_blank" rel="noreferrer">仓库</a></div>
+      </section>
+
+      <section class="card" id="proj-mi-gpt">
+        <div class="card-header">
+          <span class="tag">语音助手</span>
+          <h2>mi-gpt</h2>
+        </div>
+        <p class="desc">将小爱音箱接入 ChatGPT/豆包。</p>
+        <div class="usage">使用方法：配置 .env，推荐 Docker 方式启动。</div>
+        <div class="links"><a href="https://github.com/s48401203a/mi-gpt" target="_blank" rel="noreferrer">仓库</a></div>
+      </section>
+
+      <section class="card" id="proj-MiroThinker">
+        <div class="card-header">
+          <span class="tag">研究代理</span>
+          <h2>MiroThinker</h2>
+        </div>
+        <p class="desc">深度研究代理，支持多工具调用。</p>
+        <div class="usage">使用方法：clone 后在 apps/miroflow-agent 运行 uv sync 并配置 .env。</div>
+        <div class="links"><a href="https://github.com/s48401203a/MiroThinker" target="_blank" rel="noreferrer">仓库</a></div>
+      </section>
+
+      <section class="card" id="proj-moodist">
+        <div class="card-header">
+          <span class="tag">专注 / 白噪声</span>
+          <h2>moodist</h2>
+        </div>
+        <p class="desc">专注与放松的环境音网站。</p>
+        <div class="usage">使用方法：npm run dev 开发，npm run build 构建。</div>
+        <div class="links"><a href="https://github.com/s48401203a/moodist" target="_blank" rel="noreferrer">仓库</a> · <a href="https://moodist.app" target="_blank" rel="noreferrer">官网</a></div>
+      </section>
+
+      <section class="card" id="proj-MoonTV">
+        <div class="card-header">
+          <span class="tag">影视聚合</span>
+          <h2>MoonTV</h2>
+        </div>
+        <p class="desc">跨平台影视聚合播放器（Next.js）。</p>
+        <div class="usage">使用方法：Docker 运行设置 PASSWORD；或 Vercel/Cloudflare 部署。</div>
+        <div class="links"><a href="https://github.com/s48401203a/MoonTV" target="_blank" rel="noreferrer">仓库</a></div>
+      </section>
+
+      <section class="card" id="proj-nicegui">
+        <div class="card-header">
+          <span class="tag">Python UI</span>
+          <h2>nicegui</h2>
+        </div>
+        <p class="desc">用 Python 构建 Web UI。</p>
+        <div class="usage">使用方法：pip install nicegui → python3 main.py。</div>
+        <div class="links"><a href="https://github.com/s48401203a/nicegui" target="_blank" rel="noreferrer">仓库</a></div>
+      </section>
+
+      <section class="card" id="proj-optimizer">
+        <div class="card-header">
+          <span class="tag">系统优化</span>
+          <h2>optimizer</h2>
+        </div>
+        <p class="desc">Windows 隐私与性能优化工具。</p>
+        <div class="usage">使用方法：从 Releases 下载 exe 运行，支持命令行参数。</div>
+        <div class="links"><a href="https://github.com/s48401203a/optimizer" target="_blank" rel="noreferrer">仓库</a></div>
+      </section>
+
+      <section class="card" id="proj-primary-task-pwa">
+        <div class="card-header">
+          <span class="tag">PWA</span>
+          <h2>primary-task-pwa</h2>
+        </div>
+        <p class="desc">小学生每日打卡任务表（React + Vite + PWA）。</p>
+        <div class="usage">使用方法：npm install → npm run dev，本地开发；可部署到 Vercel。</div>
+        <div class="links"><a href="https://github.com/s48401203a/primary-task-pwa" target="_blank" rel="noreferrer">仓库</a></div>
+      </section>
+
+      <section class="card" id="proj-Rent-PL">
+        <div class="card-header">
+          <span class="tag">运维脚本</span>
+          <h2>Rent-PL</h2>
+        </div>
+        <p class="desc">端口流量统计/限制脚本（iptables + cron）。</p>
+        <div class="usage">使用方法：安装依赖 → rent.sh set → sudo rent.sh 配置。</div>
+        <div class="links"><a href="https://github.com/s48401203a/Rent-PL" target="_blank" rel="noreferrer">仓库</a></div>
+      </section>
+
+      <section class="card" id="proj-RyTuneX">
+        <div class="card-header">
+          <span class="tag">系统优化</span>
+          <h2>RyTuneX-</h2>
+        </div>
+        <p class="desc">WinUI 3 系统优化工具。</p>
+        <div class="usage">使用方法：winget install rytunex 或下载 release 安装。</div>
+        <div class="links"><a href="https://github.com/s48401203a/RyTuneX-" target="_blank" rel="noreferrer">仓库</a></div>
+      </section>
+
+      <section class="card" id="proj-skid-homework">
+        <div class="card-header">
+          <span class="tag">教育 / AI</span>
+          <h2>skid-homework</h2>
+        </div>
+        <p class="desc">AI 作业解答平台。</p>
+        <div class="usage">使用方法：访问示例站点，需 Gemini 或 OpenAI 兼容 API key。</div>
+        <div class="links"><a href="https://github.com/s48401203a/skid-homework" target="_blank" rel="noreferrer">仓库</a> · <a href="https://skid.996every.day/" target="_blank" rel="noreferrer">示例站点</a></div>
+      </section>
+
+      <section class="card" id="proj-skills">
+        <div class="card-header">
+          <span class="tag">Claude Skills</span>
+          <h2>skills</h2>
+        </div>
+        <p class="desc">Claude Skills 示例与规范仓库。</p>
+        <div class="usage">使用方法：在 Claude Code 中添加 marketplace 并安装技能。</div>
+        <div class="links"><a href="https://github.com/s48401203a/skills" target="_blank" rel="noreferrer">仓库</a></div>
+      </section>
+
+      <section class="card" id="proj-syncthing">
+        <div class="card-header">
+          <span class="tag">文件同步</span>
+          <h2>syncthing</h2>
+        </div>
+        <p class="desc">跨设备持续文件同步工具。</p>
+        <div class="usage">使用方法：按官方文档安装；支持 Docker 部署。</div>
+        <div class="links"><a href="https://github.com/s48401203a/syncthing" target="_blank" rel="noreferrer">仓库</a> · <a href="https://syncthing.net/" target="_blank" rel="noreferrer">官网</a></div>
+      </section>
+
+        </div>
+      </section>
+      <aside class="nav-right">
+        <section class="toc">
+          <h2>本页</h2>
+          <ul>
+<li><a href="#proj-alist">alist</a></li>
+<li><a href="#proj-Auto-GPT">Auto-GPT</a></li>
+<li><a href="#proj-awesome-claude-skills">awesome-claude-skills</a></li>
+<li><a href="#proj-bandwagon-exporter">bandwagon-exporter</a></li>
+<li><a href="#proj-browser-use">browser-use</a></li>
+<li><a href="#proj-Catime">Catime</a></li>
+<li><a href="#proj-ccusage">ccusage</a></li>
+<li><a href="#proj-claude-code-router">claude-code-router</a></li>
+<li><a href="#proj-Claude-Code-Usage-Monitor">Claude-Code-Usage-Monitor</a></li>
+<li><a href="#proj-claudia">claudia</a></li>
+<li><a href="#proj-context7">context7</a></li>
+<li><a href="#proj-docs">docs</a></li>
+<li><a href="#proj-eink-desk-display">eink-desk-display</a></li>
+<li><a href="#proj-GLM-4-5">GLM-4.5</a></li>
+<li><a href="#proj-jdenticon">jdenticon</a></li>
+<li><a href="#proj-k3sup">k3sup</a></li>
+<li><a href="#proj-LunaTranslator">LunaTranslator</a></li>
+<li><a href="#proj-manga-image-translator">manga-image-translator</a></li>
+<li><a href="#proj-mi-gpt">mi-gpt</a></li>
+<li><a href="#proj-MiroThinker">MiroThinker</a></li>
+<li><a href="#proj-moodist">moodist</a></li>
+<li><a href="#proj-MoonTV">MoonTV</a></li>
+<li><a href="#proj-nicegui">nicegui</a></li>
+<li><a href="#proj-optimizer">optimizer</a></li>
+<li><a href="#proj-primary-task-pwa">primary-task-pwa</a></li>
+<li><a href="#proj-Rent-PL">Rent-PL</a></li>
+<li><a href="#proj-RyTuneX">RyTuneX-</a></li>
+<li><a href="#proj-skid-homework">skid-homework</a></li>
+<li><a href="#proj-skills">skills</a></li>
+<li><a href="#proj-syncthing">syncthing</a></li>
+          </ul>
+        </section>
+      </aside>
+    </div>
+  </main>
+  <button id="back-to-top" type="button" aria-label="回到顶部">↑</button>
+  <script>
+    (function () {
+      var search = document.getElementById('project-search');
+      var cards = Array.prototype.slice.call(document.querySelectorAll('.card'));
+      var backToTop = document.getElementById('back-to-top');
+
+      function normalize(value) {
+        return (value || '').toLowerCase();
+      }
+
+      function filterCards() {
+        var q = normalize(search.value);
+        cards.forEach(function (card) {
+          var text = normalize(card.textContent);
+          card.style.display = text.indexOf(q) !== -1 ? '' : 'none';
+        });
+      }
+
+      if (search) {
+        search.addEventListener('input', filterCards);
+      }
+
+      function toggleBackToTop() {
+        if (!backToTop) return;
+        backToTop.style.display = window.scrollY > 300 ? 'block' : 'none';
+      }
+
+      if (backToTop) {
+        backToTop.addEventListener('click', function () {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
+
+      window.addEventListener('scroll', toggleBackToTop);
+      toggleBackToTop();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows BAT文件中文乱码完整解决方案</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+            line-height: 1.8;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #f5f7fa;
+            color: #333;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+
+        h2 {
+            color: #34495e;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 24px;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #555;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .highlight-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .error-box {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .info-box {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+        }
+
+        table th {
+            background: #3498db;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+
+        table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: "Consolas", "Monaco", monospace;
+            font-size: 14px;
+            color: #e83e8c;
+        }
+
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: "Consolas", "Monaco", monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .tag.success { background: #28a745; }
+        .tag.error { background: #dc3545; }
+        .tag.warning { background: #ffc107; color: #333; }
+
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+
+        li {
+            margin: 10px 0;
+        }
+
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<!-- 统一工具栏组件 - AI知识库文档系统 -->
+<style>
+  /* ===== 工具栏CSS变量（与doc-center.html保持一致）===== */
+  :root {
+    /* Linear-inspired Dark Theme Colors */
+    --bg-primary: #0e0e10;
+    --bg-secondary: #121214;
+    --bg-tertiary: #1a1a1e;
+    --bg-elevated: #1f1f23;
+    --bg-hover: #27272a;
+    
+    /* Linear Gradients */
+    --accent-purple: #8b5cf6;
+    --accent-blue: #3b82f6;
+    --accent-cyan: #06b6d4;
+    --accent-pink: #ec4899;
+    --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+    --gradient-glow: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.1) 100%);
+    --gradient-border: linear-gradient(135deg, rgba(99, 102, 241, 0.5), rgba(139, 92, 246, 0.3));
+    
+    /* Text Colors */
+    --text-primary: #fafafa;
+    --text-secondary: #a1a1aa;
+    --text-muted: #71717a;
+    --text-tertiary: #52525b;
+    
+    /* Border & Shadow */
+    --border-subtle: rgba(255, 255, 255, 0.06);
+    --border-default: rgba(255, 255, 255, 0.1);
+    --border-hover: rgba(255, 255, 255, 0.15);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+    --shadow-glow: 0 0 40px rgba(139, 92, 246, 0.15);
+    
+    /* Spacing - Notion Style */
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    
+    /* Toolbar specific */
+    --toolbar-height: 56px;
+    
+    /* Transitions */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Light Theme */
+  [data-theme="light"] {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --bg-tertiary: #f3f4f6;
+    --bg-elevated: #ffffff;
+    --bg-hover: #e5e7eb;
+    
+    --text-primary: #111827;
+    --text-secondary: #4b5563;
+    --text-muted: #9ca3af;
+    --text-tertiary: #d1d5db;
+    
+    --border-subtle: rgba(0, 0, 0, 0.04);
+    --border-default: rgba(0, 0, 0, 0.08);
+    --border-hover: rgba(0, 0, 0, 0.12);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  /* ===== 统一工具栏样式 ===== */
+  #unified-toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--toolbar-height);
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-subtle);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* 为页面内容添加顶部间距 */
+  body.has-unified-toolbar {
+    padding-top: var(--toolbar-height);
+  }
+
+  /* 左侧区域 */
+  .toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* 返回文档中心链接 */
+  .toolbar-back-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .toolbar-back-link:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+  }
+
+  .toolbar-back-link svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  /* 分隔线 */
+  .toolbar-divider {
+    width: 1px;
+    height: 20px;
+    background: var(--border-default);
+    flex-shrink: 0;
+  }
+
+  /* 当前文档标题 */
+  .toolbar-doc-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    max-width: 300px;
+  }
+
+  /* 中间区域 - 搜索框 */
+  .toolbar-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    max-width: 400px;
+  }
+
+  .toolbar-search {
+    position: relative;
+    width: 100%;
+  }
+
+  .toolbar-search-input {
+    width: 100%;
+    padding: 8px 12px 8px 36px;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    font-size: 14px;
+    transition: all var(--transition-fast);
+    font-family: inherit;
+  }
+
+  .toolbar-search-input:focus {
+    outline: none;
+    border-color: var(--accent-purple);
+    background: var(--bg-elevated);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+  }
+
+  .toolbar-search-input::placeholder {
+    color: var(--text-muted);
+  }
+
+  .toolbar-search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+
+  .toolbar-search-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* 右侧区域 */
+  .toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    justify-content: flex-end;
+  }
+
+  /* 工具栏按钮 */
+  .toolbar-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: inherit;
+  }
+
+  .toolbar-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+    border-color: var(--border-hover);
+  }
+
+  .toolbar-btn:active {
+    transform: scale(0.96);
+  }
+
+  .toolbar-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* 图标按钮 */
+  .toolbar-btn-icon {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+  }
+
+  /* 字体大小控制组 */
+  .toolbar-fontsize-group {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    padding: 2px;
+  }
+
+  .toolbar-fontsize-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: inherit;
+  }
+
+  .toolbar-fontsize-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+  }
+
+  .toolbar-fontsize-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .toolbar-fontsize-value {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    height: 28px;
+    padding: 0 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: var(--bg-elevated);
+    border-radius: var(--radius-sm);
+  }
+
+  /* 主题切换按钮 */
+  .toolbar-theme-btn {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .toolbar-theme-btn .icon-sun,
+  .toolbar-theme-btn .icon-moon {
+    transition: transform var(--transition-normal), opacity var(--transition-normal);
+  }
+
+  [data-theme="light"] .toolbar-theme-btn .icon-moon,
+  .toolbar-theme-btn .icon-sun {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+  }
+
+  [data-theme="light"] .toolbar-theme-btn .icon-sun,
+  .toolbar-theme-btn .icon-moon {
+    opacity: 0;
+    transform: rotate(90deg) scale(0.5);
+    position: absolute;
+  }
+
+  /* 响应式适配 */
+  @media (max-width: 768px) {
+    #unified-toolbar {
+      padding: 0 12px;
+    }
+
+    .toolbar-doc-title {
+      max-width: 150px;
+      font-size: 13px;
+    }
+
+    .toolbar-center {
+      max-width: 200px;
+    }
+
+    .toolbar-back-link span {
+      display: none;
+    }
+
+    .toolbar-fontsize-group {
+      display: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .toolbar-center {
+      display: none;
+    }
+  }
+</style>
+
+<!-- 工具栏HTML结构 -->
+<div id="unified-toolbar">
+  <!-- 左侧：返回链接 + 文档标题 -->
+  <div class="toolbar-left">
+    <a href="doc-center.html" class="toolbar-back-link" title="返回文档中心">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      <span>文档中心</span>
+    </a>
+    <div class="toolbar-divider"></div>
+    <div class="toolbar-doc-title" id="toolbar-doc-title">文档标题</div>
+  </div>
+
+  <!-- 中间：搜索框 -->
+  <div class="toolbar-center">
+    <div class="toolbar-search">
+      <div class="toolbar-search-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.35-4.35"/>
+        </svg>
+      </div>
+      <input 
+        type="text" 
+        class="toolbar-search-input" 
+        id="toolbar-search-input"
+        placeholder="搜索文档..."
+        autocomplete="off"
+      />
+    </div>
+  </div>
+
+  <!-- 右侧：主题切换 + 字体大小调节 -->
+  <div class="toolbar-right">
+    <!-- 字体大小控制组 -->
+    <div class="toolbar-fontsize-group">
+      <button class="toolbar-fontsize-btn" id="toolbar-fontsize-minus" title="减小字体">A-</button>
+      <div class="toolbar-fontsize-value" id="toolbar-fontsize-value">100%</div>
+      <button class="toolbar-fontsize-btn" id="toolbar-fontsize-plus" title="增大字体">A+</button>
+    </div>
+
+    <!-- 主题切换按钮 -->
+    <button class="toolbar-btn toolbar-btn-icon toolbar-theme-btn" id="toolbar-theme-toggle" title="切换主题">
+      <!-- 太阳图标（亮色模式） -->
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"/>
+        <line x1="12" y1="1" x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/>
+        <line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+      <!-- 月亮图标（暗色模式） -->
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script>
+  /**
+   * 统一工具栏组件脚本
+   * 功能：字体大小调节、主题切换、搜索跳转
+   * 所有状态保存到localStorage
+   */
+  (function() {
+    'use strict';
+
+    // ===== 配置常量 =====
+    const CONFIG = {
+      // localStorage键名
+      STORAGE_KEYS: {
+        FONT_SIZE: 'ai-kb-font-size',
+        THEME: 'ai-kb-theme'
+      },
+      // 字体大小设置
+      FONT_SIZE: {
+        BASE: 14,           // 基准字体大小(px)
+        MIN_PERCENT: 80,    // 最小百分比
+        MAX_PERCENT: 150,   // 最大百分比
+        STEP: 10,           // 每次调节步长(%)
+        DEFAULT: 100        // 默认百分比
+      },
+      // 主题设置
+      THEME: {
+        DARK: 'dark',
+        LIGHT: 'light',
+        DEFAULT: 'dark'
+      },
+      // 文档中心路径
+      DOC_CENTER_PATH: 'doc-center.html'
+    };
+
+    // ===== 工具函数 =====
+    
+    /**
+     * 获取localStorage值
+     */
+    function getStorage(key, defaultValue) {
+      try {
+        const value = localStorage.getItem(key);
+        return value !== null ? value : defaultValue;
+      } catch (e) {
+        return defaultValue;
+      }
+    }
+
+    /**
+     * 设置localStorage值
+     */
+    function setStorage(key, value) {
+      try {
+        localStorage.setItem(key, value);
+      } catch (e) {
+        console.warn('无法保存到localStorage:', e);
+      }
+    }
+
+    /**
+     * 计算并应用字体大小
+     */
+    function applyFontSize(percent) {
+      // 限制在有效范围内
+      percent = Math.max(CONFIG.FONT_SIZE.MIN_PERCENT, 
+               Math.min(CONFIG.FONT_SIZE.MAX_PERCENT, percent));
+      
+      // 计算实际字体大小
+      const fontSize = (CONFIG.FONT_SIZE.BASE * percent / 100).toFixed(2);
+      
+      // 应用到html元素
+      document.documentElement.style.fontSize = fontSize + 'px';
+      
+      // 更新显示
+      updateFontSizeDisplay(percent);
+      
+      // 保存到localStorage
+      setStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, percent.toString());
+      
+      return percent;
+    }
+
+    /**
+     * 更新字体大小显示
+     */
+    function updateFontSizeDisplay(percent) {
+      const valueEl = document.getElementById('toolbar-fontsize-value');
+      const minusBtn = document.getElementById('toolbar-fontsize-minus');
+      const plusBtn = document.getElementById('toolbar-fontsize-plus');
+      
+      if (valueEl) {
+        valueEl.textContent = percent + '%';
+      }
+      
+      // 更新按钮禁用状态
+      if (minusBtn) {
+        minusBtn.disabled = percent <= CONFIG.FONT_SIZE.MIN_PERCENT;
+      }
+      if (plusBtn) {
+        plusBtn.disabled = percent >= CONFIG.FONT_SIZE.MAX_PERCENT;
+      }
+    }
+
+    /**
+     * 应用主题
+     */
+    function applyTheme(theme) {
+      // 验证主题值
+      if (theme !== CONFIG.THEME.DARK && theme !== CONFIG.THEME.LIGHT) {
+        theme = CONFIG.THEME.DEFAULT;
+      }
+      
+      // 设置data-theme属性
+      document.documentElement.setAttribute('data-theme', theme);
+      
+      // 保存到localStorage
+      setStorage(CONFIG.STORAGE_KEYS.THEME, theme);
+      
+      return theme;
+    }
+
+    /**
+     * 切换主题
+     */
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme') || CONFIG.THEME.DEFAULT;
+      const newTheme = currentTheme === CONFIG.THEME.DARK ? CONFIG.THEME.LIGHT : CONFIG.THEME.DARK;
+      applyTheme(newTheme);
+    }
+
+    /**
+     * 执行搜索
+     */
+    function performSearch(query) {
+      if (!query || !query.trim()) return;
+      
+      // 构建跳转URL
+      const currentPath = window.location.pathname;
+      const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+      const targetUrl = basePath + CONFIG.DOC_CENTER_PATH + '#search=' + encodeURIComponent(query.trim());
+      
+      // 跳转到文档中心
+      window.location.href = targetUrl;
+    }
+
+    /**
+     * 设置文档标题
+     */
+    function setDocumentTitle(title) {
+      const titleEl = document.getElementById('toolbar-doc-title');
+      if (titleEl && title) {
+        titleEl.textContent = title;
+      }
+    }
+
+    /**
+     * 从页面自动获取文档标题
+     */
+    function autoDetectDocumentTitle() {
+      // 优先级：1. h1标题 2. title标签 3. 文件名
+      let title = '';
+      
+      // 尝试获取h1标题
+      const h1 = document.querySelector('h1');
+      if (h1 && h1.textContent.trim()) {
+        title = h1.textContent.trim();
+      } else {
+        // 尝试从title标签获取
+        const titleTag = document.querySelector('title');
+        if (titleTag && titleTag.textContent.trim()) {
+          title = titleTag.textContent.trim();
+          // 移除常见的后缀
+          title = title.replace(/[-_].*?(?:知识库|文档|AI)/i, '').trim();
+        } else {
+          // 从文件名获取
+          const path = window.location.pathname;
+          const filename = path.substring(path.lastIndexOf('/') + 1);
+          title = filename.replace(/\.html?$/i, '').replace(/[_-]/g, ' ');
+        }
+      }
+      
+      setDocumentTitle(title);
+    }
+
+    // ===== 事件处理 =====
+
+    /**
+     * 初始化事件监听
+     */
+    function initEventListeners() {
+      // 字体大小减小按钮
+      const minusBtn = document.getElementById('toolbar-fontsize-minus');
+      if (minusBtn) {
+        minusBtn.addEventListener('click', function() {
+          const currentPercent = parseInt(getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString()));
+          applyFontSize(currentPercent - CONFIG.FONT_SIZE.STEP);
+        });
+      }
+
+      // 字体大小增大按钮
+      const plusBtn = document.getElementById('toolbar-fontsize-plus');
+      if (plusBtn) {
+        plusBtn.addEventListener('click', function() {
+          const currentPercent = parseInt(getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString()));
+          applyFontSize(currentPercent + CONFIG.FONT_SIZE.STEP);
+        });
+      }
+
+      // 主题切换按钮
+      const themeBtn = document.getElementById('toolbar-theme-toggle');
+      if (themeBtn) {
+        themeBtn.addEventListener('click', toggleTheme);
+      }
+
+      // 搜索框
+      const searchInput = document.getElementById('toolbar-search-input');
+      if (searchInput) {
+        // 回车键搜索
+        searchInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            performSearch(this.value);
+          }
+        });
+      }
+    }
+
+    /**
+     * 从URL参数初始化搜索框
+     */
+    function initSearchFromURL() {
+      const hash = window.location.hash;
+      if (hash && hash.startsWith('#search=')) {
+        const query = decodeURIComponent(hash.substring(8));
+        const searchInput = document.getElementById('toolbar-search-input');
+        if (searchInput) {
+          searchInput.value = query;
+        }
+      }
+    }
+
+    // ===== 初始化 =====
+
+    /**
+     * 主初始化函数
+     */
+    function init() {
+      // 1. 恢复保存的字体大小
+      const savedFontSize = getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString());
+      applyFontSize(parseInt(savedFontSize));
+
+      // 2. 恢复保存的主题
+      const savedTheme = getStorage(CONFIG.STORAGE_KEYS.THEME, CONFIG.THEME.DEFAULT);
+      applyTheme(savedTheme);
+
+      // 3. 为body添加工具栏标识类
+      document.body.classList.add('has-unified-toolbar');
+
+      // 4. 自动检测文档标题
+      autoDetectDocumentTitle();
+
+      // 5. 初始化事件监听
+      initEventListeners();
+
+      // 6. 从URL初始化搜索框
+      initSearchFromURL();
+    }
+
+    // ===== 公共API =====
+
+    // 将工具栏API暴露到全局命名空间
+    window.UnifiedToolbar = {
+      // 设置文档标题
+      setTitle: setDocumentTitle,
+      
+      // 获取/设置字体大小
+      getFontSize: function() {
+        return parseInt(getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString()));
+      },
+      setFontSize: applyFontSize,
+      
+      // 获取/设置主题
+      getTheme: function() {
+        return document.documentElement.getAttribute('data-theme') || CONFIG.THEME.DEFAULT;
+      },
+      setTheme: applyTheme,
+      toggleTheme: toggleTheme,
+      
+      // 执行搜索
+      search: performSearch,
+      
+      // 配置常量
+      config: CONFIG
+    };
+
+    // 启动初始化
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+</script>
+
+    <div class="container">
+        <h1>🔧 Windows BAT文件中文乱码完整解决方案</h1>
+
+        <div class="info-box">
+            <strong>📅 创建时间：</strong> 2024年12月<br>
+            <strong>🎯 适用场景：</strong> Windows批处理脚本中文显示乱码问题<br>
+            <strong>✅ 解决率：</strong> 100%
+        </div>
+
+        <h2>📋 问题现象</h2>
+        <div class="error-box">
+            <h3>典型乱码表现</h3>
+            <ul>
+                <li>菜单选项显示为乱码：<code>'��提醒（明天过期）' is not recognized...</code></li>
+                <li>中文注释无法识别</li>
+                <li>变量名包含中文导致命令失败</li>
+                <li>用户输入中文后脚本崩溃</li>
+            </ul>
+        </div>
+
+        <h2>🔍 根本原因</h2>
+
+        <h3>编码不匹配导致的问题</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>环节</th>
+                    <th>使用编码</th>
+                    <th>结果</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>BAT文件保存</strong></td>
+                    <td>UTF-8</td>
+                    <td rowspan="2" style="background: #f8d7da; color: #721c24; font-weight: bold;">❌ 编码不匹配 → 乱码</td>
+                </tr>
+                <tr>
+                    <td><strong>CMD解析器读取</strong></td>
+                    <td>GBK (Windows默认)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="highlight-box">
+            <strong>⚠️ 关键误区：</strong><br>
+            很多人以为在脚本开头加 <code>chcp 65001</code> 就能解决问题，但实际上：
+            <ul>
+                <li><code>chcp 65001</code> 只改变<strong>控制台输出编码</strong>（显示用）</li>
+                <li><strong>不影响</strong>CMD解析BAT文件时使用的编码</li>
+                <li>如果文件是UTF-8，解析器仍然用GBK读取 → 依然乱码！</li>
+            </ul>
+        </div>
+
+        <h2>✅ 完整解决方案</h2>
+
+        <h3>方案对比</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>方案</th>
+                    <th>适用场景</th>
+                    <th>优点</th>
+                    <th>缺点</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="tag success">推荐</span> <strong>GBK编码</strong></td>
+                    <td>所有BAT文件</td>
+                    <td>✅ 最兼容<br>✅ CMD原生支持<br>✅ 无需chcp</td>
+                    <td>❌ 需要工具生成</td>
+                </tr>
+                <tr>
+                    <td>UTF-8 + chcp 65001</td>
+                    <td>简单脚本</td>
+                    <td>✅ 现代标准</td>
+                    <td>❌ 仅影响输出<br>❌ 部分命令不兼容</td>
+                </tr>
+                <tr>
+                    <td>Base64编码</td>
+                    <td>PowerShell脚本</td>
+                    <td>✅ 完全避免编码问题</td>
+                    <td>❌ BAT不直接支持</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>推荐方案：使用Python生成GBK编码的BAT</h3>
+
+        <div class="success-box">
+            <strong>✨ 最佳实践</strong>
+            <pre>python
+# 创建GBK编码的BAT文件
+content = """@echo off
+chcp 936 >nul
+title 密码提醒测试工具 v5.0
+echo 请选择操作:
+echo [1] 选项1
+echo [2] 选项2
+pause
+"""
+
+# 关键：使用GBK编码写入
+with open('test.bat', 'w', encoding='gbk') as f:
+    f.write(content)
+
+print('✅ 已生成GBK编码的BAT文件')
+</pre>
+        </div>
+
+        <h3>为什么必须用GBK？</h3>
+        <div class="info-box">
+            <strong>Windows CMD的工作原理：</strong>
+            <ol>
+                <li><strong>读取阶段</strong>：CMD用系统默认代码页（GBK）读取BAT文件内容</li>
+                <li><strong>解析阶段</strong>：将读取的字节流按GBK解释为字符</li>
+                <li><strong>执行阶段</strong>：执行解析后的命令</li>
+            </ol>
+            <p style="margin-top: 15px;">
+                如果文件是UTF-8编码，读取阶段就已经错误，后续无法挽回！<br>
+                <code>chcp 65001</code> 在第3阶段才生效，为时已晚。
+            </p>
+        </div>
+
+        <h2>🛠️ 实用工具</h2>
+
+        <h3>1. BAT编码检查转换工具</h3>
+        <div class="highlight-box">
+            <strong>工具位置：</strong> <code>D:\AI\password\BAT编码检查转换工具.py</code><br><br>
+            <strong>功能：</strong>
+            <ul>
+                <li>🔍 自动扫描所有BAT文件</li>
+                <li>📊 检测每个文件的编码（UTF-8/GBK/其他）</li>
+                <li>⚠️ 标记需要转换的文件</li>
+                <li>🔄 批量转换UTF-8→GBK</li>
+                <li>💾 自动备份原文件（.utf8.bak）</li>
+            </ul>
+            <br>
+            <strong>使用方法：</strong>
+            <pre>python D:\AI\password\BAT编码检查转换工具.py</pre>
+        </div>
+
+        <h3>2. 手动转换方法（记事本）</h3>
+        <div class="info-box">
+            <strong>步骤：</strong>
+            <ol>
+                <li>用记事本打开BAT文件</li>
+                <li>点击"文件" → "另存为"</li>
+                <li>编码选择：<strong>ANSI</strong>（即GBK）</li>
+                <li>保存（覆盖原文件）</li>
+            </ol>
+            <p style="color: #dc3545; margin-top: 10px;">
+                ⚠️ 注意：记事本的"UTF-8"选项会添加BOM，导致其他问题，必须选择ANSI！
+            </p>
+        </div>
+
+        <h2>📝 不同文件类型的编码建议</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>文件类型</th>
+                    <th>推荐编码</th>
+                    <th>原因</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>.bat</code> <code>.cmd</code></td>
+                    <td><span class="tag success">GBK</span></td>
+                    <td>CMD默认GBK，100%兼容</td>
+                </tr>
+                <tr>
+                    <td><code>.ps1</code></td>
+                    <td><span class="tag">UTF-8 无BOM</span></td>
+                    <td>PowerShell原生UTF-8支持</td>
+                </tr>
+                <tr>
+                    <td><code>.txt</code> <code>.md</code></td>
+                    <td><span class="tag">UTF-8</span></td>
+                    <td>现代标准，跨平台兼容</td>
+                </tr>
+                <tr>
+                    <td><code>.py</code></td>
+                    <td><span class="tag">UTF-8</span></td>
+                    <td>Python 3默认UTF-8</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>🔧 Base64方案（高级）</h2>
+
+        <h3>适用场景：PowerShell脚本中的中文</h3>
+        <div class="info-box">
+            <p>当需要在BAT中嵌入PowerShell脚本且包含中文时，可以用Base64编码避免编码问题：</p>
+            <pre>python
+import base64
+
+# 1. 中文内容编码
+chinese_text = "密码已过期"
+base64_text = base64.b64encode(chinese_text.encode('utf-8')).decode()
+print(f"Base64: {base64_text}")
+# 输出: 5a+G56CB5bey6L+H5pyf
+
+# 2. 在BAT中调用PowerShell解码
+bat_content = f"""@echo off
+powershell -Command "$t=[System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('{base64_text}')); Write-Host $t"
+pause
+"""
+
+# 3. 生成GBK编码的BAT
+with open('test.bat', 'w', encoding='gbk') as f:
+    f.write(bat_content)
+</pre>
+        </div>
+
+        <h3>为什么不直接用Base64处理BAT？</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>场景</th>
+                    <th>Base64方案</th>
+                    <th>原因</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>PowerShell脚本</td>
+                    <td><span class="tag success">✅ 适用</span></td>
+                    <td>PowerShell内置Base64解码</td>
+                </tr>
+                <tr>
+                    <td>BAT文件内容</td>
+                    <td><span class="tag error">❌ 不适用</span></td>
+                    <td>BAT无法直接解码Base64</td>
+                </tr>
+                <tr>
+                    <td>BAT调用PowerShell</td>
+                    <td><span class="tag warning">⚠️ 可间接用</span></td>
+                    <td>PowerShell解码后再用</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>📚 实际案例</h2>
+
+        <h3>案例：密码提醒测试工具</h3>
+        <div class="success-box">
+            <strong>问题：</strong> 菜单选项显示乱码，用户无法选择<br><br>
+            <strong>原因分析：</strong>
+            <ul>
+                <li>使用Write工具创建BAT → 默认UTF-8编码</li>
+                <li>Windows CMD用GBK解析 → 中文乱码</li>
+                <li>乱码导致命令无法识别 → 脚本失败</li>
+            </ul>
+            <br>
+            <strong>解决方案：</strong>
+            <pre>python
+# 使用Python重新生成，指定GBK编码
+content = '''@echo off
+chcp 936 >nul
+echo [1] 选项1
+echo [2] 选项2
+'''
+
+with open('测试工具.bat', 'w', encoding='gbk') as f:
+    f.write(content)
+</pre>
+            <strong>结果：</strong> ✅ 中文完美显示，功能正常
+        </div>
+
+        <h2>❓ 常见问题</h2>
+
+        <h3>Q1: 为什么VSCode/Notepad++显示正常，运行就乱码？</h3>
+        <div class="info-box">
+            <strong>A:</strong> 编辑器会自动检测并用正确编码显示文件内容，所以看起来正常。但CMD不会自动检测，永远用GBK读取，所以UTF-8文件运行就乱码。
+        </div>
+
+        <h3>Q2: chcp 65001到底有什么用？</h3>
+        <div class="info-box">
+            <strong>A:</strong> <code>chcp 65001</code>只改变<strong>输出编码</strong>，影响<code>echo</code>等命令的显示。对BAT文件<strong>解析阶段</strong>无效。<br><br>
+            <strong>有用的场景：</strong>
+            <ul>
+                <li>BAT文件是GBK编码，但需要输出UTF-8内容到文件</li>
+                <li>PowerShell/Python输出中文到控制台</li>
+            </ul>
+        </div>
+
+        <h3>Q3: 能用UTF-8 BOM吗？</h3>
+        <div class="error-box">
+            <strong>A:</strong> ❌ 不推荐！UTF-8 BOM会导致：
+            <ul>
+                <li>BAT第一行命令可能失效（BOM被当作命令的一部分）</li>
+                <li>部分Windows版本不支持</li>
+                <li>可能产生其他不可预测的问题</li>
+            </ul>
+            <strong>建议：</strong> 统一使用GBK编码
+        </div>
+
+        <h3>Q4: 转换工具会破坏我的原始文件吗？</h3>
+        <div class="success-box">
+            <strong>A:</strong> 不会！转换前会自动备份：
+            <ul>
+                <li>原文件：<code>test.bat</code></li>
+                <li>备份文件：<code>test.bat.utf8.bak</code></li>
+            </ul>
+            如果转换出问题，可以恢复备份文件。
+        </div>
+
+        <h2>📖 最佳实践清单</h2>
+
+        <div class="success-box">
+            <h3>✅ DO（推荐）</h3>
+            <ul>
+                <li>所有BAT文件用<strong>GBK编码</strong>保存</li>
+                <li>使用Python等工具生成GBK编码的BAT</li>
+                <li>PowerShell脚本用<strong>UTF-8无BOM</strong></li>
+                <li>PowerShell中的中文用<strong>Base64编码</strong></li>
+                <li>在BAT开头加<code>chcp 936 >nul</code>（确保输出正确）</li>
+            </ul>
+        </div>
+
+        <div class="error-box">
+            <h3>❌ DON'T（避免）</h3>
+            <ul>
+                <li>用记事本另存为UTF-8编码的BAT</li>
+                <li>依赖<code>chcp 65001</code>解决BAT乱码</li>
+                <li>在BAT中直接写中文变量名</li>
+                <li>使用UTF-8 BOM编码</li>
+                <li>混用不同编码的脚本文件</li>
+            </ul>
+        </div>
+
+        <h2>🔗 相关资源</h2>
+
+        <ul>
+            <li>📂 <strong>BAT编码检查转换工具：</strong> <code>D:\AI\password\BAT编码检查转换工具.py</code></li>
+            <li>📄 <strong>IT技术文档：</strong> <code>D:\AI\password\密码策略管理系统_IT技术文档_v5.0.md</code></li>
+            <li>🔧 <strong>测试工具（已修复）：</strong> <code>D:\AI\password\测试提醒显示工具.bat</code></li>
+        </ul>
+
+        <div class="footer">
+            <p>📅 文档创建时间：2024年12月</p>
+            <p>🔄 最后更新：2024年12月</p>
+            <p>💡 知识库位置：D:\AI\知识库\</p>
+        </div>
+    </div>
+</body>
+</html>

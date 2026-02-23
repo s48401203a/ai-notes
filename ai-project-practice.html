@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>项目实战经验 - AI学习知识库</title>
+  <meta name="description" content="4个完整AI协作项目案例：Telegram监控机器人、OKR周报系统、密码策略管理器、年终汇报自动化" />
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg-secondary: #f6f8fc;
+      --panel: #ffffff;
+      --muted: #5d6b8a;
+      --text: #0e1b31;
+      --text-secondary: #475569;
+      --accent: #2b6bff;
+      --accent-2: #0f9d58;
+      --accent-hover: #1e54d9;
+      --border: #e6ecf5;
+      --border-light: #f1f5f9;
+      --chip: #eef3fb;
+      --warn: #b47b00;
+      --danger: #c92a2a;
+      --good: #1f8d52;
+      --code-bg: #0f1530;
+      --code-text: #e7eef9;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --shadow-lg: 0 10px 26px rgba(0,0,0,0.1);
+      --navbar-height: 60px;
+      --sidebar-width: 260px;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0b1020;
+      --bg-secondary: #0f1530;
+      --panel: #121a2b;
+      --muted: #8fa3c7;
+      --text: #e7eef9;
+      --text-secondary: #94a3b8;
+      --accent: #6aa6ff;
+      --accent-2: #75e0a3;
+      --accent-hover: #85b3ff;
+      --border: #27324a;
+      --border-light: #1e2840;
+      --chip: #1a2540;
+      --warn: #f6c244;
+      --danger: #ff6b6b;
+      --good: #49d289;
+      --code-bg: #0c132a;
+      --code-text: #f4f7ff;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.2);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.25);
+      --shadow-lg: 0 10px 26px rgba(0,0,0,0.3);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; height: 100%; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Inter, "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--text);
+      background: var(--bg);
+      height: 100%;
+    }
+    a { color: var(--accent); text-decoration: none; transition: all 0.2s ease; }
+    a:hover { color: var(--accent-hover); }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.9em; }
+
+    .app-container { display: flex; flex-direction: column; height: 100vh; }
+
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; height: var(--navbar-height);
+      background: var(--panel); border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; padding: 0 24px; gap: 20px;
+      z-index: 1000; box-shadow: var(--shadow-sm);
+    }
+    .navbar-brand { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 600; color: var(--text); }
+    .navbar-logo { width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); }
+    .navbar-search { flex: 1; max-width: 500px; position: relative; }
+    .navbar-search input {
+      width: 100%; padding: 9px 16px 9px 40px; border: 1px solid var(--border);
+      border-radius: 10px; background: var(--bg-secondary); color: var(--text); font-size: 14px;
+    }
+    .navbar-search input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(43, 107, 255, 0.1); }
+    .navbar-actions { display: flex; gap: 12px; align-items: center; }
+    .navbar-btn {
+      padding: 8px 14px; border: 1px solid var(--border); border-radius: 8px;
+      background: var(--chip); color: var(--text); cursor: pointer; font-size: 14px;
+    }
+    .navbar-btn:hover { background: var(--bg-secondary); }
+    .mobile-toggle { display: none; padding: 8px; background: none; border: none; color: var(--text); cursor: pointer; font-size: 24px; }
+
+    .main-wrapper { margin-top: var(--navbar-height); display: flex; min-height: calc(100vh - var(--navbar-height)); }
+
+    .sidebar {
+      width: var(--sidebar-width); background: var(--panel); border-right: 1px solid var(--border);
+      overflow-y: auto; flex-shrink: 0; position: sticky; top: var(--navbar-height);
+      height: calc(100vh - var(--navbar-height));
+    }
+    .sidebar-content { padding: 20px 16px; }
+    .nav-group { margin-bottom: 24px; }
+    .nav-group-title {
+      padding: 8px 12px; font-size: 11px; font-weight: 700; letter-spacing: 0.8px;
+      text-transform: uppercase; color: var(--muted); cursor: pointer; border-radius: 6px;
+    }
+    .nav-group-title:hover { background: var(--chip); }
+    .nav-links { display: flex; flex-direction: column; gap: 2px; margin-top: 6px; }
+    .nav-link {
+      padding: 8px 12px; border-radius: 8px; color: var(--text-secondary);
+      font-size: 14px; display: block; border-left: 3px solid transparent;
+    }
+    .nav-link:hover { background: var(--chip); color: var(--text); border-left-color: var(--accent); }
+    .nav-link.active { background: var(--chip); color: var(--accent); font-weight: 500; border-left-color: var(--accent); }
+
+    .content { flex: 1; overflow-y: auto; background: var(--bg); padding: 32px 48px; max-width: 1000px; }
+
+    .breadcrumb { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; font-size: 13px; color: var(--muted); }
+    .breadcrumb a { color: var(--muted); }
+    .breadcrumb a:hover { color: var(--accent); }
+
+    .card {
+      background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+      padding: 24px; margin-bottom: 24px; box-shadow: var(--shadow-sm);
+    }
+    .card:hover { box-shadow: var(--shadow-md); }
+
+    h2 { margin: 0 0 16px 0; font-size: 24px; font-weight: 600; color: var(--text); padding-top: 8px; }
+    h3 { margin: 24px 0 12px 0; font-size: 18px; font-weight: 600; color: var(--text); }
+    h4 { margin: 20px 0 10px 0; font-size: 16px; font-weight: 600; color: var(--text); }
+    p { margin: 12px 0; color: var(--text-secondary); }
+    ul, ol { margin: 12px 0; padding-left: 24px; color: var(--text-secondary); }
+    li { margin: 8px 0; }
+
+    pre {
+      margin: 14px 0; background: var(--code-bg); border: 1px solid var(--border-light);
+      border-radius: 10px; overflow-x: auto; padding: 16px; position: relative;
+    }
+    pre code { color: var(--code-text); font-size: 13px; line-height: 1.6; }
+
+    .table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+    .table th, .table td { border: 1px solid var(--border); padding: 12px; text-align: left; }
+    .table th { background: var(--chip); font-weight: 600; color: var(--text); }
+    .table tr:hover { background: var(--bg-secondary); }
+
+    .alert {
+      padding: 14px 16px; border-radius: 10px; border-left: 4px solid var(--border);
+      background: var(--chip); margin: 16px 0; font-size: 14px;
+    }
+    .alert strong { display: block; margin-bottom: 6px; font-weight: 600; }
+    .alert.primary { background: rgba(106, 166, 255, 0.12); border-left-color: var(--accent); }
+    .alert.info { background: rgba(117, 224, 163, 0.12); border-left-color: var(--accent-2); }
+    .alert.warn { background: rgba(246, 194, 68, 0.15); border-left-color: var(--warn); }
+
+    .chip { display: inline-block; background: var(--chip); border: 1px solid var(--border); color: var(--text); padding: 4px 10px; border-radius: 6px; font-size: 13px; }
+    .tag-new { display: inline-block; background: linear-gradient(135deg, #10b981, #06b6d4); color: #fff; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-left: 8px; }
+
+    .project-card {
+      background: var(--bg-secondary); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px; margin-bottom: 16px;
+    }
+    .project-card:hover { border-color: var(--accent); }
+    .project-header { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+    .project-icon {
+      width: 48px; height: 48px; border-radius: 12px; display: flex;
+      align-items: center; justify-content: center; font-size: 24px;
+    }
+    .project-icon.blue { background: rgba(43, 107, 255, 0.15); }
+    .project-icon.green { background: rgba(15, 157, 88, 0.15); }
+    .project-icon.purple { background: rgba(139, 92, 246, 0.15); }
+    .project-icon.orange { background: rgba(249, 115, 22, 0.15); }
+    .project-info h4 { margin: 0; font-size: 18px; }
+    .project-info p { margin: 4px 0 0; font-size: 13px; color: var(--muted); }
+
+    .tech-stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .tech-tag { font-size: 12px; padding: 4px 10px; border-radius: 20px; background: var(--chip); color: var(--text-secondary); border: 1px solid var(--border); }
+    .tech-tag.highlight { background: rgba(16, 185, 129, 0.15); color: var(--good); border-color: transparent; }
+
+    .feature-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px; margin: 16px 0;
+    }
+    .feature-item {
+      background: var(--bg-secondary); border: 1px solid var(--border);
+      border-radius: 10px; padding: 16px;
+    }
+    .feature-item h4 { margin: 0 0 8px 0; font-size: 15px; }
+    .feature-item p { margin: 0; font-size: 13px; }
+
+    .flow-diagram {
+      background: var(--bg-secondary); border: 1px solid var(--border);
+      border-radius: 10px; padding: 20px; margin: 16px 0; text-align: center;
+    }
+    .flow-step {
+      display: inline-block; background: var(--accent); color: #fff;
+      padding: 8px 16px; border-radius: 6px; margin: 8px;
+    }
+    .flow-arrow { color: var(--accent); font-size: 20px; display: block; margin: 8px 0; }
+
+    .timeline { position: relative; padding-left: 30px; margin: 20px 0; }
+    .timeline::before {
+      content: ''; position: absolute; left: 10px; top: 0; bottom: 0;
+      width: 2px; background: linear-gradient(to bottom, var(--accent), var(--accent-2));
+    }
+    .timeline-item {
+      position: relative; margin-bottom: 20px; padding: 16px;
+      background: var(--bg-secondary); border-radius: 10px; border: 1px solid var(--border);
+    }
+    .timeline-item::before {
+      content: ''; position: absolute; left: -24px; top: 20px;
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--accent); border: 2px solid var(--panel);
+    }
+    .timeline-item h4 { margin: 0 0 8px 0; color: var(--accent); }
+    .timeline-item p { margin: 0; font-size: 14px; }
+
+    .lesson-box {
+      background: var(--bg-secondary); border: 1px solid var(--border);
+      border-radius: 10px; padding: 16px; margin: 16px 0;
+    }
+    .lesson-box h4 { margin: 0 0 8px 0; }
+    .lesson-box ul { margin: 0; padding-left: 20px; }
+
+    .foot { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; text-align: center; }
+
+    @media (max-width: 768px) {
+      .sidebar { position: fixed; left: -100%; top: var(--navbar-height); width: 80%; max-width: 300px; z-index: 999; transition: left 0.3s ease; }
+      .sidebar.active { left: 0; }
+      .content { padding: 24px 20px; }
+      .mobile-toggle { display: block; }
+      h2 { font-size: 20px; }
+      .feature-grid { grid-template-columns: 1fr; }
+    }
+
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+  </style>
+</head>
+<body data-theme="dark">
+  <div class="app-container">
+    <nav class="navbar">
+      <button class="mobile-toggle" id="mobileToggle">&#9776;</button>
+      <div class="navbar-brand">
+        <div class="navbar-logo"></div>
+        <span>项目实战</span>
+      </div>
+      <div class="navbar-search">
+        <input type="text" id="searchInput" placeholder="搜索... (Ctrl+K)" />
+      </div>
+      <div class="navbar-actions">
+        <a href="index.html" class="navbar-btn">&#127968; 首页</a>
+        <button class="navbar-btn" id="toggleTheme"><span id="themeIcon">&#9728;&#65039;</span></button>
+      </div>
+    </nav>
+
+    <div class="main-wrapper">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-content">
+          <nav>
+            <div class="nav-group">
+              <div class="nav-group-title">概览</div>
+              <div class="nav-links">
+                <a href="#overview" class="nav-link">项目概览</a>
+                <a href="#methodology" class="nav-link">方法论总结</a>
+              </div>
+            </div>
+            <div class="nav-group">
+              <div class="nav-group-title">案例一</div>
+              <div class="nav-links">
+                <a href="#telegram-bot" class="nav-link">Telegram监控机器人</a>
+                <a href="#telegram-arch" class="nav-link">系统架构</a>
+                <a href="#telegram-lessons" class="nav-link">经验总结</a>
+              </div>
+            </div>
+            <div class="nav-group">
+              <div class="nav-group-title">案例二</div>
+              <div class="nav-links">
+                <a href="#okr-system" class="nav-link">OKR周报系统</a>
+                <a href="#okr-design" class="nav-link">设计思路</a>
+                <a href="#okr-lessons" class="nav-link">经验总结</a>
+              </div>
+            </div>
+            <div class="nav-group">
+              <div class="nav-group-title">案例三</div>
+              <div class="nav-links">
+                <a href="#password-manager" class="nav-link">密码策略管理器</a>
+                <a href="#password-features" class="nav-link">功能特性</a>
+                <a href="#password-lessons" class="nav-link">经验总结</a>
+              </div>
+            </div>
+            <div class="nav-group">
+              <div class="nav-group-title">案例四</div>
+              <div class="nav-links">
+                <a href="#annual-report" class="nav-link">年终汇报自动化</a>
+                <a href="#annual-workflow" class="nav-link">工作流程</a>
+                <a href="#annual-lessons" class="nav-link">经验总结</a>
+              </div>
+            </div>
+            <div class="nav-group">
+              <div class="nav-group-title">总结</div>
+              <div class="nav-links">
+                <a href="#best-practices" class="nav-link">最佳实践</a>
+                <a href="#templates" class="nav-link">项目模板</a>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </aside>
+
+      <main class="content" id="mainContent">
+        <div class="breadcrumb">
+          <a href="index.html">首页</a>
+          <span>&#8250;</span>
+          <span>项目实战经验</span>
+        </div>
+
+        <!-- 项目概览 -->
+        <section id="overview" class="card">
+          <h2>&#128640; 项目概览</h2>
+          <p>本文档收录了4个完整的AI协作项目案例，涵盖运维监控、办公自动化、系统工具开发等场景，展示了AI在实际项目中的应用方式和协作技巧。</p>
+
+          <h3>项目列表</h3>
+          <div class="feature-grid">
+            <div class="project-card">
+              <div class="project-header">
+                <div class="project-icon blue">&#128225;</div>
+                <div class="project-info">
+                  <h4>Telegram VPS监控机器人</h4>
+                  <p>纯Bash实现的VPS流量、网速、延迟监控</p>
+                </div>
+              </div>
+              <div class="tech-stack">
+                <span class="tech-tag highlight">Bash</span>
+                <span class="tech-tag">Telegram Bot API</span>
+                <span class="tech-tag">Systemd</span>
+                <span class="tech-tag">Cron</span>
+              </div>
+            </div>
+
+            <div class="project-card">
+              <div class="project-header">
+                <div class="project-icon green">&#128202;</div>
+                <div class="project-info">
+                  <h4>OKR周报自动化系统</h4>
+                  <p>多周数据管理与展示，支持完整性检查</p>
+                </div>
+              </div>
+              <div class="tech-stack">
+                <span class="tech-tag highlight">HTML/JS</span>
+                <span class="tech-tag">单文件架构</span>
+                <span class="tech-tag">数据校验</span>
+              </div>
+            </div>
+
+            <div class="project-card">
+              <div class="project-header">
+                <div class="project-icon purple">&#128274;</div>
+                <div class="project-info">
+                  <h4>Password Policy Manager</h4>
+                  <p>企业密码策略管理，火绒静默分发</p>
+                </div>
+              </div>
+              <div class="tech-stack">
+                <span class="tech-tag highlight">PowerShell</span>
+                <span class="tech-tag">Batch</span>
+                <span class="tech-tag">Task Scheduler</span>
+                <span class="tech-tag">Toast API</span>
+              </div>
+            </div>
+
+            <div class="project-card">
+              <div class="project-header">
+                <div class="project-icon orange">&#128196;</div>
+                <div class="project-info">
+                  <h4>年终汇报自动化</h4>
+                  <p>从周报/Excel提取数据，生成汇报文档</p>
+                </div>
+              </div>
+              <div class="tech-stack">
+                <span class="tech-tag highlight">Python</span>
+                <span class="tech-tag">Pandas</span>
+                <span class="tech-tag">HTML模板</span>
+              </div>
+            </div>
+          </div>
+
+          <h3>项目共性特点</h3>
+          <table class="table">
+            <thead><tr><th>特点</th><th>说明</th></tr></thead>
+            <tbody>
+              <tr><td><strong>实际业务驱动</strong></td><td>每个项目都解决真实的工作痛点</td></tr>
+              <tr><td><strong>AI深度参与</strong></td><td>从设计到实现全程AI辅助</td></tr>
+              <tr><td><strong>迭代优化</strong></td><td>多版本演进，持续改进</td></tr>
+              <tr><td><strong>文档完善</strong></td><td>每个项目都有完整的技术文档</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 方法论总结 -->
+        <section id="methodology" class="card">
+          <h2>&#128218; AI协作方法论</h2>
+
+          <h3>项目开发流程</h3>
+          <div class="flow-diagram">
+            <div class="flow-step">需求分析</div>
+            <span class="flow-arrow">&#8594;</span>
+            <div class="flow-step">方案设计</div>
+            <span class="flow-arrow">&#8594;</span>
+            <div class="flow-step">AI协作开发</div>
+            <span class="flow-arrow">&#8594;</span>
+            <div class="flow-step">测试验证</div>
+            <span class="flow-arrow">&#8594;</span>
+            <div class="flow-step">迭代优化</div>
+          </div>
+
+          <h3>AI参与方式</h3>
+          <table class="table">
+            <thead><tr><th>阶段</th><th>AI作用</th><th>人类职责</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>需求分析</td>
+                <td>帮助梳理需求、识别关键点</td>
+                <td>提供业务背景、明确目标</td>
+              </tr>
+              <tr>
+                <td>方案设计</td>
+                <td>技术选型建议、架构设计</td>
+                <td>决策、权衡取舍</td>
+              </tr>
+              <tr>
+                <td>代码实现</td>
+                <td>生成代码、解释逻辑</td>
+                <td>审查、测试、调整</td>
+              </tr>
+              <tr>
+                <td>问题调试</td>
+                <td>分析错误、提供解决方案</td>
+                <td>执行、验证、反馈</td>
+              </tr>
+              <tr>
+                <td>文档编写</td>
+                <td>生成文档框架和内容</td>
+                <td>补充细节、确保准确</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Telegram监控机器人 -->
+        <section id="telegram-bot" class="card">
+          <h2>&#128225; 案例一：Telegram VPS监控机器人<span class="tag-new">Bash实战</span></h2>
+
+          <div class="alert info">
+            <strong>项目简介</strong>
+            <p>通过Telegram机器人实时监控VPS服务器的流量、网速、延迟等关键指标，支持按钮式交互操作。</p>
+          </div>
+
+          <h3>核心功能</h3>
+          <div class="feature-grid">
+            <div class="feature-item">
+              <h4>&#9889; 实时网速监测</h4>
+              <p>显示当前1秒内的下载/上传速度</p>
+            </div>
+            <div class="feature-item">
+              <h4>&#128202; 流量统计查询</h4>
+              <p>查询累计下载/上传流量</p>
+            </div>
+            <div class="feature-item">
+              <h4>&#128640; 下载速度测试</h4>
+              <p>测试10秒下载速度，带超时控制</p>
+            </div>
+            <div class="feature-item">
+              <h4>&#128225; 网络延迟监测</h4>
+              <p>定期ping目标IP，记录延迟数据</p>
+            </div>
+          </div>
+
+          <h3>技术特点</h3>
+          <ul>
+            <li><strong>纯Bash实现</strong>：无需额外依赖，服务器原生支持</li>
+            <li><strong>进程锁机制</strong>：防止任务重复执行导致进程堆积</li>
+            <li><strong>30秒超时控制</strong>：避免任务挂起</li>
+            <li><strong>自动数据清理</strong>：历史数据保留30天</li>
+          </ul>
+        </section>
+
+        <section id="telegram-arch" class="card">
+          <h3>系统架构</h3>
+
+          <div class="flow-diagram">
+            <div class="flow-step">用户点击Telegram按钮</div>
+            <span class="flow-arrow">&#8595;</span>
+            <div class="flow-step">监听脚本接收callback</div>
+            <span class="flow-arrow">&#8595;</span>
+            <div class="flow-step">检查任务锁（防止重复）</div>
+            <span class="flow-arrow">&#8595;</span>
+            <div class="flow-step">执行监控任务（30秒超时）</div>
+            <span class="flow-arrow">&#8595;</span>
+            <div class="flow-step">发送结果到Telegram</div>
+            <span class="flow-arrow">&#8595;</span>
+            <div class="flow-step">清理锁文件</div>
+          </div>
+
+          <h3>组件说明</h3>
+          <table class="table">
+            <thead><tr><th>组件</th><th>文件路径</th><th>功能</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>监听脚本</strong></td>
+                <td><code>/root/telegram_bot_listener.sh</code></td>
+                <td>监听Telegram消息，处理按钮点击，管理任务锁</td>
+              </tr>
+              <tr>
+                <td><strong>流量监控</strong></td>
+                <td><code>/root/traffic_alert.sh</code></td>
+                <td>执行各种监控任务，发送结果到TG</td>
+              </tr>
+              <tr>
+                <td><strong>延迟监测</strong></td>
+                <td><code>/root/ping_monitor.sh</code></td>
+                <td>定期ping目标IP，记录延迟数据</td>
+              </tr>
+              <tr>
+                <td><strong>系统服务</strong></td>
+                <td><code>/etc/systemd/system/telegram-bot.service</code></td>
+                <td>开机自启动，后台运行</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>功能清单</h3>
+          <table class="table">
+            <thead><tr><th>功能</th><th>按钮</th><th>执行时间</th></tr></thead>
+            <tbody>
+              <tr><td>实时网速</td><td>&#9889; 网速</td><td>~2秒</td></tr>
+              <tr><td>下载测速</td><td>&#128640; 测速</td><td>~10秒</td></tr>
+              <tr><td>流量查询</td><td>&#128202; 流量</td><td>~1秒</td></tr>
+              <tr><td>流量统计</td><td>&#128200; 统计</td><td>~2秒</td></tr>
+              <tr><td>1天最高速度</td><td>&#128197; 1天最高</td><td>~2秒</td></tr>
+              <tr><td>7天最高速度</td><td>&#128197; 7天最高</td><td>~3秒</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="telegram-lessons" class="card">
+          <h3>AI协作过程</h3>
+
+          <div class="timeline">
+            <div class="timeline-item">
+              <h4>v1.0 - 基础功能实现</h4>
+              <p>让AI生成基础的流量监控脚本，实现Telegram Bot消息发送</p>
+            </div>
+            <div class="timeline-item">
+              <h4>v1.5 - 按钮交互</h4>
+              <p>添加Telegram按钮菜单，实现callback处理</p>
+            </div>
+            <div class="timeline-item">
+              <h4>v2.0 - 进程锁和超时</h4>
+              <p>解决进程堆积问题，添加任务锁机制和30秒超时控制</p>
+            </div>
+          </div>
+
+          <div class="lesson-box">
+            <h4>&#128161; 关键经验</h4>
+            <ul>
+              <li><strong>问题驱动优化</strong>：v2.0的进程锁是因为发现多次点击导致进程堆积才添加的</li>
+              <li><strong>简单技术栈</strong>：纯Bash实现避免了Python依赖问题</li>
+              <li><strong>Systemd管理</strong>：使用系统服务确保进程持久运行</li>
+              <li><strong>日志记录</strong>：完善的日志帮助快速定位问题</li>
+            </ul>
+          </div>
+
+          <div class="alert warn">
+            <strong>踩坑记录</strong>
+            <ul>
+              <li>Telegram API的update_id需要正确处理，否则会重复接收消息</li>
+              <li>curl命令需要设置超时，避免网络问题导致脚本卡死</li>
+              <li>进程锁文件要及时清理，异常退出时需要处理</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- OKR周报系统 -->
+        <section id="okr-system" class="card">
+          <h2>&#128202; 案例二：OKR周报自动化系统<span class="tag-new">单文件HTML</span></h2>
+
+          <div class="alert info">
+            <strong>项目简介</strong>
+            <p>用于季度OKR周报的数据管理与展示系统，支持多周数据切换、数据完整性检查、缺失提醒等功能。</p>
+          </div>
+
+          <h3>核心功能</h3>
+          <table class="table">
+            <thead><tr><th>功能</th><th>说明</th></tr></thead>
+            <tbody>
+              <tr><td>周次切换</td><td>下拉选择任意周次，页面内容自动切换</td></tr>
+              <tr><td>数据完整度统计</td><td>实时显示数据填充率（如 12/13 = 92.3%）</td></tr>
+              <tr><td>缺失数据提醒</td><td>切换周次时自动检测并列出缺失的KR</td></tr>
+              <tr><td>页面内警告</td><td>缺失数据的KR显示红色提示文字</td></tr>
+              <tr><td>简洁格式</td><td>纯文本列表格式，便于复制到云文档</td></tr>
+            </tbody>
+          </table>
+
+          <h3>覆盖范围</h3>
+          <table class="table">
+            <thead><tr><th>Objective</th><th>KR数量</th><th>说明</th></tr></thead>
+            <tbody>
+              <tr><td>O1</td><td>3个KR</td><td>服务台支持质量</td></tr>
+              <tr><td>O2</td><td>2个KR</td><td>弱电项目交付</td></tr>
+              <tr><td>O3</td><td>4个KR</td><td>电脑管理平台</td></tr>
+              <tr><td>O4</td><td>3个KR</td><td>AI能力建设</td></tr>
+              <tr><th>合计</th><th>13个KR</th><th>4个Objective</th></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="okr-design" class="card">
+          <h3>数据结构设计</h3>
+
+          <pre><code>WEEKS (周次定义)
+├── wk1: { id, label }
+├── wk2: { id, label }
+└── ...
+
+OKR_STRUCTURE (OKR结构)
+├── O1
+│   ├── title: "O1标题"
+│   └── krs
+│       ├── O1-KR1: { title, plan[], risk, nextPlan }
+│       ├── O1-KR2: { ... }
+│       └── O1-KR3: { ... }
+├── O2, O3, O4 ...
+
+WEEKLY_DATA (每周进展数据)
+├── wk1
+│   ├── O1-KR1: ['进展1', '进展2']
+│   └── ...
+├── wk2
+│   └── ...
+└── ...</code></pre>
+
+          <h3>每个KR的四部分结构</h3>
+          <table class="table">
+            <thead><tr><th>部分</th><th>数据来源</th><th>是否随周变化</th></tr></thead>
+            <tbody>
+              <tr><td>1. 整体计划</td><td>OKR_STRUCTURE.krs[].plan</td><td>否（固定）</td></tr>
+              <tr><td>2. 本周进展</td><td>WEEKLY_DATA[weekId][krId]</td><td><strong>是</strong></td></tr>
+              <tr><td>3. 风险同步</td><td>OKR_STRUCTURE.krs[].risk</td><td>否（固定）</td></tr>
+              <tr><td>4. 下周计划</td><td>OKR_STRUCTURE.krs[].nextPlan</td><td>否（固定）</td></tr>
+            </tbody>
+          </table>
+
+          <h3>核心函数</h3>
+          <table class="table">
+            <thead><tr><th>函数名</th><th>功能</th></tr></thead>
+            <tbody>
+              <tr><td><code>getAllKRIds()</code></td><td>获取所有KR的ID列表（共13个）</td></tr>
+              <tr><td><code>getMissingKRs(weekId)</code></td><td>检查指定周缺失数据的KR列表</td></tr>
+              <tr><td><code>updateDataStats()</code></td><td>更新数据完整度统计</td></tr>
+              <tr><td><code>renderOKRContent()</code></td><td>渲染OKR内容区域</td></tr>
+              <tr><td><code>switchWeek(weekId)</code></td><td>切换到指定周次</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="okr-lessons" class="card">
+          <h3>AI协作过程</h3>
+
+          <div class="timeline">
+            <div class="timeline-item">
+              <h4>需求分析</h4>
+              <p>向AI描述OKR周报的痛点：每周手动更新繁琐，容易遗漏</p>
+            </div>
+            <div class="timeline-item">
+              <h4>架构设计</h4>
+              <p>AI建议使用单文件HTML架构，数据和逻辑内嵌，便于管理</p>
+            </div>
+            <div class="timeline-item">
+              <h4>数据结构</h4>
+              <p>AI帮助设计三层数据结构：周次、OKR结构、周进展数据</p>
+            </div>
+            <div class="timeline-item">
+              <h4>功能实现</h4>
+              <p>逐步实现周切换、数据校验、缺失提醒等功能</p>
+            </div>
+          </div>
+
+          <div class="lesson-box">
+            <h4>&#128161; 关键经验</h4>
+            <ul>
+              <li><strong>单文件架构</strong>：HTML+CSS+JS+数据全在一个文件，无需服务器</li>
+              <li><strong>数据校验</strong>：自动检测缺失，避免遗漏</li>
+              <li><strong>模板复用</strong>：OKR结构固定，每周只更新进展数据</li>
+              <li><strong>便于复制</strong>：纯文本格式，直接粘贴到云文档</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- Password Policy Manager -->
+        <section id="password-manager" class="card">
+          <h2>&#128274; 案例三：Password Policy Manager<span class="tag-new">企业工具</span></h2>
+
+          <div class="alert info">
+            <strong>项目简介</strong>
+            <p>企业级Windows密码策略管理工具，通过火绒安全软件静默分发部署，实现一次性密码提醒和自动卸载。</p>
+          </div>
+
+          <h3>核心功能</h3>
+          <div class="feature-grid">
+            <div class="feature-item">
+              <h4>&#128276; 一次性密码提醒</h4>
+              <p>部署后持续提醒用户修改密码，直到用户完成密码更改</p>
+            </div>
+            <div class="feature-item">
+              <h4>&#128465; 自动卸载机制</h4>
+              <p>检测到密码修改后，自动清理所有部署文件和计划任务</p>
+            </div>
+            <div class="feature-item">
+              <h4>&#128225; 静默部署</h4>
+              <p>支持火绒集中分发，SYSTEM权限静默执行，用户无感知</p>
+            </div>
+            <div class="feature-item">
+              <h4>&#128100; 智能账户识别</h4>
+              <p>自动跳过Microsoft账户，仅针对本地账户生效</p>
+            </div>
+          </div>
+
+          <h3>适用场景</h3>
+          <ul>
+            <li>企业内部强制密码策略执行</li>
+            <li>新员工入职密码修改提醒</li>
+            <li>安全合规审计要求</li>
+            <li>批量终端密码策略部署</li>
+          </ul>
+        </section>
+
+        <section id="password-features" class="card">
+          <h3>技术栈</h3>
+          <table class="table">
+            <thead><tr><th>组件</th><th>技术</th><th>说明</th></tr></thead>
+            <tbody>
+              <tr><td>部署脚本</td><td>Windows Batch (.bat)</td><td>主部署逻辑，兼容性最佳</td></tr>
+              <tr><td>监控脚本</td><td>PowerShell (.ps1)</td><td>密码检测、通知显示</td></tr>
+              <tr><td>清理脚本</td><td>Windows Batch (.bat)</td><td>避免安全软件拦截</td></tr>
+              <tr><td>通知系统</td><td>Windows Toast API</td><td>原生系统通知</td></tr>
+              <tr><td>任务调度</td><td>Windows Task Scheduler</td><td>登录触发 + 定时触发</td></tr>
+            </tbody>
+          </table>
+
+          <h3>功能特性</h3>
+          <table class="table">
+            <thead><tr><th>功能</th><th>描述</th><th>状态</th></tr></thead>
+            <tbody>
+              <tr><td>Toast 通知提醒</td><td>带按钮的系统通知，支持"知道了"和"稍后提醒"</td><td><span class="chip">已实现</span></td></tr>
+              <tr><td>密码变更检测</td><td>通过 PasswordAge 精确检测密码是否已修改</td><td><span class="chip">已实现</span></td></tr>
+              <tr><td>自动卸载</td><td>密码修改后自动删除所有文件和计划任务</td><td><span class="chip">已实现</span></td></tr>
+              <tr><td>Microsoft账户跳过</td><td>自动识别并跳过Microsoft账户用户</td><td><span class="chip">已实现</span></td></tr>
+              <tr><td>部署脚本自删除</td><td>通过 /autodel 参数，部署后删除分发脚本</td><td><span class="chip">v1.4.8新增</span></td></tr>
+            </tbody>
+          </table>
+
+          <h3>安全特性</h3>
+          <div class="feature-grid">
+            <div class="feature-item">
+              <h4>中文 Base64 编码</h4>
+              <p>所有中文字符串使用 Base64 编码，避免跨系统编码问题</p>
+            </div>
+            <div class="feature-item">
+              <h4>SYSTEM 权限清理</h4>
+              <p>清理任务以 SYSTEM 权限运行，确保能删除所有文件</p>
+            </div>
+            <div class="feature-item">
+              <h4>无残留设计</h4>
+              <p>完成任务后自动清理所有痕迹，包括计划任务和部署文件</p>
+            </div>
+            <div class="feature-item">
+              <h4>火绒兼容</h4>
+              <p>清理任务使用CMD执行，避免火绒对PowerShell调用链的拦截</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="password-lessons" class="card">
+          <h3>版本演进</h3>
+
+          <div class="timeline">
+            <div class="timeline-item">
+              <h4>v1.0 - v1.3</h4>
+              <p>基础功能实现，密码提醒和检测</p>
+            </div>
+            <div class="timeline-item">
+              <h4>v1.4.0 - v1.4.6</h4>
+              <p>添加Toast通知、Microsoft账户跳过、自动卸载</p>
+            </div>
+            <div class="timeline-item">
+              <h4>v1.4.7</h4>
+              <p>火绒兼容：将清理任务从PowerShell改为CMD执行</p>
+            </div>
+            <div class="timeline-item">
+              <h4>v1.4.8</h4>
+              <p>添加部署脚本自删除功能，完善无残留设计</p>
+            </div>
+          </div>
+
+          <div class="lesson-box">
+            <h4>&#128161; 关键经验</h4>
+            <ul>
+              <li><strong>安全软件兼容</strong>：企业环境必须考虑安全软件的拦截行为</li>
+              <li><strong>编码问题</strong>：中文处理使用Base64，避免各种编码坑</li>
+              <li><strong>权限管理</strong>：部署和清理需要SYSTEM权限</li>
+              <li><strong>用户体验</strong>：Toast通知比弹窗更友好</li>
+            </ul>
+          </div>
+
+          <div class="alert warn">
+            <strong>踩坑记录</strong>
+            <ul>
+              <li>火绒会拦截svchost.exe调用powershell.exe的行为，需改用CMD</li>
+              <li>计划任务需要正确设置触发条件，登录触发和定时触发各有用途</li>
+              <li>自删除功能需要延迟执行，否则会删除正在运行的脚本</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- 年终汇报自动化 -->
+        <section id="annual-report" class="card">
+          <h2>&#128196; 案例四：年终汇报自动化<span class="tag-new">数据处理</span></h2>
+
+          <div class="alert info">
+            <strong>项目简介</strong>
+            <p>从各类周报、OKR文档、Excel数据中提取关键信息，自动生成年终汇报PPT、绩效评估文档、OKR规划等。</p>
+          </div>
+
+          <h3>输出文件</h3>
+          <table class="table">
+            <thead><tr><th>文件名</th><th>用途</th><th>状态</th></tr></thead>
+            <tbody>
+              <tr><td>2025年终汇报PPT.html</td><td>年终汇报演示文稿，深色主题，分页式</td><td><span class="chip">已完成</span></td></tr>
+              <tr><td>2025年绩效评估.html</td><td>绩效自评文档，白色主题，可复制</td><td><span class="chip">已完成</span></td></tr>
+              <tr><td>2026Q1季度OKR规划.html</td><td>下季度OKR目标规划</td><td><span class="chip">已完成</span></td></tr>
+              <tr><td>2025年终述职数据汇总_综合参考.html</td><td>数据汇总参考文档</td><td><span class="chip">已完成</span></td></tr>
+            </tbody>
+          </table>
+
+          <h3>数据源</h3>
+          <table class="table">
+            <thead><tr><th>文件名</th><th>内容说明</th></tr></thead>
+            <tbody>
+              <tr><td>2025年终述职数据汇总.xlsx</td><td>核心数据源，包含12个Sheet</td></tr>
+              <tr><td>2025-Q1~Q4-WEEKLY.pdf</td><td>各季度周报数据</td></tr>
+              <tr><td>Q2/Q3季度_okr复盘和计划.pdf</td><td>OKR复盘数据</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="annual-workflow" class="card">
+          <h3>工作流程</h3>
+
+          <div class="flow-diagram">
+            <div class="flow-step">收集数据源（Excel/PDF）</div>
+            <span class="flow-arrow">&#8595;</span>
+            <div class="flow-step">Python提取Excel数据</div>
+            <span class="flow-arrow">&#8595;</span>
+            <div class="flow-step">AI协助数据清洗和汇总</div>
+            <span class="flow-arrow">&#8595;</span>
+            <div class="flow-step">生成HTML模板</div>
+            <span class="flow-arrow">&#8595;</span>
+            <div class="flow-step">填充数据到模板</div>
+            <span class="flow-arrow">&#8595;</span>
+            <div class="flow-step">浏览器预览验证</div>
+          </div>
+
+          <h3>关键数据指标（示例）</h3>
+          <div class="feature-grid">
+            <div class="feature-item">
+              <h4>&#128203; 工单数据</h4>
+              <p>全年工单总数：3647个<br>平均时效：0.73h<br>满意度：99.05%</p>
+            </div>
+            <div class="feature-item">
+              <h4>&#128187; 弱电项目</h4>
+              <p>项目总数：27个<br>已交付：23个（85%）<br>进行中：3个</p>
+            </div>
+            <div class="feature-item">
+              <h4>&#9888; 故障报警</h4>
+              <p>全年故障数：312次<br>较去年减少：54.5%<br>设备可用率：97.6%</p>
+            </div>
+            <div class="feature-item">
+              <h4>&#128421; 监控设备</h4>
+              <p>设备总数：767台<br>异常设备：14台<br>可用率：99.67%</p>
+            </div>
+          </div>
+
+          <h3>HTML模板风格</h3>
+          <table class="table">
+            <thead><tr><th>模板</th><th>主题</th><th>特点</th></tr></thead>
+            <tbody>
+              <tr><td>年终汇报PPT</td><td>深色科技风（#1a1a2e）</td><td>分页式，包含封面、目录、内容页</td></tr>
+              <tr><td>绩效评估文档</td><td>白色简洁风</td><td>表格清晰，可直接选中复制</td></tr>
+              <tr><td>综合参考文档</td><td>浅灰背景（#f5f7fa）</td><td>数据密集型，表格为主</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="annual-lessons" class="card">
+          <h3>AI协作过程</h3>
+
+          <div class="timeline">
+            <div class="timeline-item">
+              <h4>数据提取</h4>
+              <p>AI帮助编写Python脚本，从Excel提取各Sheet数据</p>
+            </div>
+            <div class="timeline-item">
+              <h4>数据清洗</h4>
+              <p>AI协助处理缺失值、异常值，标准化数据格式</p>
+            </div>
+            <div class="timeline-item">
+              <h4>模板设计</h4>
+              <p>AI设计HTML模板结构，包括PPT分页、表格样式等</p>
+            </div>
+            <div class="timeline-item">
+              <h4>内容填充</h4>
+              <p>AI根据数据生成各部分内容文本</p>
+            </div>
+          </div>
+
+          <div class="lesson-box">
+            <h4>&#128161; 关键经验</h4>
+            <ul>
+              <li><strong>数据标准化</strong>：Excel中的数据格式要统一，便于程序处理</li>
+              <li><strong>模板复用</strong>：设计好的HTML模板可以每年复用</li>
+              <li><strong>增量更新</strong>：支持数据更新后重新生成</li>
+              <li><strong>多格式输出</strong>：HTML可以直接浏览、打印、或复制到Word</li>
+            </ul>
+          </div>
+
+          <div class="alert primary">
+            <strong>提示词示例</strong>
+            <pre style="margin-top:8px;"><code>请读取 D:\AI\weekport\2025年终述职数据汇总.xlsx 中的数据，
+更新 D:\AI\weekport\2025年终汇报PPT.html 中的以下内容：
+1. 服务台季度数据表格
+2. 弱电项目数量和列表
+3. 关键指标卡片数据
+
+注意排除以下Sheet：故障报警双月度数据、弱电闲置利旧价值统计</code></pre>
+          </div>
+        </section>
+
+        <!-- 最佳实践 -->
+        <section id="best-practices" class="card">
+          <h2>&#9989; 最佳实践总结</h2>
+
+          <h3>AI协作原则</h3>
+          <div class="feature-grid">
+            <div class="feature-item">
+              <h4>1. 明确需求</h4>
+              <p>开始前清晰描述项目目标、约束条件、技术偏好</p>
+            </div>
+            <div class="feature-item">
+              <h4>2. 分步实现</h4>
+              <p>复杂项目拆分为小任务，每步验证后再继续</p>
+            </div>
+            <div class="feature-item">
+              <h4>3. 持续迭代</h4>
+              <p>根据实际使用反馈不断优化，多版本演进</p>
+            </div>
+            <div class="feature-item">
+              <h4>4. 文档同步</h4>
+              <p>项目开发过程中同步编写技术文档</p>
+            </div>
+          </div>
+
+          <h3>技术选型建议</h3>
+          <table class="table">
+            <thead><tr><th>场景</th><th>推荐技术</th><th>理由</th></tr></thead>
+            <tbody>
+              <tr><td>服务器脚本</td><td>Bash</td><td>无依赖，原生支持</td></tr>
+              <tr><td>数据处理</td><td>Python + Pandas</td><td>强大的数据处理能力</td></tr>
+              <tr><td>Windows工具</td><td>PowerShell + Batch</td><td>系统集成度高</td></tr>
+              <tr><td>展示页面</td><td>单文件HTML</td><td>无需服务器，便于分享</td></tr>
+            </tbody>
+          </table>
+
+          <h3>常见问题处理</h3>
+          <table class="table">
+            <thead><tr><th>问题类型</th><th>处理方式</th></tr></thead>
+            <tbody>
+              <tr><td>进程堆积</td><td>添加进程锁机制</td></tr>
+              <tr><td>任务超时</td><td>设置超时限制，异常处理</td></tr>
+              <tr><td>编码问题</td><td>统一使用UTF-8，中文用Base64</td></tr>
+              <tr><td>权限问题</td><td>明确权限需求，使用正确的执行身份</td></tr>
+              <tr><td>兼容性问题</td><td>测试不同环境，避免特定依赖</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 项目模板 -->
+        <section id="templates" class="card">
+          <h2>&#128203; 项目模板</h2>
+
+          <h3>项目文档模板</h3>
+          <div class="alert primary">
+            <strong>技术文档结构</strong>
+            <pre style="margin-top:8px;"><code>1. 项目概述
+   - 项目背景
+   - 核心功能
+   - 技术栈
+
+2. 系统架构
+   - 组件说明
+   - 数据流程
+   - 文件结构
+
+3. 功能详解
+   - 功能列表
+   - 使用方法
+   - 配置说明
+
+4. 部署指南
+   - 环境要求
+   - 安装步骤
+   - 验证方法
+
+5. 常见问题
+   - 问题排查
+   - 解决方案
+
+6. 版本历史
+   - 版本记录
+   - 更新说明</code></pre>
+          </div>
+
+          <h3>AI协作提示词模板</h3>
+          <div class="alert info">
+            <strong>项目启动提示词</strong>
+            <pre style="margin-top:8px;"><code>我需要开发一个[项目类型]，主要功能是[核心功能描述]。
+
+技术约束：
+- 运行环境：[Windows/Linux/...]
+- 技术偏好：[Bash/Python/PowerShell/...]
+- 部署方式：[手动/自动化/...]
+
+具体需求：
+1. [需求1]
+2. [需求2]
+3. [需求3]
+
+请帮我：
+1. 分析技术方案
+2. 设计系统架构
+3. 列出实现步骤</code></pre>
+          </div>
+
+          <div class="alert info">
+            <strong>问题调试提示词</strong>
+            <pre style="margin-top:8px;"><code>我在运行[脚本/程序名]时遇到问题。
+
+问题现象：
+[描述具体现象]
+
+错误信息：
+[粘贴错误日志]
+
+环境信息：
+- 操作系统：[...]
+- 相关版本：[...]
+
+已尝试的方法：
+1. [...]
+
+请帮我分析可能的原因和解决方案。</code></pre>
+          </div>
+        </section>
+
+        <footer class="foot">
+          <p><a href="index.html">&#127968; 返回首页</a></p>
+          <p style="margin-top: 8px;">最后更新：2026-01-06 | AI学习知识库</p>
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    // 主题切换
+    const themeBtn = document.getElementById('toggleTheme');
+    const themeIcon = document.getElementById('themeIcon');
+    const root = document.body;
+
+    function setTheme(theme) {
+      root.setAttribute('data-theme', theme);
+      themeIcon.innerHTML = theme === 'dark' ? '&#9728;&#65039;' : '&#127769;';
+      localStorage.setItem('ai-kb-theme', theme);
+    }
+
+    themeBtn.addEventListener('click', () => {
+      const current = root.getAttribute('data-theme');
+      setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    const savedTheme = localStorage.getItem('ai-kb-theme') || 'dark';
+    setTheme(savedTheme);
+
+    // 移动端侧边栏
+    const mobileToggle = document.getElementById('mobileToggle');
+    const sidebar = document.getElementById('sidebar');
+
+    mobileToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+    });
+
+    document.getElementById('mainContent').addEventListener('click', () => {
+      if (window.innerWidth <= 768) {
+        sidebar.classList.remove('active');
+      }
+    });
+
+    // 导航高亮
+    function highlightNav() {
+      const navLinks = document.querySelectorAll('.nav-link');
+      const sections = document.querySelectorAll('section[id]');
+      let currentSection = null;
+
+      sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= 150) {
+          currentSection = section;
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (currentSection && link.getAttribute('href') === `#${currentSection.id}`) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', highlightNav);
+    highlightNav();
+
+    // 搜索
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase();
+      const sections = document.querySelectorAll('section');
+
+      sections.forEach(section => {
+        const text = section.textContent.toLowerCase();
+        section.style.display = !query || text.includes(query) ? '' : 'none';
+      });
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.key === 'k') {
+        e.preventDefault();
+        searchInput.focus();
+      }
+    });
+  </script>
+</body>
+</html>

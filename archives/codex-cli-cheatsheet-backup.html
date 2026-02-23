@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Codex CLI 速查手册（Windows / WSL2 / PowerShell / Clash）</title>
+  <meta name="description" content="Codex CLI（@openai/codex）完整速查：安装、登录、模型、审批模式、常用命令、图像输入、用量与订阅、代理与 WSL、FAQs、以及给 Codex 的维护提示词。" />
+  <style>
+    :root{
+      --bg:#0b1020; --panel:#121a2b; --muted:#8fa3c7; --text:#e7eef9;
+      --accent:#6aa6ff; --accent-2:#75e0a3; --border:#27324a; --chip:#1a2540;
+      --warn:#f6c244; --danger:#ff6b6b; --good:#49d289; --code:#0f1530;
+    }
+    [data-theme="light"]{
+      --bg:#f6f8fc; --panel:#ffffff; --muted:#5d6b8a; --text:#0e1b31;
+      --accent:#2b6bff; --accent-2:#0f9d58; --border:#e6ecf5; --chip:#eef3fb;
+      --warn:#b47b00; --danger:#c92a2a; --good:#1f8d52; --code:#0b1020;
+    }
+    *{box-sizing:border-box} html,body{height:100%}
+    body{margin:0;font:14px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Inter,"Noto Sans CJK SC","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text)}
+    a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+    .app{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
+    .sidebar{position:sticky;top:0;height:100vh;overflow:auto;padding:24px 20px;background:var(--panel);border-right:1px solid var(--border)}
+    .brand{display:flex;gap:10px;align-items:center;margin-bottom:16px}
+    .logo{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:0 6px 20px rgba(59,130,246,.35)}
+    .brand h1{font-size:16px;margin:0}.muted{color:var(--muted)}
+    .nav{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+    .nav a{padding:8px 10px;border-radius:10px;color:var(--text);background:transparent;border:1px solid transparent}
+    .nav a:hover{background:var(--chip);border-color:var(--border)}
+    .container{padding:28px 36px;max-width:1100px}
+    .header{display:flex;gap:14px;align-items:center;flex-wrap:wrap;justify-content:space-between;margin-bottom:18px}
+    .header .title{font-size:24px;margin:0}
+    .btn{appearance:none;border:none;background:var(--chip);color:var(--text);padding:8px 12px;border-radius:12px;cursor:pointer;border:1px solid var(--border)}
+    .btn:hover{filter:brightness(1.05)} .btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;border:none}
+    .grid{display:grid;gap:16px} .grid.cols-2{grid-template-columns:1fr 1fr}
+    @media (max-width:980px){.app{grid-template-columns:1fr}.sidebar{display:none}.grid.cols-2{grid-template-columns:1fr}}
+    .card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:18px 18px 14px 18px;box-shadow:0 10px 26px rgba(0,0,0,.08)}
+    h2{margin:0 0 10px 0;font-size:20px} h3{margin:18px 0 10px 0;font-size:16px}
+    .kvs{display:flex;flex-wrap:wrap;gap:8px}
+    .chip{background:var(--chip);border:1px solid var(--border);color:var(--text);padding:5px 10px;border-radius:999px;font-size:12px}
+    .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;padding:2px 6px;border-radius:6px;background:var(--chip);border:1px solid var(--border)}
+    pre{margin:10px 0;background:#0c132a;border:1px solid #1e2a45;border-radius:12px;overflow:auto} [data-theme="light"] pre{background:#0f1530;color:#e7eef9;border-color:#263254}
+    code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+    .copy{position:relative;float:right;margin:-6px -6px 8px 0}
+    .copy button{font-size:12px;padding:4px 8px;border-radius:8px;border:1px solid var(--border);background:var(--chip);color:var(--text);cursor:pointer}
+    .copy .ok{display:none;margin-left:6px;color:var(--good)}
+    .alert{padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:rgba(116,178,255,.08)}
+    .alert.warn{background:rgba(246,194,68,.12)} .alert.danger{background:rgba(255,107,107,.12)}
+    .foot{margin-top:24px;color:var(--muted);font-size:12px}
+    .table{width:100%;border-collapse:collapse;margin:8px 0}.table th,.table td{border:1px solid var(--border);padding:8px;text-align:left}.table th{background:var(--chip)}
+    .nav-group{display:flex;flex-direction:column;gap:6px;margin-top:16px}
+    .nav-group:first-of-type{margin-top:0}
+    .nav-group-title{padding-left:10px;font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
+    .alert.primary{background:rgba(106,166,255,.14);border-color:rgba(106,166,255,.32)}
+    .alert.info{background:rgba(117,224,163,.12);border-color:rgba(117,224,163,.3)}
+    .alert.success{background:rgba(73,210,137,.12);border-color:rgba(73,210,137,.32)}
+    .alert.warning{background:rgba(246,194,68,.18);border-color:rgba(246,194,68,.32);color:#f5d37b}
+    [data-theme="light"] .alert.warning{color:#8d6a00}
+    .step-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+    .step-list li{display:flex;gap:12px;align-items:flex-start}
+    .step-number{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:999px;background:var(--accent);color:#fff;font-weight:600;font-size:13px;flex-shrink:0;margin-top:2px}
+    .step-body{flex:1}
+    pre code .comment{color:#75e0a3}
+    [data-theme="light"] pre code .comment{color:#1f7d4d}
+    .checklist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+    .checklist li{position:relative;padding-left:22px}
+    .checklist li:before{content:"✓";position:absolute;left:0;color:var(--accent-2);font-weight:600}
+    .error-controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:16px}
+    .error-search{flex:1;min-width:220px}
+    .error-search input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--panel);color:var(--text)}
+    [data-theme="light"] .error-search input{background:#fff}
+    .error-tabs{display:flex;flex-wrap:wrap;gap:8px}
+    .error-tabs button{padding:6px 12px;border-radius:999px;border:1px solid var(--border);background:var(--chip);color:var(--text);cursor:pointer;font-size:12px}
+    .error-tabs button.active{background:linear-gradient(135deg,var(--accent),var(--accent-2));border:none;color:#fff}
+    .error-tabs button:hover{filter:brightness(1.05)}
+    .error-grid{display:grid;gap:14px}
+    @media (min-width:900px){.error-grid{grid-template-columns:1fr 1fr}}
+    .error-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px;box-shadow:0 8px 20px rgba(0,0,0,.08)}
+    .error-header{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+    .error-code{background:var(--accent);color:#fff;padding:4px 14px;border-radius:999px;font-weight:600}
+    .error-type{padding:4px 12px;border-radius:999px;font-size:12px;font-weight:500}
+    .error-type.type-auth{background:rgba(106,166,255,.18);color:var(--accent)}
+    .error-type.type-rate{background:rgba(246,194,68,.2);color:var(--warn)}
+    .error-type.type-server{background:rgba(255,107,107,.2);color:var(--danger)}
+    .error-type.type-client{background:rgba(117,224,163,.2);color:var(--accent-2)}
+    .error-title{margin:0 0 6px 0;font-size:16px}
+    .error-desc{margin:0 0 10px 0;color:var(--muted)}
+    .solution{border-top:1px solid var(--border);padding-top:10px;margin-top:10px}
+    .solution-title{font-weight:600;margin-bottom:6px}
+    .solution-steps{list-style:none;margin:0;padding:0}
+    .solution-steps li{position:relative;padding-left:20px;margin:6px 0}
+    .solution-steps li:before{content:"✓";position:absolute;left:0;color:var(--accent-2);font-weight:600}
+    .code-block{display:block;margin:8px 0;background:var(--code);color:#f4f7ff;border:1px solid #1e2a45;border-radius:10px;padding:10px;overflow:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.6}
+    [data-theme="light"] .code-block{color:#e7eef9;background:#0f1530;border-color:#263254}
+    .warning{background:rgba(246,194,68,.14);border-left:3px solid var(--warn);padding:10px 12px;border-radius:10px;margin-top:10px;color:var(--warn)}
+    .info{background:rgba(106,166,255,.14);border-left:3px solid var(--accent);padding:10px 12px;border-radius:10px;margin-top:10px;color:var(--accent)}
+    .note{background:rgba(255,255,255,0.04);border-left:3px solid var(--border);padding:8px 12px;border-radius:10px;margin-top:8px;color:var(--muted)}
+    .subtle-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+    .resource-links{display:grid;gap:10px}
+    @media(min-width:860px){.resource-links{grid-template-columns:1fr 1fr}}
+  </style>
+</head>
+<body data-theme="dark">
+  <!-- Changelog:
+       2025-02-15 合并 Claude Code 支持文档与 Print Spooler 诊断到单页并重新整理导航。
+       2025-10-31 Add UI footer hints, usage metrics, FAQ, and Codex prompt.
+  -->
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <h1>Codex CLI 速查</h1>
+          <div class="muted">Windows / WSL2 / PowerShell / Clash</div>
+        </div>
+      </div>
+      <nav class="nav">
+        <div class="nav-group">
+          <div class="nav-group-title">Codex CLI</div>
+          <a href="#quickstart">快速开始</a>
+          <a href="#login">登录方式</a>
+          <a href="#models">模型与推理</a>
+          <a href="#approvals">审批模式</a>
+          <a href="#usage">常用用法</a>
+          <a href="#images">图像输入</a>
+          <a href="#args">常用参数</a>
+          <a href="#ui">界面快捷键</a>
+          <a href="#usage-metrics">用量与订阅</a>
+          <a href="#proxy">网络与代理</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Claude Code</div>
+          <a href="#claude-overview">总览自检</a>
+          <a href="#claude-quickstart">快速开始</a>
+          <a href="#claude-windows">Windows 常见问题</a>
+          <a href="#claude-auth">认证处理</a>
+          <a href="#claude-proxy">代理配置</a>
+          <a href="#claude-cross">跨平台授权</a>
+          <a href="#claude-cleanup">清理重装</a>
+          <a href="#claude-diagnosis">诊断与资源</a>
+          <a href="#claude-errors">错误代码速查</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">系统工具</div>
+          <a href="#print-spooler">Print Spooler 诊断</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">维护</div>
+          <a href="#faq">问题汇总</a>
+          <a href="#aliases">别名与 Profile</a>
+          <a href="#codex-prompt">给 Codex 的提示词</a>
+        </div>
+      </nav>
+      <div class="foot">© oscar 的个人手册 · 可长期保存本页面（离线可用）</div>
+    </aside>
+
+    <main class="container">
+      <header class="header">
+        <h2 class="title">Codex CLI（@openai/codex）速查手册</h2>
+        <div class="btns">
+          <button class="btn" id="toggleTheme">切换主题</button>
+          <button class="btn primary" onclick="window.scrollTo({top:0,behavior:'smooth'})">回到顶部</button>
+        </div>
+      </header>
+
+      <section id="quickstart" class="card">
+        <h2>🚀 快速开始</h2>
+        <div class="alert">前提：已安装 Node.js / npm，且 <span class="kbd">npm config set prefix "%APPDATA%\\npm"</span>。</div>
+        <div class="copy"><button data-copy="npm i -g @openai/codex">复制</button><span class="ok">已复制</span></div>
+        <pre><code>npm i -g @openai/codex</code></pre>
+        <div class="copy"><button data-copy="codex --version">复制</button><span class="ok">已复制</span></div>
+        <pre><code>codex --version
+# 期望输出：codex-cli 0.53.0</code></pre>
+      </section>
+
+      <section id="login" class="grid cols-2">
+        <div class="card">
+          <h2>🔐 登录（ChatGPT 账号）</h2>
+          <p>首次运行 <span class="kbd">codex</span> 按提示登录（Plus / Pro / Team / Edu / Enterprise）。</p>
+          <div class="copy"><button data-copy="codex">复制</button><span class="ok">已复制</span></div>
+          <pre><code>codex</code></pre>
+          <p class="muted">配置位于 <span class="kbd">%USERPROFILE%\\.codex\\</span>。</p>
+        </div>
+        <div class="card">
+          <h2>🔑 登录（API Key 模式）</h2>
+          <div class="copy"><button data-copy="$env:OPENAI_API_KEY=&quot;sk-xxxx&quot;
+codex --auth api">复制</button><span class="ok">已复制</span></div>
+          <pre><code>$env:OPENAI_API_KEY="sk-xxxx"
+codex --auth api</code></pre>
+          <p class="alert warn">API Key 模式额度与速率受你的 API 账号限制。</p>
+        </div>
+      </section>
+
+      <section id="models" class="card">
+        <h2>🧠 模型与推理层级</h2>
+        <table class="table">
+          <thead><tr><th>命令</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td><code>codex --model gpt-5</code></td><td>默认通用模型</td></tr>
+            <tr><td><code>codex --model gpt-5-codex</code></td><td>为代码/系统命令优化（推荐）</td></tr>
+            <tr><td><code>codex --model gpt-4o-mini</code></td><td>轻量快速模型</td></tr>
+            <tr><td><code>codex --model gpt-5-codex --reasoning high</code></td><td>高推理，适合复杂任务</td></tr>
+          </tbody>
+        </table>
+        <div class="alert">推荐：<span class="kbd">codex --model gpt-5-codex</span></div>
+      </section>
+
+      <section id="approvals" class="card">
+        <h2>🛡️ 审批模式（执行权限）</h2>
+        <table class="table">
+          <thead><tr><th>模式</th><th>命令</th><th>用途</th></tr></thead>
+          <tbody>
+            <tr><td>自动（默认）</td><td><code>codex /approvals Auto</code></td><td>可读写工程目录并运行命令；越权需授权</td></tr>
+            <tr><td>只读（安全）</td><td><code>codex /approvals ReadOnly</code></td><td>仅分析规划，不修改文件</td></tr>
+            <tr><td>完全访问（谨慎）</td><td><code>codex /approvals Full</code></td><td>无需确认即可读写与联网</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="usage" class="grid cols-2">
+        <div class="card">
+          <h2>💬 日常用法</h2>
+          <div class="copy"><button data-copy="codex &quot;解释这个 PowerShell 脚本是干嘛的&quot;">复制</button><span class="ok">已复制</span></div>
+          <pre><code>codex "解释这个 PowerShell 脚本是干嘛的"</code></pre>
+          <div class="copy"><button data-copy="codex &quot;用 PowerShell 写一个定时清理临时文件的脚本&quot;">复制</button><span class="ok">已复制</span></div>
+          <pre><code>codex "用 PowerShell 写一个定时清理临时文件的脚本"</code></pre>
+        </div>
+        <div class="card">
+          <h2>🧰 代码分析 / 执行任务</h2>
+          <div class="copy"><button data-copy="codex &quot;Explain this codebase&quot;">复制</button><span class="ok">已复制</span></div>
+          <pre><code>codex "Explain this codebase"</code></pre>
+          <div class="copy"><button data-copy="codex exec &quot;fix the CI pipeline error&quot;">复制</button><span class="ok">已复制</span></div>
+          <pre><code>codex exec "fix the CI pipeline error"</code></pre>
+        </div>
+      </section>
+
+      <section id="images" class="card">
+        <h2>🖼️ 图像输入</h2>
+        <p>可粘贴图片到编辑器，或在 CLI 指定文件：</p>
+        <div class="copy"><button data-copy="codex -i error.png &quot;Explain this build error&quot;">复制</button><span class="ok">已复制</span></div>
+        <pre><code>codex -i error.png "Explain this build error"</code></pre>
+        <div class="copy"><button data-copy="codex --image log1.png,log2.png &quot;Summarize what failed&quot;">复制</button><span class="ok">已复制</span></div>
+        <pre><code>codex --image log1.png,log2.png "Summarize what failed"</code></pre>
+      </section>
+
+      <section id="args" class="card">
+        <h2>⚙️ 常用参数</h2>
+        <div class="kvs">
+          <span class="chip">--model &lt;name&gt;</span>
+          <span class="chip">--image &lt;file&gt;</span>
+          <span class="chip">--auth api</span>
+          <span class="chip">--reasoning low/medium/high</span>
+          <span class="chip">--help</span>
+        </div>
+      </section>
+
+      <section id="ui" class="card">
+        <h2>⌨️ 界面快捷键与底部提示</h2>
+        <ul>
+          <li><span class="kbd">↩ send</span>：<span class="kbd">Enter</span> 发送消息</li>
+          <li><span class="kbd">Ctrl+J newline</span>：输入时换行</li>
+          <li><span class="kbd">Ctrl+T transcript</span>：导出/查看会话记录</li>
+          <li><span class="kbd">Ctrl+C quit</span>：退出 Codex</li>
+        </ul>
+        <p class="alert danger">若显示“upgrade to Plus”红字，表示当前计划不含全部功能。可换 API Key 模式或升级 ChatGPT 计划。</p>
+      </section>
+
+      <section id="usage-metrics" class="grid cols-2">
+        <div class="card">
+          <h2>📊 查看用量（Token Usage）</h2>
+          <p>顶部/侧边会显示 Session Token 用量。若提示 “Send a message to load usage data.”，请先发送任意消息：</p>
+          <div class="copy"><button data-copy="你是谁，你能做什么">复制</button><span class="ok">已复制</span></div>
+          <pre><code>你是谁，你能做什么</code></pre>
+        </div>
+        <div class="card">
+          <h2>🧾 订阅与权限</h2>
+          <ul>
+            <li>Plus/Pro/Team/Edu/Enterprise 具备更完整的 Codex 功能。</li>
+            <li>API Key 模式额度取决于你的 API 账户。</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="proxy" class="grid cols-2">
+        <div class="card">
+          <h2>🌐 代理与网络（Clash Verge）</h2>
+          <ul>
+            <li>启用系统代理或 TUN；OpenAI 域名命中 <span class="kbd">💬 OpenAi → 🔗 链式代理</span>。</li>
+            <li>切换策略后执行 <span class="kbd">ipconfig /flushdns</span> 并在 Verge 里重载配置。</li>
+          </ul>
+          <div class="copy"><button data-copy="curl https://api.ipify.org
+curl https://ipapi.co/json">复制</button><span class="ok">已复制</span></div>
+          <pre><code>curl https://api.ipify.org
+curl https://ipapi.co/json</code></pre>
+        </div>
+        <div class="card">
+          <h2>🧱 npm/系统代理设置</h2>
+          <div class="copy"><button data-copy="npm config set proxy http://127.0.0.1:7897
+npm config set https-proxy http://127.0.0.1:7897
+npm ping">复制</button><span class="ok">已复制</span></div>
+          <pre><code>npm config set proxy http://127.0.0.1:7897
+npm config set https-proxy http://127.0.0.1:7897
+npm ping</code></pre>
+        </div>
+      </section>
+
+      <section id="faq" class="card">
+        <h2>❓ 常见问题汇总（本次对话要点）</h2>
+        <ol>
+          <li>Windows 找不到 <code>codex</code>：把 <span class="kbd">%APPDATA%\\npm</span> 加入用户 PATH，或在 <span class="kbd">$PROFILE</span> 里自检补 PATH。</li>
+          <li>npm 包 <code>openai-codex-cli</code> 不存在：正确包名为 <span class="kbd">@openai/codex</span>。</li>
+          <li>PowerShell 的 <code>where</code> 实际是过滤器；请用 <span class="kbd">Get-Command codex</span> 或 <span class="kbd">where.exe codex</span> 检查路径。</li>
+          <li>WSL2 忘记密码：用 <span class="kbd">wsl -u root</span> 进入重置 <span class="kbd">passwd &lt;user&gt;</span>。</li>
+          <li>想长期维护这份 HTML：见下节“给 Codex 的提示词”。</li>
+        </ol>
+      </section>
+
+      <section id="aliases" class="card">
+        <h2>🧪 建议添加的别名（$PROFILE）</h2>
+        <div class="copy"><button data-copy='Set-Alias cx codex
+Set-Alias cxc "codex --model gpt-5-codex"
+Set-Alias cxf "codex /approvals Full"
+Set-Alias cxo "codex /approvals ReadOnly"'>复制</button><span class="ok">已复制</span></div>
+        <pre><code>Set-Alias cx codex
+Set-Alias cxc "codex --model gpt-5-codex"
+Set-Alias cxf "codex /approvals Full"
+Set-Alias cxo "codex /approvals ReadOnly"</code></pre>
+      </section>
+
+      <section id="codex-prompt" class="card">
+        <h2>🧩 给 Codex 的提示词（自动维护本 HTML 知识库）</h2>
+        <p>把下面 Prompt 粘贴到 Codex（建议先 ReadOnly 预览）：</p>
+        <div class="copy"><button data-copy='You are my personal docs maintainer for a single-file HTML knowledge base named "codex-cli-cheatsheet.html".
+Goals:
+1) Merge any new notes/HTML I provide into the file.
+2) Preserve current structure, anchors, styles, copy buttons, and theme toggle.
+3) Add sections when needed: UI hints, usage metrics, proxies, WSL, FAQs.
+4) Do not delete working commands; deprecate with a small note instead.
+5) Keep content in Chinese with concise tables and code blocks.
+6) Return the full updated HTML for me to overwrite the file.
+
+Rules:
+- Make minimal visual changes; keep existing CSS and layout.
+- Ensure examples are accurate; mark untested ones as examples.
+- When I say "merge another HTML", extract and integrate relevant parts, deduplicate overlaps.
+- Keep a "Changelog" HTML comment at the top with date and summary.
+- If ambiguous, choose a safe default and proceed.
+
+Tasks now:
+- Review my latest notes/questions.
+- Update Windows/WSL setup, proxies, npm prefix/PATH, approvals, models, images, and usage metrics.
+- Keep copy buttons working (data-copy attributes).
+- Return the final HTML content only.'>复制</button><span class="ok">已复制</span></div>
+        <pre><code>You are my personal docs maintainer for a single-file HTML knowledge base named "codex-cli-cheatsheet.html".
+Goals:
+1) Merge any new notes/HTML I provide into the file.
+2) Preserve current structure, anchors, styles, copy buttons, and theme toggle.
+3) Add sections when needed: UI hints, usage metrics, proxies, WSL, FAQs.
+4) Do not delete working commands; deprecate with a small note instead.
+5) Keep content in Chinese with concise tables and code blocks.
+6) Return the full updated HTML for me to overwrite the file.
+
+Rules:
+- Make minimal visual changes; keep existing CSS and layout.
+- Ensure examples are accurate; mark untested ones as examples.
+- When I say "merge another HTML", extract and integrate relevant parts, deduplicate overlaps.
+- Keep a "Changelog" HTML comment at the top with date and summary.
+- If ambiguous, choose a safe default and proceed.
+
+Tasks now:
+- Review my latest notes/questions.
+- Update Windows/WSL setup, proxies, npm prefix/PATH, approvals, models, images, and usage metrics.
+- Keep copy buttons working (data-copy attributes).
+- Return the final HTML content only.</code></pre>
+      </section>
+
+      <!-- Claude Code 部分 -->
+      <section id="claude-overview" class="card">
+        <h2>📊 Claude Code 总览自检</h2>
+        <div class="alert primary">
+          <strong>⚡ 快速自检清单：</strong>
+          <ol>
+            <li>Node.js 版本是否 ≥ 16.0？运行 <span class="kbd">node --version</span></li>
+            <li>Claude Code 是否最新版？运行 <span class="kbd">claude-code --version</span></li>
+            <li>代理设置是否正确？检查 HTTP_PROXY 和 HTTPS_PROXY</li>
+            <li>是否混淆了 Claude.ai 订阅和 Claude API？</li>
+            <li>Windows 用户是否添加了 .cmd 扩展名？</li>
+          </ol>
+        </div>
+        <h3>🎯 三种产品的区别</h3>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>产品</th>
+              <th>用途</th>
+              <th>认证方式</th>
+              <th>费用</th>
+              <th>使用限制</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Claude.ai</strong></td>
+              <td>网页对话</td>
+              <td>邮箱账号</td>
+              <td>免费/$20/月</td>
+              <td>消息数限制</td>
+            </tr>
+            <tr>
+              <td><strong>Claude API</strong></td>
+              <td>开发集成</td>
+              <td>API Key</td>
+              <td>按使用量</td>
+              <td>速率限制</td>
+            </tr>
+            <tr>
+              <td><strong>Claude Code</strong></td>
+              <td>编程助手</td>
+              <td>OAuth/API Key</td>
+              <td>依赖上述服务</td>
+              <td>取决于后端</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="claude-quickstart" class="card">
+        <h2>🎯 Claude Code 快速开始</h2>
+        <div class="alert warn">
+          <strong>⚠️ 重要提醒：</strong>
+          <ul>
+            <li>如果之前使用过 Claude Code，必须先执行 <span class="kbd">claude logout</span></li>
+            <li>Claude.ai 订阅账号和 Claude API 是两个不同的产品</li>
+            <li>建议使用美区代理</li>
+          </ul>
+        </div>
+        <h3>完整安装流程</h3>
+        <ol class="step-list">
+          <li>
+            <div class="step-number">1</div>
+            <div class="step-body">
+              <strong>安装 Node.js</strong>（要求版本 ≥ 16.0）
+              <div class="copy"><button data-copy="node --version
+npm --version">复制</button><span class="ok">已复制</span></div>
+              <pre><code>node --version
+npm --version</code></pre>
+            </div>
+          </li>
+          <li>
+            <div class="step-number">2</div>
+            <div class="step-body">
+              <strong>安装 Claude Code</strong>
+              <div class="copy"><button data-copy="npm install -g @anthropic-ai/claude-code">复制</button><span class="ok">已复制</span></div>
+              <pre><code><span class="comment"># 全局安装</span>
+npm install -g @anthropic-ai/claude-code
+
+<span class="comment"># 中国用户可使用镜像</span>
+npm install -g @anthropic-ai/claude-code --registry https://registry.npmmirror.com</code></pre>
+            </div>
+          </li>
+          <li>
+            <div class="step-number">3</div>
+            <div class="step-body">
+              <strong>配置认证</strong>
+              <div class="copy"><button data-copy="claude-code auth">复制</button><span class="ok">已复制</span></div>
+              <pre><code><span class="comment"># OAuth 认证（使用 Claude.ai 账号）</span>
+claude-code auth
+
+<span class="comment"># 或使用 API Key</span>
+claude-code config set apiKey sk-ant-api03-YOUR-KEY</code></pre>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <section id="claude-windows" class="card">
+        <h2>💻 Claude Code Windows 常见问题</h2>
+        <h3>1. 命令无法识别问题</h3>
+        <div class="alert danger">
+          <strong>错误：</strong>'claude-code' 不是内部或外部命令
+        </div>
+        <h4>解决方案A：使用完整路径（临时）</h4>
+        <div class="copy"><button data-copy='C:\Users\%USERNAME%\AppData\Roaming\npm\claude-code.cmd --version'>复制</button><span class="ok">已复制</span></div>
+        <pre><code><span class="comment"># Windows 需要添加 .cmd 扩展名</span>
+C:\Users\%USERNAME%\AppData\Roaming\npm\claude-code.cmd --version</code></pre>
+        <h4>解决方案B：添加到 PATH（永久）</h4>
+        <div class="copy"><button data-copy='[Environment]::SetEnvironmentVariable("Path", "$env:Path;C:\Users\$env:USERNAME\AppData\Roaming\npm", [EnvironmentVariableTarget]::User)'>复制</button><span class="ok">已复制</span></div>
+        <pre><code><span class="comment"># PowerShell 管理员模式</span>
+[Environment]::SetEnvironmentVariable(
+    "Path",
+    "$env:Path;C:\Users\$env:USERNAME\AppData\Roaming\npm",
+    [EnvironmentVariableTarget]::User
+)</code></pre>
+        <h4>解决方案C：创建别名（推荐）</h4>
+        <div class="copy"><button data-copy='notepad $PROFILE'>复制</button><span class="ok">已复制</span></div>
+        <pre><code><span class="comment"># 编辑 PowerShell Profile</span>
+notepad $PROFILE
+
+<span class="comment"># 添加以下内容</span>
+Set-Alias claude "C:\Users\$env:USERNAME\AppData\Roaming\npm\claude-code.cmd"
+
+<span class="comment"># 保存后重新加载</span>
+. $PROFILE</code></pre>
+        <h3>2. PowerShell 执行策略问题</h3>
+        <div class="alert warn">如果遇到 "无法加载文件，因为在此系统上禁止运行脚本"</div>
+        <div class="copy"><button data-copy='Get-ExecutionPolicy
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser'>复制</button><span class="ok">已复制</span></div>
+        <pre><code><span class="comment"># 查看当前执行策略</span>
+Get-ExecutionPolicy
+
+<span class="comment"># 设置执行策略</span>
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser</code></pre>
+      </section>
+
+      <section id="claude-auth" class="card">
+        <h2>🔐 Claude Code 认证处理</h2>
+        <h3>1. API Key 格式错误 (401)</h3>
+        <div class="alert danger">
+          <strong>错误：</strong>401 Invalid API key format
+        </div>
+        <div class="alert info">
+          <strong>重要说明：</strong>
+          <ul>
+            <li>Claude.ai Pro/Team 订阅 ≠ Claude API</li>
+            <li>网页版订阅不能直接用作 API Key</li>
+            <li>需要在 console.anthropic.com 单独申请 API</li>
+          </ul>
+        </div>
+        <h4>正确的认证方式选择：</h4>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>你有什么？</th>
+              <th>使用方式</th>
+              <th>命令</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Claude.ai Pro 订阅</td>
+              <td>OAuth 认证</td>
+              <td><code>claude-code auth</code></td>
+            </tr>
+            <tr>
+              <td>Claude API Key</td>
+              <td>API 认证</td>
+              <td><code>claude-code config set apiKey sk-ant-...</code></td>
+            </tr>
+            <tr>
+              <td>都没有</td>
+              <td>申请 API</td>
+              <td>访问 console.anthropic.com</td>
+            </tr>
+          </tbody>
+        </table>
+        <h3>2. OAuth Token 撤销问题</h3>
+        <div class="copy"><button data-copy='claude-code auth logout
+claude-code auth'>复制</button><span class="ok">已复制</span></div>
+        <pre><code><span class="comment"># 清除旧的认证信息</span>
+claude-code auth logout
+
+<span class="comment"># 重新认证</span>
+claude-code auth</code></pre>
+      </section>
+
+      <section id="claude-proxy" class="card">
+        <h2>🌐 Claude Code 代理配置</h2>
+        <div class="alert info">
+          <strong>💡 提示：</strong>代理设置可能影响 OAuth 认证，建议认证时临时禁用代理
+        </div>
+        <h3>Windows 代理配置</h3>
+        <div class="copy"><button data-copy='$env:HTTP_PROXY="http://127.0.0.1:10809"
+$env:HTTPS_PROXY="http://127.0.0.1:10809"'>复制</button><span class="ok">已复制</span></div>
+        <pre><code><span class="comment"># PowerShell 临时设置</span>
+$env:HTTP_PROXY="http://127.0.0.1:10809"
+$env:HTTPS_PROXY="http://127.0.0.1:10809"</code></pre>
+        <h3>Mac/Linux 代理配置</h3>
+        <div class="copy"><button data-copy='export HTTP_PROXY="http://127.0.0.1:1087"
+export HTTPS_PROXY="http://127.0.0.1:1087"'>复制</button><span class="ok">已复制</span></div>
+        <pre><code>export HTTP_PROXY="http://127.0.0.1:1087"
+export HTTPS_PROXY="http://127.0.0.1:1087"</code></pre>
+      </section>
+
+      <section id="claude-cross" class="card">
+        <h2>🔄 Claude Code 跨平台授权</h2>
+        <div class="alert info">
+          <strong>场景：</strong>需要在不同地理位置的电脑上进行授权
+        </div>
+        <h3>解决方案1：手动授权模式</h3>
+        <div class="copy"><button data-copy='claude-code auth --manual'>复制</button><span class="ok">已复制</span></div>
+        <pre><code><span class="comment"># 使用手动模式</span>
+claude-code auth --manual
+
+<span class="comment"># 完成授权后，复制浏览器地址栏的回调 URL</span></code></pre>
+        <h3>解决方案2：使用 API Key（推荐）</h3>
+        <div class="copy"><button data-copy='claude-code config set apiKey sk-ant-api03-YOUR-KEY'>复制</button><span class="ok">已复制</span></div>
+        <pre><code><span class="comment"># 避免 OAuth 的复杂性，直接使用 API Key</span>
+claude-code config set apiKey sk-ant-api03-YOUR-KEY</code></pre>
+      </section>
+
+      <section id="claude-cleanup" class="card">
+        <h2>🧹 Claude Code 清理重装</h2>
+        <div class="alert warn">
+          <strong>何时需要完全清理：</strong>
+          <ul>
+            <li>配置了第三方 API 想恢复官方服务</li>
+            <li>持续认证失败</li>
+            <li>配置文件损坏</li>
+          </ul>
+        </div>
+        <h3>Windows 快速清理</h3>
+        <div class="copy"><button data-copy='npm uninstall -g @anthropic-ai/claude-code
+npm cache clean --force
+npm install -g @anthropic-ai/claude-code'>复制</button><span class="ok">已复制</span></div>
+        <pre><code>npm uninstall -g @anthropic-ai/claude-code
+npm cache clean --force
+npm install -g @anthropic-ai/claude-code</code></pre>
+      </section>
+
+      <section id="claude-diagnosis" class="card">
+        <h2>🔍 Claude Code 诊断与资源</h2>
+        <h3>快速诊断命令</h3>
+        <div class="copy"><button data-copy='claude-code --version
+claude-code auth status
+claude-code config list'>复制</button><span class="ok">已复制</span></div>
+        <pre><code><span class="comment"># 版本信息</span>
+claude-code --version
+node --version
+npm --version
+
+<span class="comment"># 认证状态</span>
+claude-code auth status
+
+<span class="comment"># 配置信息</span>
+claude-code config list</code></pre>
+        <h3>官方链接</h3>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>资源</th>
+              <th>链接</th>
+              <th>用途</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Claude.ai</td>
+              <td>claude.ai</td>
+              <td>网页版对话</td>
+            </tr>
+            <tr>
+              <td>API Console</td>
+              <td>console.anthropic.com</td>
+              <td>API Key 管理</td>
+            </tr>
+            <tr>
+              <td>官方文档</td>
+              <td>docs.anthropic.com</td>
+              <td>API 文档</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="claude-errors" class="card">
+        <h2>❌ Claude Code 错误代码速查</h2>
+        <h3>401 Unauthorized - 未授权</h3>
+        <div class="alert danger">API Error: 401 Unauthorized</div>
+        <ul class="checklist">
+          <li>检查 API Key 格式：必须以 <code>sk-ant-api03-</code> 开头</li>
+          <li>验证账号是否有效且有余额/订阅</li>
+          <li>确认使用正确的认证方式（OAuth vs API Key）</li>
+        </ul>
+        <h3>403 Forbidden - 禁止访问</h3>
+        <div class="alert danger">API Error: 403 Forbidden</div>
+        <ul class="checklist">
+          <li>账号可能被限制或暂停</li>
+          <li>IP 地址可能被限制（某些地区）</li>
+          <li>尝试使用 VPN/代理（美区推荐）</li>
+        </ul>
+        <h3>429 Too Many Requests - 请求过多</h3>
+        <div class="alert warn">API Error: 429 Rate Limit</div>
+        <ul class="checklist">
+          <li>等待几分钟后重试</li>
+          <li>减少请求频率</li>
+          <li>升级到更高级别的订阅</li>
+        </ul>
+        <h3>ERR_CONNECTION_REFUSED - 连接被拒绝</h3>
+        <div class="alert danger">localhost:54545 拒绝连接</div>
+        <ul class="checklist">
+          <li>这是 OAuth 回调问题，使用 <code>claude-code auth --manual</code></li>
+          <li>或在同一台电脑完成授权</li>
+          <li>检查防火墙是否阻止 Node.js</li>
+        </ul>
+      </section>
+
+      <!-- Print Spooler 部分 -->
+      <section id="print-spooler" class="card">
+        <h2>🖨️ Print Spooler 诊断</h2>
+        <div class="alert warn">
+          <strong>⚠️ 重要提示：</strong>所有操作都需要管理员权限！
+        </div>
+        <h3>快速修复步骤</h3>
+        <ol class="step-list">
+          <li>
+            <div class="step-number">1</div>
+            <div class="step-body">
+              <strong>停止 Print Spooler 服务</strong>
+              <div class="copy"><button data-copy="net stop spooler">复制</button><span class="ok">已复制</span></div>
+              <pre><code>net stop spooler</code></pre>
+            </div>
+          </li>
+          <li>
+            <div class="step-number">2</div>
+            <div class="step-body">
+              <strong>清理打印队列文件</strong>
+              <div class="copy"><button data-copy='del /F /Q %SystemRoot%\System32\spool\PRINTERS\*.*'>复制</button><span class="ok">已复制</span></div>
+              <pre><code>del /F /Q %SystemRoot%\System32\spool\PRINTERS\*.*</code></pre>
+            </div>
+          </li>
+          <li>
+            <div class="step-number">3</div>
+            <div class="step-body">
+              <strong>重启服务</strong>
+              <div class="copy"><button data-copy="net start spooler">复制</button><span class="ok">已复制</span></div>
+              <pre><code>net start spooler</code></pre>
+            </div>
+          </li>
+        </ol>
+        <h3>常见错误代码</h3>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>错误代码</th>
+              <th>解决方案</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1068</strong></td>
+              <td>启动依赖服务 (RPC, HTTP)</td>
+            </tr>
+            <tr>
+              <td><strong>1053</strong></td>
+              <td>清理打印队列，重启服务</td>
+            </tr>
+            <tr>
+              <td><strong>1067</strong></td>
+              <td>运行 SFC 扫描修复系统文件</td>
+            </tr>
+          </tbody>
+        </table>
+        <h3>高级修复</h3>
+        <div class="copy"><button data-copy='sfc /scannow
+DISM /Online /Cleanup-Image /RestoreHealth'>复制</button><span class="ok">已复制</span></div>
+        <pre><code><span class="comment"># 系统文件检查</span>
+sfc /scannow
+
+<span class="comment"># DISM 修复</span>
+DISM /Online /Cleanup-Image /RestoreHealth</code></pre>
+      </section>
+
+      <footer class="foot">
+        本页面为单文件 HTML，可离线保存与分享；需要更新时，把此文件交给 Codex 按上面提示词进行合并维护即可。
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    // 主题开关
+    const btn = document.getElementById('toggleTheme');
+    const root = document.body;
+    btn.addEventListener('click', () => {
+      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('codex-theme', next);
+    });
+    const saved = localStorage.getItem('codex-theme');
+    if(saved){ root.setAttribute('data-theme', saved); }
+
+    // 复制按钮
+    for (const b of document.querySelectorAll('.copy button')) {
+      b.addEventListener('click', async () => {
+        try{
+          await navigator.clipboard.writeText(b.getAttribute('data-copy'));
+          const ok = b.parentElement.querySelector('.ok'); ok.style.display='inline';
+          setTimeout(()=>ok.style.display='none', 1400);
+        }catch(e){ alert('复制失败：' + e); }
+      });
+    }
+  </script>
+</body>
+</html>

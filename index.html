@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <title>AI 学习知识库 - 首页</title>
+  <meta name="description" content="AI学习经验总结、工具对比、提示词工程、项目实战的综合知识库" />
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg-secondary: #f6f8fc;
+      --panel: #ffffff;
+      --muted: #5d6b8a;
+      --text: #0e1b31;
+      --text-secondary: #475569;
+      --accent: #2b6bff;
+      --accent-2: #0f9d58;
+      --accent-hover: #1e54d9;
+      --border: #e6ecf5;
+      --border-light: #f1f5f9;
+      --chip: #eef3fb;
+      --warn: #b47b00;
+      --danger: #c92a2a;
+      --good: #1f8d52;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --shadow-lg: 0 10px 26px rgba(0,0,0,0.1);
+      --navbar-height: 60px;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0b1020;
+      --bg-secondary: #0f1530;
+      --panel: #121a2b;
+      --muted: #8fa3c7;
+      --text: #e7eef9;
+      --text-secondary: #94a3b8;
+      --accent: #6aa6ff;
+      --accent-2: #75e0a3;
+      --accent-hover: #85b3ff;
+      --border: #27324a;
+      --border-light: #1e2840;
+      --chip: #1a2540;
+      --warn: #f6c244;
+      --danger: #ff6b6b;
+      --good: #49d289;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.2);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.25);
+      --shadow-lg: 0 10px 26px rgba(0,0,0,0.3);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      height: 100%;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Inter, "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--text);
+      background: var(--bg);
+      min-height: 100vh;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    a:hover {
+      color: var(--accent-hover);
+    }
+
+    /* 导航栏 */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--navbar-height);
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 1000;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .navbar-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+    }
+
+    .navbar-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .navbar-btn {
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--chip);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .navbar-btn:hover {
+      background: var(--bg-secondary);
+      transform: translateY(-1px);
+    }
+
+    /* 主容器 */
+    .main-container {
+      margin-top: var(--navbar-height);
+      padding: 48px 24px;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Hero区域 */
+    .hero {
+      text-align: center;
+      padding: 48px 0 64px;
+    }
+
+    .hero-title {
+      font-size: 42px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: 18px;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto 32px;
+      line-height: 1.7;
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      margin-top: 32px;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* 卡片网格 */
+    .cards-section {
+      margin-top: 48px;
+    }
+
+    .section-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--accent);
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    .card-icon.blue { background: rgba(43, 107, 255, 0.15); }
+    .card-icon.green { background: rgba(15, 157, 88, 0.15); }
+    .card-icon.purple { background: rgba(139, 92, 246, 0.15); }
+    .card-icon.orange { background: rgba(249, 115, 22, 0.15); }
+    .card-icon.pink { background: rgba(236, 72, 153, 0.15); }
+    .card-icon.cyan { background: rgba(6, 182, 212, 0.15); }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    .card-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: var(--chip);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .tag.highlight {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--good);
+      border-color: transparent;
+    }
+
+    /* 快速链接 */
+    .quick-links {
+      margin-top: 64px;
+      padding: 32px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+
+    .quick-links-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .quick-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      background: var(--bg-secondary);
+      color: var(--text);
+      transition: all 0.2s ease;
+    }
+
+    .quick-link:hover {
+      background: var(--chip);
+      color: var(--accent);
+    }
+
+    .quick-link-icon {
+      font-size: 18px;
+    }
+
+    /* 页脚 */
+    .footer {
+      margin-top: 64px;
+      padding: 32px 0;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* 响应式 */
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 28px;
+      }
+
+      .hero-subtitle {
+        font-size: 16px;
+      }
+
+      .hero-stats {
+        gap: 24px;
+      }
+
+      .stat-number {
+        font-size: 24px;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .main-container {
+        padding: 24px 16px;
+      }
+    }
+
+    /* 滚动条 */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--muted);
+    }
+
+    /* 动画 */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card {
+      animation: fadeInUp 0.5s ease backwards;
+    }
+
+    .card:nth-child(1) { animation-delay: 0.1s; }
+    .card:nth-child(2) { animation-delay: 0.2s; }
+    .card:nth-child(3) { animation-delay: 0.3s; }
+    .card:nth-child(4) { animation-delay: 0.4s; }
+    .card:nth-child(5) { animation-delay: 0.5s; }
+    .card:nth-child(6) { animation-delay: 0.6s; }
+  </style>
+</head>
+<body data-theme="dark">
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <div class="navbar-logo">AI</div>
+      <span>AI 学习知识库</span>
+    </div>
+    <div class="navbar-actions">
+      <button class="navbar-btn" id="toggleTheme">
+        <span id="themeIcon">&#9728;&#65039;</span>
+        <span>主题</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- 主内容 -->
+  <div class="main-container">
+    <!-- Hero区域 -->
+    <section class="hero">
+      <h1 class="hero-title">AI 学习知识库</h1>
+      <p class="hero-subtitle">
+        从入门到精通的AI学习资源，包含工具对比、提示词工程、项目实战经验，助你高效掌握AI协作技能
+      </p>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-number">6</div>
+          <div class="stat-label">专题模块</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">10+</div>
+          <div class="stat-label">AI工具对比</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">4</div>
+          <div class="stat-label">实战案例</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 卡片网格 -->
+    <section class="cards-section">
+      <h2 class="section-title">&#128218; 知识模块</h2>
+      <div class="cards-grid">
+        <!-- AI工具对比 -->
+        <a href="ai-tools-comparison.html" class="card">
+          <div class="card-icon blue">&#128736;</div>
+          <h3 class="card-title">AI工具使用教程与对比</h3>
+          <p class="card-desc">全面对比豆包、Kimi、智谱清言、通义千问等Web版AI，豆包浏览器、夸克浏览器，以及Trae、CodeGeeX、Claude Code等本地工具</p>
+          <div class="card-tags">
+            <span class="tag">豆包</span>
+            <span class="tag">Kimi</span>
+            <span class="tag">Trae</span>
+            <span class="tag highlight">Claude Code</span>
+          </div>
+        </a>
+
+        <!-- 提示词专题 -->
+        <a href="ai-prompt-engineering.html" class="card">
+          <div class="card-icon green">&#128172;</div>
+          <h3 class="card-title">AI提示词与记忆文件</h3>
+          <p class="card-desc">提示词工程核心技巧、CLAUDE.md等AI记忆文件规范、约束设计、输出格式控制，以及实战提示词模板库</p>
+          <div class="card-tags">
+            <span class="tag">Prompt</span>
+            <span class="tag">CLAUDE.md</span>
+            <span class="tag">Few-shot</span>
+            <span class="tag highlight">模板库</span>
+          </div>
+        </a>
+
+        <!-- 学习经验 -->
+        <a href="ai-learning-experience.html" class="card">
+          <div class="card-icon purple">&#127891;</div>
+          <h3 class="card-title">AI学习经验总结</h3>
+          <p class="card-desc">AI学习路线图、核心概念理解、高效对话技巧、任务分解方法、常见误区纠正，以及个人实践心得</p>
+          <div class="card-tags">
+            <span class="tag">学习路线</span>
+            <span class="tag">最佳实践</span>
+            <span class="tag highlight">经验总结</span>
+          </div>
+        </a>
+
+        <!-- 项目实战 -->
+        <a href="ai-project-practice.html" class="card">
+          <div class="card-icon orange">&#128187;</div>
+          <h3 class="card-title">项目实战经验</h3>
+          <p class="card-desc">4个完整AI协作项目案例：Telegram监控机器人、OKR周报系统、密码策略管理器、年终汇报自动化</p>
+          <div class="card-tags">
+            <span class="tag">Telegram Bot</span>
+            <span class="tag">自动化</span>
+            <span class="tag highlight">完整案例</span>
+          </div>
+        </a>
+
+        <!-- 教学PPT -->
+        <a href="ai-tutorial-ppt.html" class="card">
+          <div class="card-icon pink">&#127916;</div>
+          <h3 class="card-title">AI实战教学PPT</h3>
+          <p class="card-desc">面向有一定基础用户的教学演示，涵盖工具选择、Claude Code实战、提示词技巧、项目案例精讲</p>
+          <div class="card-tags">
+            <span class="tag">16页PPT</span>
+            <span class="tag">演示教学</span>
+            <span class="tag highlight">进阶内容</span>
+          </div>
+        </a>
+
+        <!-- 工具手册 -->
+        <a href="codex-cli-cheatsheet-v2.html" class="card">
+          <div class="card-icon cyan">&#128214;</div>
+          <h3 class="card-title">CLI工具速查手册</h3>
+          <p class="card-desc">Codex CLI与Claude Code的完整使用手册，包含安装配置、命令速查、代理设置、错误代码解决方案</p>
+          <div class="card-tags">
+            <span class="tag">Codex CLI</span>
+            <span class="tag">Claude Code</span>
+            <span class="tag highlight">速查手册</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- 快速链接 -->
+    <section class="quick-links">
+      <h3 class="quick-links-title">&#128279; 快速导航</h3>
+      <div class="links-grid">
+        <a href="ai-tools-comparison.html#web-tools" class="quick-link">
+          <span class="quick-link-icon">&#127760;</span>
+          <span>Web版AI工具</span>
+        </a>
+        <a href="ai-tools-comparison.html#browser-tools" class="quick-link">
+          <span class="quick-link-icon">&#128187;</span>
+          <span>浏览器端工具</span>
+        </a>
+        <a href="ai-tools-comparison.html#local-tools" class="quick-link">
+          <span class="quick-link-icon">&#128190;</span>
+          <span>本地客户端</span>
+        </a>
+        <a href="ai-tools-comparison.html#claude-code" class="quick-link">
+          <span class="quick-link-icon">&#9000;</span>
+          <span>Claude Code详解</span>
+        </a>
+        <a href="ai-prompt-engineering.html#prompt-basics" class="quick-link">
+          <span class="quick-link-icon">&#128172;</span>
+          <span>提示词基础</span>
+        </a>
+        <a href="ai-prompt-engineering.html#memory-files" class="quick-link">
+          <span class="quick-link-icon">&#128196;</span>
+          <span>记忆文件规范</span>
+        </a>
+        <a href="ai-prompt-engineering.html#prompt-library" class="quick-link">
+          <span class="quick-link-icon">&#128218;</span>
+          <span>提示词库</span>
+        </a>
+        <a href="ai-project-practice.html" class="quick-link">
+          <span class="quick-link-icon">&#128640;</span>
+          <span>项目实战</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+      <p>AI 学习知识库 &copy; 2025 - 持续更新中</p>
+      <p style="margin-top: 8px;">最后更新：2026-01-06</p>
+    </footer>
+  </div>
+
+  <script>
+    // 主题切换
+    const themeBtn = document.getElementById('toggleTheme');
+    const themeIcon = document.getElementById('themeIcon');
+    const root = document.body;
+
+    function setTheme(theme) {
+      root.setAttribute('data-theme', theme);
+      themeIcon.innerHTML = theme === 'dark' ? '&#9728;&#65039;' : '&#127769;';
+      localStorage.setItem('ai-kb-theme', theme);
+    }
+
+    themeBtn.addEventListener('click', () => {
+      const current = root.getAttribute('data-theme');
+      setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    // 加载保存的主题
+    const savedTheme = localStorage.getItem('ai-kb-theme') || 'dark';
+    setTheme(savedTheme);
+  </script>
+</body>
+</html>

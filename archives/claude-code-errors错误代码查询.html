@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code 错误代码速查手册</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .search-box {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            transition: all 0.3s;
+        }
+        .search-box:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 10px 20px;
+            background: #f5f5f5;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .tab:hover:not(.active) {
+            background: #e8e8e8;
+        }
+        .error-grid {
+            display: grid;
+            gap: 20px;
+        }
+        .error-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s;
+        }
+        .error-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .error-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .error-code {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .error-type {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .type-auth {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .type-rate {
+            background: #cfe2ff;
+            color: #084298;
+        }
+        .type-server {
+            background: #f8d7da;
+            color: #842029;
+        }
+        .type-client {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        .error-title {
+            font-size: 20px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .error-desc {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        .solution {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        .solution-title {
+            color: #27ae60;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .solution-steps {
+            list-style: none;
+            padding-left: 0;
+        }
+        .solution-steps li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: #555;
+            line-height: 1.6;
+        }
+        .solution-steps li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .code-block {
+            background: #2c3e50;
+            color: #f8f8f2;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+            font-size: 14px;
+        }
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 12px 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            color: #856404;
+        }
+        .info {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 12px 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            color: #0c5460;
+        }
+        .quick-fix {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        .quick-fix:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(86, 171, 47, 0.3);
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+            .error-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Claude Code 错误代码速查手册</h1>
+        <p class="subtitle">快速诊断和解决 Claude Code 使用中的常见问题</p>
+        
+        <input type="text" class="search-box" id="searchBox" placeholder="搜索错误代码或描述...（如：401、认证、超时）">
+        
+        <div class="tabs">
+            <button class="tab active" data-filter="all">全部错误</button>
+            <button class="tab" data-filter="auth">认证错误</button>
+            <button class="tab" data-filter="rate">限流错误</button>
+            <button class="tab" data-filter="server">服务器错误</button>
+            <button class="tab" data-filter="client">客户端错误</button>
+        </div>
+        
+        <div class="error-grid" id="errorGrid">
+            <!-- 401 错误 -->
+            <div class="error-card" data-category="auth">
+                <div class="error-header">
+                    <span class="error-code">401</span>
+                    <span class="error-type type-auth">认证错误</span>
+                </div>
+                <h3 class="error-title">Unauthorized - 未授权</h3>
+                <p class="error-desc">API密钥无效、过期或未提供。这是最常见的错误之一。</p>
+                <div class="solution">
+                    <div class="solution-title">💡 解决方案</div>
+                    <ul class="solution-steps">
+                        <li>检查API密钥是否正确配置：<code class="code-block">export ANTHROPIC_API_KEY="sk-ant-xxx"</code></li>
+                        <li>确认密钥未过期，可在 console.anthropic.com 查看</li>
+                        <li>检查环境变量是否正确加载：<code class="code-block">echo $ANTHROPIC_API_KEY</code></li>
+                        <li>如果使用配置文件，确保路径正确：~/.config/claude/config.json</li>
+                    </ul>
+                    <div class="warning">⚠️ 注意：不要在代码中硬编码API密钥，始终使用环境变量</div>
+                </div>
+            </div>
+
+            <!-- 403 错误 -->
+            <div class="error-card" data-category="auth">
+                <div class="error-header">
+                    <span class="error-code">403</span>
+                    <span class="error-type type-auth">权限错误</span>
+                </div>
+                <h3 class="error-title">Forbidden - 禁止访问</h3>
+                <p class="error-desc">账户权限不足或访问了受限资源。</p>
+                <div class="solution">
+                    <div class="solution-title">💡 解决方案</div>
+                    <ul class="solution-steps">
+                        <li>确认账户已开通相应模型的访问权限（如 Claude 3 Opus）</li>
+                        <li>检查是否在不支持的地区使用服务</li>
+                        <li>确认账户余额充足且未被暂停</li>
+                        <li>如果是企业账户，联系管理员确认权限设置</li>
+                    </ul>
+                    <div class="info">💼 企业用户请检查组织设置中的模型访问权限</div>
+                </div>
+            </div>
+
+            <!-- 429 错误 -->
+            <div class="error-card" data-category="rate">
+                <div class="error-header">
+                    <span class="error-code">429</span>
+                    <span class="error-type type-rate">限流错误</span>
+                </div>
+                <h3 class="error-title">Too Many Requests - 请求过多</h3>
+                <p class="error-desc">超过了API的速率限制，需要降低请求频率。</p>
+                <div class="solution">
+                    <div class="solution-title">💡 解决方案</div>
+                    <ul class="solution-steps">
+                        <li>实现指数退避重试机制：<code class="code-block">import time
+for i in range(3):
+    try:
+        # API调用
+        break
+    except RateLimitError:
+        time.sleep(2 ** i)</code></li>
+                        <li>降低并发请求数量</li>
+                        <li>使用批处理而非单个请求</li>
+                        <li>升级到更高的API套餐获取更高限额</li>
+                    </ul>
+                    <div class="info">📊 当前限制：免费层 5 req/min，付费层 50 req/min</div>
+                </div>
+            </div>
+
+            <!-- 500 错误 -->
+            <div class="error-card" data-category="server">
+                <div class="error-header">
+                    <span class="error-code">500</span>
+                    <span class="error-type type-server">服务器错误</span>
+                </div>
+                <h3 class="error-title">Internal Server Error - 内部服务器错误</h3>
+                <p class="error-desc">Claude服务器端出现问题，通常是临时性的。</p>
+                <div class="solution">
+                    <div class="solution-title">💡 解决方案</div>
+                    <ul class="solution-steps">
+                        <li>等待几分钟后重试</li>
+                        <li>检查 status.anthropic.com 了解服务状态</li>
+                        <li>实现自动重试机制（建议3次，间隔递增）</li>
+                        <li>如果持续出现，联系支持团队</li>
+                    </ul>
+                    <div class="warning">⚠️ 不要立即大量重试，可能加重服务器负担</div>
+                </div>
+            </div>
+
+            <!-- 502 错误 -->
+            <div class="error-card" data-category="server">
+                <div class="error-header">
+                    <span class="error-code">502</span>
+                    <span class="error-type type-server">网关错误</span>
+                </div>
+                <h3 class="error-title">Bad Gateway - 网关错误</h3>
+                <p class="error-desc">代理服务器从上游服务器收到无效响应。</p>
+                <div class="solution">
+                    <div class="solution-title">💡 解决方案</div>
+                    <ul class="solution-steps">
+                        <li>检查网络连接稳定性</li>
+                        <li>如使用代理，确认代理服务器正常</li>
+                        <li>尝试使用不同的网络环境</li>
+                        <li>等待服务恢复（通常几分钟内）</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 503 错误 -->
+            <div class="error-card" data-category="server">
+                <div class="error-header">
+                    <span class="error-code">503</span>
+                    <span class="error-type type-server">服务不可用</span>
+                </div>
+                <h3 class="error-title">Service Unavailable - 服务暂时不可用</h3>
+                <p class="error-desc">服务器临时过载或维护中。</p>
+                <div class="solution">
+                    <div class="solution-title">💡 解决方案</div>
+                    <ul class="solution-steps">
+                        <li>查看官方状态页面确认是否在维护</li>
+                        <li>实现带有退避策略的重试</li>
+                        <li>考虑在非高峰时段使用</li>
+                        <li>准备降级方案或备用服务</li>
+                    </ul>
+                    <div class="info">🔧 计划维护通常会提前通知</div>
+                </div>
+            </div>
+
+            <!-- 400 错误 -->
+            <div class="error-card" data-category="client">
+                <div class="error-header">
+                    <span class="error-code">400</span>
+                    <span class="error-type type-client">请求错误</span>
+                </div>
+                <h3 class="error-title">Bad Request - 错误的请求</h3>
+                <p class="error-desc">请求格式错误或参数无效。</p>
+                <div class="solution">
+                    <div class="solution-title">💡 解决方案</div>
+                    <ul class="solution-steps">
+                        <li>检查JSON格式是否正确</li>
+                        <li>确认必需参数都已提供</li>
+                        <li>验证参数类型（如max_tokens应为整数）</li>
+                        <li>检查模型名称拼写：claude-3-opus-20240229</li>
+                    </ul>
+                    <code class="code-block"># 正确的请求示例
+{
+  "model": "claude-3-opus-20240229",
+  "messages": [{"role": "user", "content": "Hello"}],
+  "max_tokens": 1000
+}</code>
+                </div>
+            </div>
+
+            <!-- 408 错误 -->
+            <div class="error-card" data-category="client">
+                <div class="error-header">
+                    <span class="error-code">408</span>
+                    <span class="error-type type-client">超时错误</span>
+                </div>
+                <h3 class="error-title">Request Timeout - 请求超时</h3>
+                <p class="error-desc">请求处理时间过长，超过了服务器等待时间。</p>
+                <div class="solution">
+                    <div class="solution-title">💡 解决方案</div>
+                    <ul class="solution-steps">
+                        <li>减少单次请求的内容长度</li>
+                        <li>增加客户端超时设置：<code class="code-block">client = anthropic.Client(timeout=60.0)</code></li>
+                        <li>将长任务分解为多个小任务</li>
+                        <li>使用流式响应避免超时</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 422 错误 -->
+            <div class="error-card" data-category="client">
+                <div class="error-header">
+                    <span class="error-code">422</span>
+                    <span class="error-type type-client">验证错误</span>
+                </div>
+                <h3 class="error-title">Unprocessable Entity - 无法处理的实体</h3>
+                <p class="error-desc">请求格式正确但内容有语义错误。</p>
+                <div class="solution">
+                    <div class="solution-title">💡 解决方案</div>
+                    <ul class="solution-steps">
+                        <li>检查token数量是否超过模型限制（200k tokens）</li>
+                        <li>确认温度参数在0-1之间</li>
+                        <li>验证消息角色只使用 "user" 或 "assistant"</li>
+                        <li>检查是否有不支持的参数组合</li>
+                    </ul>
+                    <div class="warning">⚠️ 不同模型有不同的token限制，请查阅文档</div>
+                </div>
+            </div>
+
+            <!-- 网络错误 -->
+            <div class="error-card" data-category="client">
+                <div class="error-header">
+                    <span class="error-code">ECONNREFUSED</span>
+                    <span class="error-type type-client">连接错误</span>
+                </div>
+                <h3 class="error-title">Connection Refused - 连接被拒绝</h3>
+                <p class="error-desc">无法建立到API服务器的连接。</p>
+                <div class="solution">
+                    <div class="solution-title">💡 解决方案</div>
+                    <ul class="solution-steps">
+                        <li>检查网络连接和防火墙设置</li>
+                        <li>确认API端点URL正确：api.anthropic.com</li>
+                        <li>如在中国大陆，可能需要配置代理：<code class="code-block">export HTTPS_PROXY=http://your-proxy:port</code></li>
+                        <li>检查DNS解析是否正常</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- SSL错误 -->
+            <div class="error-card" data-category="client">
+                <div class="error-header">
+                    <span class="error-code">SSL_ERROR</span>
+                    <span class="error-type type-client">证书错误</span>
+                </div>
+                <h3 class="error-title">SSL Certificate Error - SSL证书错误</h3>
+                <p class="error-desc">SSL/TLS证书验证失败。</p>
+                <div class="solution">
+                    <div class="solution-title">💡 解决方案</div>
+                    <ul class="solution-steps">
+                        <li>更新系统证书：<code class="code-block">pip install --upgrade certifi</code></li>
+                        <li>检查系统时间是否正确</li>
+                        <li>如在企业网络，可能需要添加企业证书</li>
+                        <li>临时方案（不推荐生产环境）：禁用SSL验证</li>
+                    </ul>
+                    <div class="warning">⚠️ 生产环境请勿禁用SSL验证</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 搜索功能
+        document.getElementById('searchBox').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.error-card');
+            
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // 标签过滤
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // 更新活动标签
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                // 过滤卡片
+                const filter = this.dataset.filter;
+                const cards = document.querySelectorAll('.error-card');
+                
+                cards.forEach(card => {
+                    if (filter === 'all' || card.dataset.category === filter) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // 复制代码块功能
+        document.querySelectorAll('.code-block').forEach(block => {
+            block.style.cursor = 'pointer';
+            block.title = '点击复制';
+            block.addEventListener('click', function() {
+                navigator.clipboard.writeText(this.textContent);
+                const originalText = this.textContent;
+                this.textContent = '✓ 已复制到剪贴板';
+                setTimeout(() => {
+                    this.textContent = originalText;
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>

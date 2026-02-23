@@ -1,0 +1,1708 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TRAE 使用教程（计费/模型/快捷键/代理）</title>
+  <meta name="description" content="TRAE（trae.ai）使用教程：下载安装、计费与配额、模型列表、快捷键、上手流程与常见问题（简中离线版）。" />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111c33;
+      --panel2: #0b1224;
+      --card: #152244;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --muted2: #64748b;
+      --border: rgba(148, 163, 184, 0.18);
+      --shadow: 0 12px 30px rgba(0, 0, 0, 0.38);
+      --accent: #60a5fa;
+      --accent2: #a78bfa;
+      --good: #34d399;
+      --warn: #fbbf24;
+      --bad: #fb7185;
+      --radius: 14px;
+      --radius-sm: 10px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    [data-theme="light"] {
+      --bg: #f6f7fb;
+      --panel: #ffffff;
+      --panel2: #f1f5f9;
+      --card: #ffffff;
+      --text: #0b1224;
+      --muted: #475569;
+      --muted2: #64748b;
+      --border: rgba(2, 6, 23, 0.12);
+      --shadow: 0 12px 30px rgba(2, 6, 23, 0.12);
+      --accent: #2563eb;
+      --accent2: #7c3aed;
+      --good: #059669;
+      --warn: #d97706;
+      --bad: #e11d48;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--text);
+      background: radial-gradient(1100px 520px at 22% -10%, rgba(96, 165, 250, 0.18), transparent 60%),
+        radial-gradient(900px 480px at 90% 0%, rgba(167, 139, 250, 0.16), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg));
+      line-height: 1.7;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 56px;
+      z-index: 50;
+      border-bottom: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.72);
+      backdrop-filter: blur(14px);
+    }
+
+    [data-theme="light"] .topbar {
+      background: rgba(246, 247, 251, 0.75);
+    }
+
+    .topbar-inner {
+      max-width: 1220px;
+      margin: 0 auto;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 260px;
+    }
+
+    .mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 14px 40px rgba(96, 165, 250, 0.25);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 0.2px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.2;
+    }
+
+    .brand p {
+      margin: 2px 0 0;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.2;
+    }
+
+    .search {
+      flex: 1;
+      position: relative;
+    }
+
+    .search input {
+      width: 100%;
+      padding: 10px 12px 10px 40px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(17, 28, 51, 0.72);
+      color: var(--text);
+      outline: none;
+      transition: border-color 140ms ease, box-shadow 140ms ease;
+    }
+
+    [data-theme="light"] .search input {
+      background: rgba(255, 255, 255, 0.88);
+    }
+
+    .search input:focus {
+      border-color: rgba(96, 165, 250, 0.7);
+      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.18);
+    }
+
+    .search .icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted2);
+      font-size: 14px;
+      user-select: none;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn {
+      border: 1px solid var(--border);
+      background: rgba(17, 28, 51, 0.55);
+      color: var(--text);
+      padding: 9px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 12px;
+      transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      user-select: none;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+
+    [data-theme="light"] .btn {
+      background: rgba(255, 255, 255, 0.75);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(96, 165, 250, 0.55);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .layout {
+      max-width: 1220px;
+      margin: 0 auto;
+      padding: 18px 16px 48px;
+      display: grid;
+      grid-template-columns: 270px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 78px;
+      max-height: calc(100vh - 98px);
+      overflow: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(17, 28, 51, 0.72), rgba(11, 18, 36, 0.72));
+      box-shadow: var(--shadow);
+    }
+
+    [data-theme="light"] .sidebar {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(241, 245, 249, 0.88));
+    }
+
+    .side-head {
+      padding: 14px 14px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .side-head .label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: 0.4px;
+    }
+
+    .side-head .hint {
+      font-size: 12px;
+      color: var(--muted2);
+      margin-top: 6px;
+    }
+
+    .nav {
+      padding: 10px 6px 10px;
+    }
+
+    .nav a {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 9px 12px;
+      margin: 2px 4px;
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--muted);
+      border: 1px solid transparent;
+    }
+
+    .nav a:hover {
+      background: rgba(96, 165, 250, 0.10);
+      color: var(--text);
+      border-color: rgba(96, 165, 250, 0.20);
+    }
+
+    .nav a.active {
+      background: rgba(96, 165, 250, 0.14);
+      color: var(--text);
+      border-color: rgba(96, 165, 250, 0.32);
+    }
+
+    .chip {
+      margin-left: auto;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--muted2);
+      background: rgba(11, 18, 36, 0.45);
+    }
+
+    [data-theme="light"] .chip {
+      background: rgba(241, 245, 249, 0.88);
+    }
+
+    main {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(17, 28, 51, 0.62), rgba(11, 18, 36, 0.62));
+      box-shadow: var(--shadow);
+    }
+
+    [data-theme="light"] main {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(241, 245, 249, 0.88));
+    }
+
+    .hero {
+      padding: 22px 20px;
+      border-bottom: 1px solid var(--border);
+      background:
+        radial-gradient(850px 340px at 0% 0%, rgba(96, 165, 250, 0.18), transparent 60%),
+        radial-gradient(720px 320px at 90% 10%, rgba(167, 139, 250, 0.16), transparent 60%);
+    }
+
+    .hero h2 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: 0.2px;
+    }
+
+    .hero p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      max-width: 920px;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .pill {
+      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(11, 18, 36, 0.42);
+      color: var(--muted);
+    }
+
+    [data-theme="light"] .pill {
+      background: rgba(241, 245, 249, 0.88);
+    }
+
+    .pill b {
+      color: var(--text);
+    }
+
+    .content {
+      padding: 22px 20px 34px;
+    }
+
+    section {
+      scroll-margin-top: 88px;
+      padding: 18px 0 6px;
+      border-top: 1px dashed rgba(148, 163, 184, 0.18);
+    }
+
+    section:first-of-type {
+      border-top: none;
+      padding-top: 0;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      letter-spacing: 0.2px;
+    }
+
+    h4 {
+      margin: 18px 0 8px;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    p {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+
+    ul,
+    ol {
+      margin: 8px 0 14px 20px;
+      color: var(--muted);
+    }
+
+    li {
+      margin: 6px 0;
+    }
+
+    code {
+      font-family: var(--mono);
+      font-size: 12.5px;
+      padding: 2px 6px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(11, 18, 36, 0.55);
+      color: rgba(96, 165, 250, 0.92);
+    }
+
+    [data-theme="light"] code {
+      background: rgba(241, 245, 249, 0.88);
+    }
+
+    pre {
+      margin: 14px 0;
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: rgba(11, 18, 36, 0.55);
+      overflow: auto;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+    }
+
+    [data-theme="light"] pre {
+      background: rgba(241, 245, 249, 0.88);
+      box-shadow: none;
+    }
+
+    pre code {
+      padding: 0;
+      border: none;
+      background: none;
+      color: var(--text);
+      font-size: 12.5px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+
+    th,
+    td {
+      padding: 10px 10px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      text-align: left;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    th {
+      color: var(--text);
+      background: rgba(11, 18, 36, 0.40);
+      font-weight: 800;
+      letter-spacing: 0.2px;
+    }
+
+    [data-theme="light"] th {
+      background: rgba(241, 245, 249, 0.92);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .callout {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: rgba(96, 165, 250, 0.10);
+      padding: 12px 14px;
+      margin: 14px 0;
+      color: var(--muted);
+    }
+
+    .callout b {
+      color: var(--text);
+    }
+
+    .callout.good {
+      background: rgba(52, 211, 153, 0.10);
+    }
+
+    .callout.warn {
+      background: rgba(251, 191, 36, 0.10);
+    }
+
+    .callout.bad {
+      background: rgba(251, 113, 133, 0.10);
+    }
+
+    .kbd {
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(11, 18, 36, 0.52);
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    [data-theme="light"] .kbd {
+      background: rgba(241, 245, 249, 0.88);
+    }
+
+    mark {
+      background: rgba(251, 191, 36, 0.22);
+      color: var(--text);
+      padding: 0 3px;
+      border-radius: 4px;
+    }
+
+    .mobile-only {
+      display: none;
+    }
+
+    .drawer-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.52);
+      z-index: 80;
+    }
+
+    .drawer {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 86vw;
+      max-width: 340px;
+      z-index: 90;
+      padding: 12px;
+      transform: translateX(-102%);
+      transition: transform 180ms ease;
+    }
+
+    .drawer.open {
+      transform: translateX(0);
+    }
+
+    @media (max-width: 980px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        display: none;
+      }
+
+      .brand {
+        min-width: 0;
+      }
+
+      .brand p {
+        display: none;
+      }
+
+      .mobile-only {
+        display: inline-flex;
+      }
+
+      .drawer-overlay.show {
+        display: block;
+      }
+
+      .drawer {
+        display: block;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .topbar-inner {
+        flex-wrap: wrap;
+      }
+
+      .actions {
+        width: 100%;
+        justify-content: flex-end;
+      }
+    }
+
+    .footer {
+      padding: 14px 20px;
+      border-top: 1px solid var(--border);
+      color: var(--muted2);
+      font-size: 12px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      background: rgba(11, 18, 36, 0.38);
+    }
+
+    [data-theme="light"] .footer {
+      background: rgba(241, 245, 249, 0.88);
+    }
+  </style>
+</head>
+
+<body data-theme="dark">
+  <!-- 统一工具栏组件 - AI知识库文档系统 -->
+  <style>
+    /* ===== 工具栏CSS变量（与doc-center.html保持一致）===== */
+    :root {
+      /* Linear-inspired Dark Theme Colors */
+      --bg-primary: #0e0e10;
+      --bg-secondary: #121214;
+      --bg-tertiary: #1a1a1e;
+      --bg-elevated: #1f1f23;
+      --bg-hover: #27272a;
+
+      /* Linear Gradients */
+      --accent-purple: #8b5cf6;
+      --accent-blue: #3b82f6;
+      --accent-cyan: #06b6d4;
+      --accent-pink: #ec4899;
+      --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+      --gradient-glow: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.1) 100%);
+      --gradient-border: linear-gradient(135deg, rgba(99, 102, 241, 0.5), rgba(139, 92, 246, 0.3));
+
+      /* Text Colors */
+      --text-primary: #fafafa;
+      --text-secondary: #a1a1aa;
+      --text-muted: #71717a;
+      --text-tertiary: #52525b;
+
+      /* Border & Shadow */
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-default: rgba(255, 255, 255, 0.1);
+      --border-hover: rgba(255, 255, 255, 0.15);
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+      --shadow-glow: 0 0 40px rgba(139, 92, 246, 0.15);
+
+      /* Spacing - Notion Style */
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+
+      /* Toolbar specific */
+      --toolbar-height: 56px;
+
+      /* Transitions */
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Light Theme */
+    [data-theme="light"] {
+      --bg-primary: #ffffff;
+      --bg-secondary: #f9fafb;
+      --bg-tertiary: #f3f4f6;
+      --bg-elevated: #ffffff;
+      --bg-hover: #e5e7eb;
+
+      --text-primary: #111827;
+      --text-secondary: #4b5563;
+      --text-muted: #9ca3af;
+      --text-tertiary: #d1d5db;
+
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --border-default: rgba(0, 0, 0, 0.08);
+      --border-hover: rgba(0, 0, 0, 0.12);
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    /* ===== 统一工具栏样式 ===== */
+    #unified-toolbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--toolbar-height);
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* 为页面内容添加顶部间距 */
+    body.has-unified-toolbar {
+      padding-top: var(--toolbar-height);
+    }
+
+    /* 左侧区域 */
+    .toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* 返回文档中心链接 */
+    .toolbar-back-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: var(--radius-md);
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all var(--transition-fast);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .toolbar-back-link:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .toolbar-back-link svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    /* 分隔线 */
+    .toolbar-divider {
+      width: 1px;
+      height: 20px;
+      background: var(--border-default);
+      flex-shrink: 0;
+    }
+
+    /* 当前文档标题 */
+    .toolbar-doc-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+      max-width: 300px;
+    }
+
+    /* 中间区域 - 搜索框 */
+    .toolbar-center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      max-width: 400px;
+    }
+
+    .toolbar-search {
+      position: relative;
+      width: 100%;
+    }
+
+    .toolbar-search-input {
+      width: 100%;
+      padding: 8px 12px 8px 36px;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      font-size: 14px;
+      transition: all var(--transition-fast);
+      font-family: inherit;
+    }
+
+    .toolbar-search-input:focus {
+      outline: none;
+      border-color: var(--accent-purple);
+      background: var(--bg-elevated);
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+    }
+
+    .toolbar-search-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .toolbar-search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .toolbar-search-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* 右侧区域 */
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      justify-content: flex-end;
+    }
+
+    /* 工具栏按钮 */
+    .toolbar-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      font-family: inherit;
+    }
+
+    .toolbar-btn:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+      border-color: var(--border-hover);
+    }
+
+    .toolbar-btn:active {
+      transform: scale(0.96);
+    }
+
+    .toolbar-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* 图标按钮 */
+    .toolbar-btn-icon {
+      width: 36px;
+      height: 36px;
+      padding: 0;
+    }
+
+    /* 字体大小控制组 */
+    .toolbar-fontsize-group {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      padding: 2px;
+    }
+
+    .toolbar-fontsize-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      font-family: inherit;
+    }
+
+    .toolbar-fontsize-btn:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .toolbar-fontsize-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .toolbar-fontsize-value {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      height: 28px;
+      padding: 0 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+      background: var(--bg-elevated);
+      border-radius: var(--radius-sm);
+    }
+
+    /* 主题切换按钮 */
+    .toolbar-theme-btn {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .toolbar-theme-btn .icon-sun,
+    .toolbar-theme-btn .icon-moon {
+      transition: transform var(--transition-normal), opacity var(--transition-normal);
+    }
+
+    [data-theme="light"] .toolbar-theme-btn .icon-moon,
+    .toolbar-theme-btn .icon-sun {
+      opacity: 1;
+      transform: rotate(0deg) scale(1);
+    }
+
+    [data-theme="light"] .toolbar-theme-btn .icon-sun,
+    .toolbar-theme-btn .icon-moon {
+      opacity: 0;
+      transform: rotate(90deg) scale(0.5);
+      position: absolute;
+    }
+
+    /* 响应式适配 */
+    @media (max-width: 768px) {
+      #unified-toolbar {
+        padding: 0 12px;
+      }
+
+      .toolbar-doc-title {
+        max-width: 150px;
+        font-size: 13px;
+      }
+
+      .toolbar-center {
+        max-width: 200px;
+      }
+
+      .toolbar-back-link span {
+        display: none;
+      }
+
+      .toolbar-fontsize-group {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .toolbar-center {
+        display: none;
+      }
+    }
+  </style>
+
+  <!-- 工具栏HTML结构 -->
+  <div id="unified-toolbar">
+    <!-- 左侧：返回链接 + 文档标题 -->
+    <div class="toolbar-left">
+      <a href="doc-center.html" class="toolbar-back-link" title="返回文档中心">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M19 12H5M12 19l-7-7 7-7" />
+        </svg>
+        <span>文档中心</span>
+      </a>
+      <div class="toolbar-divider"></div>
+      <div class="toolbar-doc-title" id="toolbar-doc-title">文档标题</div>
+    </div>
+
+    <!-- 中间：搜索框 -->
+    <div class="toolbar-center">
+      <div class="toolbar-search">
+        <div class="toolbar-search-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+        </div>
+        <input type="text" class="toolbar-search-input" id="toolbar-search-input" placeholder="搜索文档..."
+          autocomplete="off" />
+      </div>
+    </div>
+
+    <!-- 右侧：主题切换 + 字体大小调节 -->
+    <div class="toolbar-right">
+      <!-- 字体大小控制组 -->
+      <div class="toolbar-fontsize-group">
+        <button class="toolbar-fontsize-btn" id="toolbar-fontsize-minus" title="减小字体">A-</button>
+        <div class="toolbar-fontsize-value" id="toolbar-fontsize-value">100%</div>
+        <button class="toolbar-fontsize-btn" id="toolbar-fontsize-plus" title="增大字体">A+</button>
+      </div>
+
+      <!-- 主题切换按钮 -->
+      <button class="toolbar-btn toolbar-btn-icon toolbar-theme-btn" id="toolbar-theme-toggle" title="切换主题">
+        <!-- 太阳图标（亮色模式） -->
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5" />
+          <line x1="12" y1="1" x2="12" y2="3" />
+          <line x1="12" y1="21" x2="12" y2="23" />
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+          <line x1="1" y1="12" x2="3" y2="12" />
+          <line x1="21" y1="12" x2="23" y2="12" />
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+        </svg>
+        <!-- 月亮图标（暗色模式） -->
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * 统一工具栏组件脚本
+     * 功能：字体大小调节、主题切换、搜索跳转
+     * 所有状态保存到localStorage
+     */
+    (function () {
+      'use strict';
+
+      // ===== 配置常量 =====
+      const CONFIG = {
+        // localStorage键名
+        STORAGE_KEYS: {
+          FONT_SIZE: 'ai-kb-font-size',
+          THEME: 'ai-kb-theme'
+        },
+        // 字体大小设置
+        FONT_SIZE: {
+          BASE: 14,           // 基准字体大小(px)
+          MIN_PERCENT: 80,    // 最小百分比
+          MAX_PERCENT: 150,   // 最大百分比
+          STEP: 10,           // 每次调节步长(%)
+          DEFAULT: 100        // 默认百分比
+        },
+        // 主题设置
+        THEME: {
+          DARK: 'dark',
+          LIGHT: 'light',
+          DEFAULT: 'dark'
+        },
+        // 文档中心路径
+        DOC_CENTER_PATH: 'doc-center.html'
+      };
+
+      // ===== 工具函数 =====
+
+      /**
+       * 获取localStorage值
+       */
+      function getStorage(key, defaultValue) {
+        try {
+          const value = localStorage.getItem(key);
+          return value !== null ? value : defaultValue;
+        } catch (e) {
+          return defaultValue;
+        }
+      }
+
+      /**
+       * 设置localStorage值
+       */
+      function setStorage(key, value) {
+        try {
+          localStorage.setItem(key, value);
+        } catch (e) {
+          console.warn('无法保存到localStorage:', e);
+        }
+      }
+
+      /**
+       * 计算并应用字体大小
+       */
+      function applyFontSize(percent) {
+        // 限制在有效范围内
+        percent = Math.max(CONFIG.FONT_SIZE.MIN_PERCENT,
+          Math.min(CONFIG.FONT_SIZE.MAX_PERCENT, percent));
+
+        // 计算实际字体大小
+        const fontSize = (CONFIG.FONT_SIZE.BASE * percent / 100).toFixed(2);
+
+        // 应用到html元素
+        document.documentElement.style.fontSize = fontSize + 'px';
+
+        // 更新显示
+        updateFontSizeDisplay(percent);
+
+        // 保存到localStorage
+        setStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, percent.toString());
+
+        return percent;
+      }
+
+      /**
+       * 更新字体大小显示
+       */
+      function updateFontSizeDisplay(percent) {
+        const valueEl = document.getElementById('toolbar-fontsize-value');
+        const minusBtn = document.getElementById('toolbar-fontsize-minus');
+        const plusBtn = document.getElementById('toolbar-fontsize-plus');
+
+        if (valueEl) {
+          valueEl.textContent = percent + '%';
+        }
+
+        // 更新按钮禁用状态
+        if (minusBtn) {
+          minusBtn.disabled = percent <= CONFIG.FONT_SIZE.MIN_PERCENT;
+        }
+        if (plusBtn) {
+          plusBtn.disabled = percent >= CONFIG.FONT_SIZE.MAX_PERCENT;
+        }
+      }
+
+      /**
+       * 应用主题
+       */
+      function applyTheme(theme) {
+        // 验证主题值
+        if (theme !== CONFIG.THEME.DARK && theme !== CONFIG.THEME.LIGHT) {
+          theme = CONFIG.THEME.DEFAULT;
+        }
+
+        // 设置data-theme属性
+        document.documentElement.setAttribute('data-theme', theme);
+
+        // 保存到localStorage
+        setStorage(CONFIG.STORAGE_KEYS.THEME, theme);
+
+        return theme;
+      }
+
+      /**
+       * 切换主题
+       */
+      function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || CONFIG.THEME.DEFAULT;
+        const newTheme = currentTheme === CONFIG.THEME.DARK ? CONFIG.THEME.LIGHT : CONFIG.THEME.DARK;
+        applyTheme(newTheme);
+      }
+
+      /**
+       * 执行搜索
+       */
+      function performSearch(query) {
+        if (!query || !query.trim()) return;
+
+        // 构建跳转URL
+        const currentPath = window.location.pathname;
+        const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+        const targetUrl = basePath + CONFIG.DOC_CENTER_PATH + '#search=' + encodeURIComponent(query.trim());
+
+        // 跳转到文档中心
+        window.location.href = targetUrl;
+      }
+
+      /**
+       * 设置文档标题
+       */
+      function setDocumentTitle(title) {
+        const titleEl = document.getElementById('toolbar-doc-title');
+        if (titleEl && title) {
+          titleEl.textContent = title;
+        }
+      }
+
+      /**
+       * 从页面自动获取文档标题
+       */
+      function autoDetectDocumentTitle() {
+        // 优先级：1. h1标题 2. title标签 3. 文件名
+        let title = '';
+
+        // 尝试获取h1标题
+        const h1 = document.querySelector('h1');
+        if (h1 && h1.textContent.trim()) {
+          title = h1.textContent.trim();
+        } else {
+          // 尝试从title标签获取
+          const titleTag = document.querySelector('title');
+          if (titleTag && titleTag.textContent.trim()) {
+            title = titleTag.textContent.trim();
+            // 移除常见的后缀
+            title = title.replace(/[-_].*?(?:知识库|文档|AI)/i, '').trim();
+          } else {
+            // 从文件名获取
+            const path = window.location.pathname;
+            const filename = path.substring(path.lastIndexOf('/') + 1);
+            title = filename.replace(/\.html?$/i, '').replace(/[_-]/g, ' ');
+          }
+        }
+
+        setDocumentTitle(title);
+      }
+
+      // ===== 事件处理 =====
+
+      /**
+       * 初始化事件监听
+       */
+      function initEventListeners() {
+        // 字体大小减小按钮
+        const minusBtn = document.getElementById('toolbar-fontsize-minus');
+        if (minusBtn) {
+          minusBtn.addEventListener('click', function () {
+            const currentPercent = parseInt(getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString()));
+            applyFontSize(currentPercent - CONFIG.FONT_SIZE.STEP);
+          });
+        }
+
+        // 字体大小增大按钮
+        const plusBtn = document.getElementById('toolbar-fontsize-plus');
+        if (plusBtn) {
+          plusBtn.addEventListener('click', function () {
+            const currentPercent = parseInt(getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString()));
+            applyFontSize(currentPercent + CONFIG.FONT_SIZE.STEP);
+          });
+        }
+
+        // 主题切换按钮
+        const themeBtn = document.getElementById('toolbar-theme-toggle');
+        if (themeBtn) {
+          themeBtn.addEventListener('click', toggleTheme);
+        }
+
+        // 搜索框
+        const searchInput = document.getElementById('toolbar-search-input');
+        if (searchInput) {
+          // 回车键搜索
+          searchInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+              performSearch(this.value);
+            }
+          });
+        }
+      }
+
+      /**
+       * 从URL参数初始化搜索框
+       */
+      function initSearchFromURL() {
+        const hash = window.location.hash;
+        if (hash && hash.startsWith('#search=')) {
+          const query = decodeURIComponent(hash.substring(8));
+          const searchInput = document.getElementById('toolbar-search-input');
+          if (searchInput) {
+            searchInput.value = query;
+          }
+        }
+      }
+
+      // ===== 初始化 =====
+
+      /**
+       * 主初始化函数
+       */
+      function init() {
+        // 1. 恢复保存的字体大小
+        const savedFontSize = getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString());
+        applyFontSize(parseInt(savedFontSize));
+
+        // 2. 恢复保存的主题
+        const savedTheme = getStorage(CONFIG.STORAGE_KEYS.THEME, CONFIG.THEME.DEFAULT);
+        applyTheme(savedTheme);
+
+        // 3. 为body添加工具栏标识类
+        document.body.classList.add('has-unified-toolbar');
+
+        // 4. 自动检测文档标题
+        autoDetectDocumentTitle();
+
+        // 5. 初始化事件监听
+        initEventListeners();
+
+        // 6. 从URL初始化搜索框
+        initSearchFromURL();
+      }
+
+      // ===== 公共API =====
+
+      // 将工具栏API暴露到全局命名空间
+      window.UnifiedToolbar = {
+        // 设置文档标题
+        setTitle: setDocumentTitle,
+
+        // 获取/设置字体大小
+        getFontSize: function () {
+          return parseInt(getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString()));
+        },
+        setFontSize: applyFontSize,
+
+        // 获取/设置主题
+        getTheme: function () {
+          return document.documentElement.getAttribute('data-theme') || CONFIG.THEME.DEFAULT;
+        },
+        setTheme: applyTheme,
+        toggleTheme: toggleTheme,
+
+        // 执行搜索
+        search: performSearch,
+
+        // 配置常量
+        config: CONFIG
+      };
+
+      // 启动初始化
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    })();
+  </script>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="mark"><img src="assets/icons/trae-color.png" alt="Trae" style="width: 24px; height: 24px;"></div>
+        <div>
+          <h1>TRAE 教程（离线）</h1>
+          <p>计费与配额 / 模型 / 快捷键</p>
+        </div>
+      </div>
+
+      <div class="search" role="search">
+        <div class="icon">&#128269;</div>
+        <input id="searchInput" type="text" placeholder="搜索：Pro、配额、模型列表、Cmd+U、MCP" autocomplete="off" />
+      </div>
+
+      <div class="actions">
+        <button class="btn mobile-only" id="openNavBtn" type="button">&#9776; 目录</button>
+        <button class="btn" id="toggleThemeBtn" type="button">&#9728; 主题</button>
+        <a class="btn" href="doc-center.html">&#128279; 文档中心</a>
+        <a class="btn" href="ai-tools-comparison.html">&#128279; 工具对比</a>
+        <a class="btn" href="https://www.trae.ai/" target="_blank" rel="noreferrer">&#128279; 官网</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <div class="drawer" id="drawer">
+    <div class="sidebar" style="position: static; max-height: none;">
+      <div class="side-head">
+        <div class="label">目录</div>
+        <div class="hint">点击跳转；搜索会高亮命中。</div>
+      </div>
+      <nav class="nav" id="drawerNav"></nav>
+    </div>
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="目录">
+      <div class="side-head">
+        <div class="label">目录</div>
+        <div class="hint">以官方 billing 文档为准。</div>
+      </div>
+      <nav class="nav" id="sideNav"></nav>
+    </aside>
+
+    <main>
+      <div class="hero">
+        <h2>TRAE（trae.ai）使用教程</h2>
+        <p>
+          本页聚焦 TRAE 的“客户端是否收费、配额怎么计算、内置模型有哪些、怎么快速上手”。
+          计费与模型列表以 <code>docs.trae.ai/ide/billing</code> 为准。
+        </p>
+        <div class="meta">
+          <span class="pill"><b>免费版</b> 有（额度）</span>
+          <span class="pill"><b>Pro</b> 10 美金/月（文档描述）</span>
+          <span class="pill"><b>抓取日期</b> 2026-02-02</span>
+        </div>
+        <div class="callout warn" style="margin-top: 14px;">
+          <b>网络提示：</b>TRAE 的 AI 能力依赖联网访问模型服务；若你的网络环境限制相关域名，可能需要配置代理（具体以你的地区与服务为准）。
+        </div>
+      </div>
+
+      <div class="content" id="docRoot">
+        <section id="overview" data-title="概览">
+          <h3>概览</h3>
+          <ul>
+            <li><b>产品形态</b>：IDE + SOLO（响应式 coding agent）。</li>
+            <li><b>收费</b>：官方 billing 文档明确提供“免费版 + Pro 版订阅 + 限时容量包”。</li>
+            <li><b>模型</b>：官方 billing 文档给出“超级模型/高级模型”列表（可能随版本变化）。</li>
+          </ul>
+        </section>
+
+        <section id="install" data-title="安装">
+          <h3>安装</h3>
+          <p>
+            你可以从 TRAE 官网下载；另一个独立文档站（traeide.com）提供了 Trae IDE 的下载与快捷键说明。
+          </p>
+          <ul>
+            <li>官网：<a href="https://www.trae.ai/" target="_blank" rel="noreferrer">https://www.trae.ai/</a></li>
+            <li>下载：<a href="https://www.trae.ai/download" target="_blank"
+                rel="noreferrer">https://www.trae.ai/download</a></li>
+          </ul>
+          <p class="muted2">补充参考：<a href="https://traeide.com/download" target="_blank"
+              rel="noreferrer">traeide.com/download</a></p>
+        </section>
+
+        <section id="pricing" data-title="是否收费/配额（官方）">
+          <h3>是否收费/配额（官方）（2026年2月更新）</h3>
+          <p>TRAE 的计费与配额以官方文档为准。下面是关键条目摘要（节选）。</p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>项</th>
+                <th>免费版</th>
+                <th>Pro 版</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>定价</td>
+                <td><strong>免费（Claude 3.7/DeepSeek R1 无限）</strong></td>
+                <td>$10/月（首月$3）</td>
+              </tr>
+              <tr>
+                <td>代码自动补全</td>
+                <td>5000 次/月</td>
+                <td>无限次</td>
+              </tr>
+              <tr>
+                <td>超级模型问答</td>
+                <td>快速队列 10 次/月；慢速队列 50 次/月</td>
+                <td>快速队列 600 次/月；慢速队列 无限次</td>
+              </tr>
+              <tr>
+                <td>高级模型问答</td>
+                <td>1000 次/月（不限队列）</td>
+                <td>无限次（不限队列）</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="callout warn">
+            <b>注意：</b>文档中还描述了“限时容量包”（购买额外快速队列次数）以及“支持的国家/地区”。如果你无法订阅/支付，优先检查地区限制。
+          </div>
+
+          <p class="muted2">来源：<a href="https://docs.trae.ai/ide/billing" target="_blank"
+              rel="noreferrer">docs.trae.ai/ide/billing</a></p>
+        </section>
+
+        <section id="models" data-title="模型列表与统计（官方）">
+          <h3>模型列表与统计（官方）</h3>
+          <p>billing 文档把内置模型分为“超级模型”和“高级模型”。下面按文档可见条目整理（以官方为准）。</p>
+
+          <h4>超级模型（节选，2026年2月更新）</h4>
+          <ul>
+            <li>Gemini-3-Pro-Preview（含 200k variant）</li>
+            <li>Gemini-2.5-Pro / Gemini-2.5-Pro-Exp-03-25</li>
+            <li>Claude-3.7-Sonnet / Claude-3.7-Sonnet-Thinking</li>
+            <li>Kimi-K2-0905</li>
+            <li>GPT-5.2 / GPT-5.1 / GPT-5-medium / GPT-5-high</li>
+            <li>DeepSeek-V3.1 / DeepSeek-R1</li>
+            <li>Grok-4</li>
+          </ul>
+
+          <h4>高级模型（节选，2026年2月更新）</h4>
+          <ul>
+            <li>Gemini-2.5-Flash / Gemini-2.5-Flash-Thinking</li>
+            <li>Claude-3.5-Sonnet</li>
+            <li>GPT-4o / GPT-4o-mini</li>
+            <li>DeepSeek-V3（免费无限使用）</li>
+          </ul>
+
+          <div class="callout good">
+            <b>统计口径：</b>
+            <ul>
+              <li><b>内置模型数（按 billing 列表）</b>：超级模型至少 10 个条目；高级模型至少 1 个条目。</li>
+              <li><b>最终可用模型</b>：受地区、套餐、队列策略影响，以客户端内模型选择器为准。</li>
+            </ul>
+          </div>
+
+          <p class="muted2">来源：<a href="https://docs.trae.ai/ide/billing" target="_blank"
+              rel="noreferrer">docs.trae.ai/ide/billing</a></p>
+        </section>
+
+        <section id="shortcuts" data-title="快捷键（参考）">
+          <h3>快捷键（参考）</h3>
+          <p>
+            下面快捷键来自 traeide.com 文档站（偏 IDE 操作层面）。不同版本/不同系统可能有差异，以你实际安装版本为准。
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>动作</th>
+                <th>macOS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>打开侧边 AI Chat</td>
+                <td><span class="kbd">Cmd + U</span></td>
+              </tr>
+              <tr>
+                <td>打开行内 AI Chat</td>
+                <td><span class="kbd">Cmd + I</span></td>
+              </tr>
+              <tr>
+                <td>打开命令面板</td>
+                <td><span class="kbd">Cmd + Shift + P</span></td>
+              </tr>
+              <tr>
+                <td>打开设置</td>
+                <td><span class="kbd">Cmd + ,</span></td>
+              </tr>
+              <tr>
+                <td>触发自动补全</td>
+                <td><span class="kbd">Ctrl + Space</span></td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="muted2">来源：<a href="https://traeide.com/docs/trae-ide-ai-shortcut-setting" target="_blank"
+              rel="noreferrer">traeide.com/docs/trae-ide-ai-shortcut-setting</a></p>
+        </section>
+
+        <section id="workflows" data-title="核心工作流（3+）">
+          <h3>核心工作流（3+）</h3>
+          <h4>工作流 1：把需求变成可执行任务</h4>
+          <ol>
+            <li>用一句话描述目标 + 验收标准（例如：跑通 build + 通过测试）</li>
+            <li>让 agent 先规划（plan）再执行（build）</li>
+            <li>要求交付可验证证据（diff / 测试输出 / 日志）</li>
+          </ol>
+
+          <h4>工作流 2：按成本选择队列/模型</h4>
+          <ol>
+            <li>日常小问题优先慢速队列/低成本模型</li>
+            <li>关键路径（架构/复杂 bug）用超级模型（更强推理）</li>
+          </ol>
+
+          <h4>工作流 3：建立“可重复”的编码约束</h4>
+          <ol>
+            <li>把团队规范写进规则文件/模板</li>
+            <li>每次任务都要求遵循同一套输出格式与验证清单</li>
+          </ol>
+        </section>
+
+        <section id="network" data-title="代理/网络">
+          <h3>代理/网络</h3>
+          <p>
+            TRAE 文档会涉及地区与订阅可用性；如果你访问模型服务失败，一般从三个方向排查：地区限制、DNS/网络阻断、代理配置。
+          </p>
+          <ul>
+            <li>地区与订阅可用性：参照 <code>docs.trae.ai/ide/billing</code> 中的“支持的国家/地区”。</li>
+            <li>若需要代理：建议优先使用系统级代理（全局或按应用分流）。</li>
+          </ul>
+        </section>
+
+        <section id="faq" data-title="常见问题">
+          <h3>常见问题</h3>
+          <h4>1) 我是免费版，为什么用不了某些模型？</h4>
+          <p>模型可用性受套餐/配额/地区影响；以客户端内模型选择器与 billing 文档说明为准。</p>
+
+          <h4>2) 为什么订阅/支付入口不可用？</h4>
+          <p>优先检查 billing 文档中的“支持的国家/地区”。</p>
+        </section>
+
+        <section id="sources" data-title="引用/来源">
+          <h3>引用/来源</h3>
+          <ul>
+            <li>官网：<a href="https://www.trae.ai/" target="_blank" rel="noreferrer">https://www.trae.ai/</a></li>
+            <li>计费与配额（官方）：<a href="https://docs.trae.ai/ide/billing" target="_blank"
+                rel="noreferrer">https://docs.trae.ai/ide/billing</a></li>
+            <li>Pricing（入口）：<a href="https://www.trae.ai/pricing" target="_blank"
+                rel="noreferrer">https://www.trae.ai/pricing</a></li>
+            <li>Trae IDE 参考：<a href="https://traeide.com/docs/what-is-trae-ide" target="_blank"
+                rel="noreferrer">https://traeide.com/docs/what-is-trae-ide</a></li>
+            <li>Trae IDE 快捷键参考：<a href="https://traeide.com/docs/trae-ide-ai-shortcut-setting" target="_blank"
+                rel="noreferrer">https://traeide.com/docs/trae-ide-ai-shortcut-setting</a></li>
+          </ul>
+        </section>
+      </div>
+
+      <div class="footer">
+        <div>TRAE 教程（离线） | 生成于 2026-02-02</div>
+        <div class="muted2">提示：按 <span class="kbd">Esc</span> 清空搜索；回车跳到第一个命中。</div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+      var body = document.body;
+      var searchInput = document.getElementById("searchInput");
+      var sideNav = document.getElementById("sideNav");
+      var drawerNav = document.getElementById("drawerNav");
+      var openNavBtn = document.getElementById("openNavBtn");
+      var drawer = document.getElementById("drawer");
+      var drawerOverlay = document.getElementById("drawerOverlay");
+      var toggleThemeBtn = document.getElementById("toggleThemeBtn");
+      var docRoot = document.getElementById("docRoot");
+
+      function qsAll(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
+      function escapeHtml(text) {
+        return String(text)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/\"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+      function buildNav() {
+        var sections = qsAll("section[data-title]", docRoot);
+        var items = sections.map(function (sec) {
+          return { id: sec.getAttribute("id"), title: sec.getAttribute("data-title") || sec.getAttribute("id") };
+        });
+        function render(target) {
+          target.innerHTML = items.map(function (it, idx) {
+            return '<a href="#' + it.id + '" data-target="' + it.id + '">' +
+              '<span>' + escapeHtml(it.title) + '</span>' +
+              '<span class="chip">' + (idx + 1) + '</span>' +
+              '</a>';
+          }).join("");
+        }
+        render(sideNav);
+        render(drawerNav);
+      }
+      function setActiveNav(id) {
+        [sideNav, drawerNav].forEach(function (nav) {
+          qsAll('a[data-target]', nav).forEach(function (a) {
+            a.classList.toggle('active', a.getAttribute('data-target') === id);
+          });
+        });
+      }
+      function getCurrentSectionId() {
+        var sections = qsAll("section[id]", docRoot);
+        var top = 92;
+        var current = sections[0] ? sections[0].id : "";
+        for (var i = 0; i < sections.length; i++) {
+          var rect = sections[i].getBoundingClientRect();
+          if (rect.top - top <= 1) current = sections[i].id;
+        }
+        return current;
+      }
+      function closeDrawer() { drawer.classList.remove('open'); drawerOverlay.classList.remove('show'); }
+      function openDrawer() { drawer.classList.add('open'); drawerOverlay.classList.add('show'); }
+      function toggleTheme() {
+        var now = body.getAttribute('data-theme');
+        var next = now === 'dark' ? 'light' : 'dark';
+        body.setAttribute('data-theme', next);
+        try { localStorage.setItem('kb-trae-theme', next); } catch (e) { }
+      }
+      function restoreTheme() {
+        try {
+          var saved = localStorage.getItem('kb-trae-theme');
+          if (saved === 'dark' || saved === 'light') body.setAttribute('data-theme', saved);
+        } catch (e) { }
+      }
+      function clearHighlights() {
+        qsAll('[data-orig-html]', docRoot).forEach(function (el) {
+          el.innerHTML = el.getAttribute('data-orig-html');
+          el.removeAttribute('data-orig-html');
+        });
+      }
+      function highlightMatches(query) {
+        if (!query) return;
+        var q = query.trim();
+        if (!q) return;
+        var re;
+        try { re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'ig'); } catch (e) { return; }
+        var candidates = qsAll('h3, h4, p, li, td, th', docRoot);
+        candidates.forEach(function (el) {
+          var html = el.innerHTML;
+          if (!el.hasAttribute('data-orig-html')) el.setAttribute('data-orig-html', html);
+          if (re.test(el.textContent)) el.innerHTML = html.replace(re, function (m) { return '<mark>' + m + '</mark>'; });
+        });
+      }
+      function onSearch() {
+        var q = searchInput.value || '';
+        clearHighlights();
+        if (!q.trim()) return;
+        highlightMatches(q);
+        var first = docRoot.querySelector('mark');
+        if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      buildNav();
+      restoreTheme();
+      setActiveNav(getCurrentSectionId());
+      window.addEventListener('scroll', function () { setActiveNav(getCurrentSectionId()); }, { passive: true });
+      document.addEventListener('click', function (e) {
+        var a = e.target.closest('a[data-target]');
+        if (!a) return;
+        closeDrawer();
+      });
+      if (openNavBtn) openNavBtn.addEventListener('click', openDrawer);
+      drawerOverlay.addEventListener('click', closeDrawer);
+      toggleThemeBtn.addEventListener('click', toggleTheme);
+
+      var searchTimer = null;
+      searchInput.addEventListener('input', function () {
+        if (searchTimer) window.clearTimeout(searchTimer);
+        searchTimer = window.setTimeout(onSearch, 140);
+      });
+      searchInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          searchInput.value = '';
+          clearHighlights();
+          searchInput.blur();
+          return;
+        }
+        if (e.key === 'Enter') onSearch();
+      });
+    })();
+  </script>
+</body>
+
+</html>

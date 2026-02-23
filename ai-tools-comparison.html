@@ -1,0 +1,1994 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI工具使用教程与对比 - AI学习知识库</title>
+  <meta name="description" content="全面对比豆包、Kimi、智谱清言、通义千问、Trae、CodeGeeX、Claude Code等AI工具的功能、定价和使用场景" />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111c33;
+      --panel2: #0b1224;
+      --card: #152244;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --muted2: #64748b;
+      --border: rgba(148, 163, 184, 0.18);
+      --shadow: 0 12px 30px rgba(0, 0, 0, 0.38);
+      --accent: #60a5fa;
+      --accent2: #a78bfa;
+      --good: #34d399;
+      --warn: #fbbf24;
+      --bad: #fb7185;
+      --radius: 14px;
+      --radius-sm: 10px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    [data-theme="light"] {
+      --bg: #f6f7fb;
+      --panel: #ffffff;
+      --panel2: #f1f5f9;
+      --card: #ffffff;
+      --text: #0b1224;
+      --muted: #475569;
+      --muted2: #64748b;
+      --border: rgba(2, 6, 23, 0.12);
+      --shadow: 0 12px 30px rgba(2, 6, 23, 0.12);
+      --accent: #2563eb;
+      --accent2: #7c3aed;
+      --good: #059669;
+      --warn: #d97706;
+      --bad: #e11d48;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--text);
+      background: radial-gradient(1100px 520px at 22% -10%, rgba(96, 165, 250, 0.18), transparent 60%),
+        radial-gradient(900px 480px at 90% 0%, rgba(167, 139, 250, 0.16), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg));
+      line-height: 1.7;
+      padding-top: 56px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .topbar {
+      position: fixed;
+      top: 56px;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      border-bottom: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.72);
+      backdrop-filter: blur(14px);
+    }
+
+    [data-theme="light"] .topbar {
+      background: rgba(246, 247, 251, 0.75);
+    }
+
+    .topbar-inner {
+      max-width: 1220px;
+      margin: 0 auto;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 260px;
+    }
+
+    .mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 14px 40px rgba(96, 165, 250, 0.25);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.2;
+    }
+
+    .brand p {
+      margin: 2px 0 0;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.2;
+    }
+
+    .search {
+      flex: 1;
+      position: relative;
+    }
+
+    .search input {
+      width: 100%;
+      padding: 10px 12px 10px 40px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(17, 28, 51, 0.72);
+      color: var(--text);
+      outline: none;
+    }
+
+    [data-theme="light"] .search input {
+      background: rgba(255, 255, 255, 0.88);
+    }
+
+    .search input:focus {
+      border-color: rgba(96, 165, 250, 0.7);
+      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.18);
+    }
+
+    .search .icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted2);
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn {
+      border: 1px solid var(--border);
+      background: rgba(17, 28, 51, 0.55);
+      color: var(--text);
+      padding: 9px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 140ms ease;
+    }
+
+    [data-theme="light"] .btn {
+      background: rgba(255, 255, 255, 0.75);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(96, 165, 250, 0.55);
+    }
+
+    .layout {
+      max-width: 1220px;
+      margin: 0 auto;
+      padding: 88px 16px 48px;
+      display: grid;
+      grid-template-columns: 270px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 140px;
+      max-height: calc(100vh - 160px);
+      overflow: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(17, 28, 51, 0.72), rgba(11, 18, 36, 0.72));
+      box-shadow: var(--shadow);
+    }
+
+    [data-theme="light"] .sidebar {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(241, 245, 249, 0.88));
+    }
+
+    .side-head {
+      padding: 14px 14px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .side-head .label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: 0.4px;
+    }
+
+    .nav {
+      padding: 10px 6px 10px;
+    }
+
+    .nav a {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 9px 12px;
+      margin: 2px 4px;
+      border-radius: 12px;
+      color: var(--muted);
+      border: 1px solid transparent;
+    }
+
+    .nav a:hover {
+      background: rgba(96, 165, 250, 0.10);
+      color: var(--text);
+      border-color: rgba(96, 165, 250, 0.20);
+    }
+
+    .nav a.active {
+      background: rgba(96, 165, 250, 0.14);
+      color: var(--text);
+      border-color: rgba(96, 165, 250, 0.32);
+    }
+
+    .nav-group {
+      margin-top: 12px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-group:first-child {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
+    }
+
+    .nav-title {
+      font-size: 11px;
+      color: var(--muted2);
+      font-weight: 700;
+      padding: 6px 16px 4px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    main {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(17, 28, 51, 0.62), rgba(11, 18, 36, 0.62));
+      box-shadow: var(--shadow);
+    }
+
+    [data-theme="light"] main {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(241, 245, 249, 0.88));
+    }
+
+    .hero {
+      padding: 22px 20px;
+      border-bottom: 1px solid var(--border);
+      background:
+        radial-gradient(850px 340px at 0% 0%, rgba(96, 165, 250, 0.18), transparent 60%),
+        radial-gradient(720px 320px at 90% 10%, rgba(167, 139, 250, 0.16), transparent 60%);
+    }
+
+    .hero h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .hero p {
+      margin: 10px 0 0;
+      color: var(--muted);
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .pill {
+      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(11, 18, 36, 0.42);
+      color: var(--muted);
+    }
+
+    [data-theme="light"] .pill {
+      background: rgba(241, 245, 249, 0.88);
+    }
+
+    .pill b {
+      color: var(--text);
+    }
+
+    .content {
+      padding: 22px 20px 34px;
+    }
+
+    section {
+      scroll-margin-top: 150px;
+      padding: 18px 0 6px;
+      border-top: 1px dashed rgba(148, 163, 184, 0.18);
+    }
+
+    section:first-of-type {
+      border-top: none;
+      padding-top: 0;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    h4 {
+      margin: 18px 0 8px;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    p {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+
+    ul,
+    ol {
+      margin: 8px 0 14px 20px;
+      color: var(--muted);
+    }
+
+    li {
+      margin: 6px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+
+    th,
+    td {
+      padding: 10px 10px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      text-align: left;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    th {
+      color: var(--text);
+      background: rgba(11, 18, 36, 0.40);
+      font-weight: 800;
+    }
+
+    [data-theme="light"] th {
+      background: rgba(241, 245, 249, 0.92);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .callout {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: rgba(96, 165, 250, 0.10);
+      padding: 12px 14px;
+      margin: 14px 0;
+      color: var(--muted);
+    }
+
+    .callout b {
+      color: var(--text);
+    }
+
+    .callout.good {
+      background: rgba(52, 211, 153, 0.10);
+    }
+
+    .callout.warn {
+      background: rgba(251, 191, 36, 0.10);
+    }
+
+    .callout.bad {
+      background: rgba(251, 113, 133, 0.10);
+    }
+
+    .tag-new {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--good), #06b6d4);
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-left: 8px;
+    }
+
+    .tool-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .tool-card:hover {
+      border-color: rgba(96, 165, 250, 0.4);
+    }
+
+    .tool-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .tool-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      background: rgba(96, 165, 250, 0.15);
+    }
+
+    .tool-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: inherit;
+    }
+
+    .tool-icon.blue {
+      background: rgba(43, 107, 255, 0.15);
+    }
+
+    .tool-icon.green {
+      background: rgba(15, 157, 88, 0.15);
+    }
+
+    .tool-icon.purple {
+      background: rgba(139, 92, 246, 0.15);
+    }
+
+    .tool-icon.orange {
+      background: rgba(249, 115, 22, 0.15);
+    }
+
+    .tool-info h4 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .tool-info p {
+      margin: 4px 0 0;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .tool-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 12px;
+    }
+
+    .feature-tag {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(11, 18, 36, 0.55);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    [data-theme="light"] .feature-tag {
+      background: rgba(241, 245, 249, 0.88);
+    }
+
+    .feature-tag.highlight {
+      background: rgba(52, 211, 153, 0.15);
+      color: var(--good);
+      border-color: rgba(52, 211, 153, 0.3);
+    }
+
+    /* 翻墙需求标签 */
+    .feature-tag.proxy-free {
+      background: rgba(52, 211, 153, 0.18);
+      color: var(--good);
+      border-color: rgba(52, 211, 153, 0.4);
+      font-weight: 600;
+    }
+
+    .feature-tag.proxy-need {
+      background: rgba(251, 113, 133, 0.18);
+      color: var(--bad);
+      border-color: rgba(251, 113, 133, 0.4);
+      font-weight: 600;
+    }
+
+    .feature-tag.proxy-partial {
+      background: rgba(251, 191, 36, 0.18);
+      color: var(--warn);
+      border-color: rgba(251, 191, 36, 0.4);
+      font-weight: 600;
+    }
+
+    /* 上手难度标签 */
+    .feature-tag.diff-easy {
+      background: rgba(52, 211, 153, 0.18);
+      color: var(--good);
+      border-color: rgba(52, 211, 153, 0.4);
+    }
+
+    .feature-tag.diff-medium {
+      background: rgba(251, 191, 36, 0.18);
+      color: var(--warn);
+      border-color: rgba(251, 191, 36, 0.4);
+    }
+
+    .feature-tag.diff-hard {
+      background: rgba(251, 113, 133, 0.18);
+      color: var(--bad);
+      border-color: rgba(251, 113, 133, 0.4);
+    }
+
+    .footer {
+      padding: 14px 20px;
+      border-top: 1px solid var(--border);
+      color: var(--muted2);
+      font-size: 12px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      background: rgba(11, 18, 36, 0.38);
+    }
+
+    [data-theme="light"] .footer {
+      background: rgba(241, 245, 249, 0.88);
+    }
+
+    @media (max-width: 980px) {
+      .layout {
+        grid-template-columns: 1fr;
+        padding-top: 20px;
+      }
+
+      .sidebar {
+        display: none;
+      }
+
+      .brand {
+        min-width: 0;
+      }
+
+      .brand p {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body data-theme="dark">
+  <!-- 统一工具栏组件 -->
+  <style>
+    :root {
+      --bg-primary: #0e0e10;
+      --bg-secondary: #121214;
+      --bg-tertiary: #1a1a1e;
+      --bg-elevated: #1f1f23;
+      --bg-hover: #27272a;
+      --accent-purple: #8b5cf6;
+      --text-primary: #fafafa;
+      --text-secondary: #a1a1aa;
+      --text-muted: #71717a;
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-default: rgba(255, 255, 255, 0.1);
+      --border-hover: rgba(255, 255, 255, 0.15);
+      --toolbar-height: 56px;
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #ffffff;
+      --bg-tertiary: #f3f4f6;
+      --bg-elevated: #ffffff;
+      --bg-hover: #e5e7eb;
+      --text-primary: #111827;
+      --text-secondary: #4b5563;
+      --text-muted: #9ca3af;
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --border-default: rgba(0, 0, 0, 0.08);
+    }
+
+    #unified-toolbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--toolbar-height);
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      font-family: var(--sans);
+    }
+
+    .toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex: 1;
+    }
+
+    .toolbar-back-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 500;
+      transition: all var(--transition-fast);
+    }
+
+    .toolbar-back-link:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .toolbar-back-link svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .toolbar-divider {
+      width: 1px;
+      height: 20px;
+      background: var(--border-default);
+    }
+
+    .toolbar-doc-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toolbar-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--border-default);
+      border-radius: 8px;
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .toolbar-btn:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .toolbar-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    [data-theme="light"] .toolbar-btn .icon-moon,
+    .toolbar-btn .icon-sun {
+      opacity: 1;
+    }
+
+    [data-theme="light"] .toolbar-btn .icon-sun,
+    .toolbar-btn .icon-moon {
+      opacity: 0;
+      position: absolute;
+    }
+  </style>
+
+  <div id="unified-toolbar">
+    <div class="toolbar-left">
+      <a href="doc-center.html" class="toolbar-back-link" title="返回文档中心">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M19 12H5M12 19l-7-7 7-7" />
+        </svg>
+        <span>文档中心</span>
+      </a>
+      <div class="toolbar-divider"></div>
+      <div class="toolbar-doc-title">AI工具使用教程与对比</div>
+    </div>
+    <div class="toolbar-right">
+      <button class="toolbar-btn" id="toolbar-theme-toggle" title="切换主题">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5" />
+          <line x1="12" y1="1" x2="12" y2="3" />
+          <line x1="12" y1="21" x2="12" y2="23" />
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+          <line x1="1" y1="12" x2="3" y2="12" />
+          <line x1="21" y1="12" x2="23" y2="12" />
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="side-head">
+        <div class="label">AI工具对比</div>
+      </div>
+      <nav class="nav">
+        <div class="nav-group">
+          <div class="nav-title">概览</div>
+          <a href="#overview">🌐 AI工具全景图</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-title">Web版本</div>
+          <a href="#doubao">🍡 豆包</a>
+          <a href="#kimi">🌙 Kimi</a>
+          <a href="#zhipu">📚 智谱清言</a>
+          <a href="#tongyi">☁️ 通义千问</a>
+          <a href="#chatgpt">🧠 ChatGPT</a>
+          <a href="#grok">🌌 Grok</a>
+          <a href="#notebooklm">📓 NotebookLM</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-title">AI IDE</div>
+          <a href="#cursor">🖱️ Cursor</a>
+          <a href="#windsurf">🏄 Windsurf</a>
+          <a href="#trae">💻 Trae IDE</a>
+          <a href="#antigravity">🚀 Antigravity</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-title">CLI终端工具</div>
+          <a href="#claude-code">⌨️ Claude Code</a>
+          <a href="#codex-cli">🔮 Codex CLI</a>
+          <a href="#opencode">📟 OpenCode</a>
+          <a href="#kimi-cli">🌙 Kimi Code CLI</a>
+          <a href="#aider">🤝 Aider</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-title">AI客户端</div>
+          <a href="#cherry-studio">🍒 Cherry Studio</a>
+          <a href="#codegeex">🔧 CodeGeeX</a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-title">对比总结</div>
+          <a href="#comparison">📊 综合对比表</a>
+          <a href="#recommendation">💡 场景推荐</a>
+        </div>
+      </nav>
+    </aside>
+
+    <main>
+      <div class="hero">
+        <h2>🤖 AI工具使用教程与对比</h2>
+        <p>2025-2026年，AI工具市场经历了爆发式增长。本文档对比主流AI工具的功能、定价和适用场景，帮助你选择最适合的工具。</p>
+        <div class="meta">
+          <span class="pill"><b>更新日期</b> 2026-02-02</span>
+          <span class="pill"><b>涵盖工具</b> 16+</span>
+          <span class="pill"><b>数据来源</b> 官方公告</span>
+        </div>
+      </div>
+
+      <div class="content">
+        <!-- 概览 -->
+        <section id="overview">
+          <h3>🌐 AI工具全景图</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>类型</th>
+                <th>代表工具</th>
+                <th>特点</th>
+                <th>适用场景</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>Web版本</b></td>
+                <td>豆包、Kimi、智谱清言、通义千问</td>
+                <td>无需安装，即开即用</td>
+                <td>日常问答、文档处理、学习辅助</td>
+              </tr>
+              <tr>
+                <td><b>AI IDE</b></td>
+                <td>Cursor、Windsurf、Trae、Antigravity</td>
+                <td>AI原生IDE，Agent驱动</td>
+                <td>项目级开发、代码重构</td>
+              </tr>
+              <tr>
+                <td><b>CLI终端工具</b></td>
+                <td>Claude Code、Codex CLI、OpenCode、Kimi CLI、Aider</td>
+                <td>终端操作，文件系统访问</td>
+                <td>项目级开发、自动化任务</td>
+              </tr>
+              <tr>
+                <td><b>AI客户端</b></td>
+                <td>Cherry Studio、CodeGeeX</td>
+                <td>多模型聚合，本地部署</td>
+                <td>统一入口、隐私优先</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 豆包 -->
+        <section id="doubao">
+          <h3>🍡 豆包（字节跳动）<span class="tag-new">2026热门</span></h3>
+          <div class="tool-card">
+            <div class="tool-header">
+              <div class="tool-icon blue">🤖</div>
+              <div class="tool-info">
+                <h4>豆包大模型 1.8</h4>
+                <p>字节跳动旗下AI助手，月活2.3亿，2026.2预计推出2.0</p>
+              </div>
+            </div>
+            <div class="tool-features">
+              <span class="feature-tag proxy-free">🟢 免翻墙</span>
+              <span class="feature-tag diff-easy">🟢 易上手</span>
+              <span class="feature-tag highlight">256K上下文</span>
+              <span class="feature-tag">多模态Agent</span>
+              <span class="feature-tag">联网搜索</span>
+            </div>
+          </div>
+          <h4>核心特性</h4>
+          <ul>
+            <li><b>豆包1.8</b>（2025.12）：针对多模态Agent场景优化，工具调用能力显著提升</li>
+            <li><b>豆包1.5-pro</b>：稀疏MoE架构，深度推理、编码能力出色</li>
+            <li><b>豆包2.0</b>：预计2026年2月发布的新一代旗舰模型</li>
+          </ul>
+          <div class="callout good">
+            <b>创新定价（业界首创）</b><br>
+            按输入长度分区定价：0-32K区间输入0.8元/百万tokens，输出8元/百万tokens<br>
+            综合成本仅为 DeepSeek R1 的三分之一
+          </div>
+        </section>
+
+        <!-- Kimi -->
+        <section id="kimi">
+          <h3>🌙 Kimi（月之暗面）<span class="tag-new">2026新版K2.5</span></h3>
+          <div class="tool-card">
+            <div class="tool-header">
+              <div class="tool-icon purple"><img src="assets/icons/kimi-color.png" alt="Kimi"></div>
+              <div class="tool-info">
+                <h4>Kimi K2.5 模型</h4>
+                <p>2026.1.26发布，性价比领先，多模态Agent专家</p>
+              </div>
+            </div>
+            <div class="tool-features">
+              <span class="feature-tag proxy-free">🟢 免翻墙</span>
+              <span class="feature-tag diff-easy">🟢 易上手</span>
+              <span class="feature-tag highlight">1T参数</span>
+              <span class="feature-tag highlight">开源</span>
+              <span class="feature-tag">256K上下文</span>
+            </div>
+          </div>
+          <h4>K2.5模型亮点</h4>
+          <ul>
+            <li><b>极致性价比</b>：输入价格比GPT-4便宜98%，输出价格便宜24倍</li>
+            <li><b>多模态Agent</b>：支持复杂任务执行、深度研究、自动化工作流</li>
+            <li><b>Agent功能</b>：Researcher、OKComputer、KimiCode、HyperComputer等</li>
+          </ul>
+          <h4>会员订阅价格（2026年最新）</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>会员等级</th>
+                <th>月付</th>
+                <th>年付</th>
+                <th>主要权益</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>免费版 (Adagio)</td>
+                <td>免费</td>
+                <td>-</td>
+                <td>Agent 3次/月，深度研究1次/月</td>
+              </tr>
+              <tr>
+                <td>Andante (入门版)</td>
+                <td>¥49</td>
+                <td>¥468</td>
+                <td>10次Agent/深度研究，Turbo高速</td>
+              </tr>
+              <tr>
+                <td>Moderato (基础版)</td>
+                <td>¥99</td>
+                <td>¥948</td>
+                <td>20次额度，支持同时两个任务</td>
+              </tr>
+              <tr>
+                <td>Allegretto (高级版)</td>
+                <td>¥199</td>
+                <td>¥1908</td>
+                <td>40次额度，Agent Swarm功能</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="callout">
+            <b>API价格</b><br>
+            输入：¥4.00/百万token（缓存未命中），¥0.70/百万token（缓存命中）<br>
+            输出：¥21.00/百万token
+          </div>
+        </section>
+
+        <!-- 智谱清言 -->
+        <section id="zhipu">
+          <h3>📚 智谱清言（GLM系列）<span class="tag-new">GLM-4.7</span></h3>
+          <div class="tool-card">
+            <div class="tool-header">
+              <div class="tool-icon green"><img src="assets/icons/qingyan-color.png" alt="智谱清言"></div>
+              <div class="tool-info">
+                <h4>GLM-4.7 / GLM-4.7-Flash</h4>
+                <p>清华系AI，开源旗舰，2026年计划推出GLM-5</p>
+              </div>
+            </div>
+            <div class="tool-features">
+              <span class="feature-tag proxy-free">🟢 免翻墙</span>
+              <span class="feature-tag diff-easy">🟢 易上手</span>
+              <span class="feature-tag highlight">GLM-4.7-Flash免费</span>
+              <span class="feature-tag">代码能力SOTA</span>
+              <span class="feature-tag">AutoGLM</span>
+            </div>
+          </div>
+          <h4>最新模型</h4>
+          <ul>
+            <li><b>GLM-4.7</b>（2025.12.22）：基座模型，代码能力全面提升，对齐Claude Sonnet 4.5</li>
+            <li><b>GLM-4.7-Flash</b>（2026.1.19）：免费版本，针对高频调用场景优化</li>
+            <li><b>GLM-4-Flash</b>：完全免费，128K上下文</li>
+          </ul>
+          <h4>定价</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>模型</th>
+                <th>价格</th>
+                <th>特点</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>GLM-4.7-Flash</td>
+                <td><b style="color:var(--good)">免费</b></td>
+                <td>高效编码，任务理解强</td>
+              </tr>
+              <tr>
+                <td>GLM-4-Flash</td>
+                <td><b style="color:var(--good)">免费</b></td>
+                <td>128K上下文，适合入门</td>
+              </tr>
+              <tr>
+                <td>GLM-4-Plus</td>
+                <td>5元/百万tokens</td>
+                <td>降价90%</td>
+              </tr>
+              <tr>
+                <td>GLM-4-Long</td>
+                <td>0.001元/千tokens</td>
+                <td>1M超长上下文</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 通义千问 -->
+        <section id="tongyi">
+          <h3>☁️ 通义千问（阿里云）<span class="tag-new">Qwen3-Max-Thinking</span></h3>
+          <div class="tool-card">
+            <div class="tool-header">
+              <div class="tool-icon orange"><img src="assets/icons/qwen-color.png" alt="通义千问"></div>
+              <div class="tool-info">
+                <h4>Qwen3-Max-Thinking</h4>
+                <p>2026.1.26发布，超万亿参数，开源全球第一</p>
+              </div>
+            </div>
+            <div class="tool-features">
+              <span class="feature-tag proxy-free">🟢 免翻墙</span>
+              <span class="feature-tag diff-easy">🟢 易上手</span>
+              <span class="feature-tag highlight">万亿参数</span>
+              <span class="feature-tag highlight">开源第一</span>
+              <span class="feature-tag">1M上下文</span>
+            </div>
+          </div>
+          <h4>核心能力</h4>
+          <ul>
+            <li><b>Qwen3-Max-Thinking</b>（2026.1.26）：最新旗舰推理模型，可媲美GPT-5.2和Gemini 3 Pro</li>
+            <li><b>测试时扩展机制</b>：推理性能和效率显著提升，大幅降低模型幻觉</li>
+            <li><b>原生Agent能力</b>：边思考边使用工具，提供智能流畅的响应</li>
+            <li><b>开源成就</b>：Hugging Face下载量超10亿次，衍生模型超20万个</li>
+          </ul>
+          <h4>多模态能力</h4>
+          <table>
+            <tr>
+              <td><b>Qwen3-Omni</b></td>
+              <td>49种音色，10种语言，实时语音交互</td>
+            </tr>
+            <tr>
+              <td><b>通义万相2.6</b></td>
+              <td>15秒长视频，音画同步，专业级影视</td>
+            </tr>
+            <tr>
+              <td><b>翻译模型</b></td>
+              <td>92语互译，术语定制</td>
+            </tr>
+          </table>
+        </section>
+
+        <!-- ChatGPT -->
+        <section id="chatgpt">
+          <h3>🧠 ChatGPT (OpenAI)<span class="tag-new">o1-Pro</span></h3>
+          <div class="tool-card">
+            <div class="tool-header">
+              <div class="tool-icon green"><img src="assets/icons/openai.png" alt="ChatGPT"></div>
+              <div class="tool-info">
+                <h4>ChatGPT-4o / o1</h4>
+                <p>全球AI领军者，强推理与多模态标杆</p>
+              </div>
+            </div>
+            <div class="tool-features">
+              <span class="feature-tag proxy-need">🔴 需翻墙</span>
+              <span class="feature-tag diff-easy">🟢 易上手</span>
+              <span class="feature-tag highlight">o1推理模型</span>
+              <span class="feature-tag highlight">Canvas创作</span>
+              <span class="feature-tag">Advanced Voice</span>
+            </div>
+          </div>
+          <h4>最新动态</h4>
+          <ul>
+            <li><b>o1 (Strawberry)</b>：强化推理模型，解决复杂数学/编程问题，Cot思维链可见</li>
+            <li><b>Canvas</b>：全新的写作与编码界面，支持局部编辑与即时反馈</li>
+            <li><b>Search</b>：实时联网搜索，提供带引用的答案，挑战传统搜索</li>
+          </ul>
+          <div class="callout warn">
+            <b>使用门槛</b><br>
+            必须使用非香港/内地IP的海外节点。Plus订阅($20/月)可解锁o1模型与更高限额。
+          </div>
+        </section>
+
+        <!-- Grok -->
+        <section id="grok">
+          <h3>🌌 Grok (xAI)<span class="tag-new">Grok-3</span></h3>
+          <div class="tool-card">
+            <div class="tool-header">
+              <div class="tool-icon" style="background:rgba(255,255,255,0.1);color:#fff;"><img
+                  src="assets/icons/grok.png" alt="Grok"></div>
+              <div class="tool-info">
+                <h4>Grok-2 / Grok-3</h4>
+                <p>马斯克旗下xAI打造，实时接入X(Twitter)数据</p>
+              </div>
+            </div>
+            <div class="tool-features">
+              <span class="feature-tag proxy-need">🔴 需翻墙</span>
+              <span class="feature-tag diff-easy">🟢 易上手</span>
+              <span class="feature-tag highlight">实时X数据</span>
+              <span class="feature-tag highlight">无审查模式</span>
+              <span class="feature-tag">Flux绘图</span>
+            </div>
+          </div>
+          <h4>核心优势</h4>
+          <ul>
+            <li><b>实时资讯</b>：直接索引X平台推文，突发新闻捕捉速度全球第一</li>
+            <li><b>Fun Mode</b>：具有幽默感与讽刺风格，拒绝过度"政治正确"</li>
+            <li><b>多模态</b>：集成Flux.1模型，生成高质量图像（无审查限制较少）</li>
+          </ul>
+          <div class="callout bad">
+            <b>订阅限制</b><br>
+            需订阅 X Premium+ ($16/月) 才能使用，无法单独订阅。
+          </div>
+        </section>
+
+        <!-- NotebookLM -->
+        <section id="notebooklm">
+          <h3>📓 NotebookLM (Google)<span class="tag-new">播客生成</span></h3>
+          <div class="tool-card">
+            <div class="tool-header">
+              <div class="tool-icon blue"><img src="assets/icons/notebooklm.png" alt="NotebookLM"></div>
+              <div class="tool-info">
+                <h4>NotebookLM</h4>
+                <p>基于Gemini 1.5 Pro的AI笔记助手，RAG应用典范</p>
+              </div>
+            </div>
+            <div class="tool-features">
+              <span class="feature-tag proxy-need">🔴 需翻墙</span>
+              <span class="feature-tag diff-easy">🟢 易上手</span>
+              <span class="feature-tag highlight">Audio Overview</span>
+              <span class="feature-tag highlight">来源溯源</span>
+              <span class="feature-tag">完全免费</span>
+            </div>
+          </div>
+          <h4>杀手级功能</h4>
+          <ul>
+            <li><b>Audio Overview</b>：将文档一键转换为双人对谈的"播客"音频，学习神技</li>
+            <li><b>信源磨碎</b>：严格基于上传的PDF/文档回答，杜绝幻觉，自带引用跳转</li>
+            <li><b>超长上下文</b>：支持上传50个源文件，每个通过Gemini 1.5 Pro处理</li>
+          </ul>
+          <div class="callout good">
+            <b>完全免费</b><br>
+            目前作为实验性产品完全免费开放，是研读论文、书籍的最佳伴侣。
+          </div>
+        </section>
+
+        <!-- Cursor -->
+        <section id="cursor">
+          <h3>🖱️ Cursor<span class="tag-new">百万用户AI IDE</span></h3>
+          <div class="tool-card">
+            <div class="tool-header">
+              <div class="tool-icon purple">🖱️</div>
+              <div class="tool-info">
+                <h4>Cursor AI IDE</h4>
+                <p>基于VS Code的AI优先IDE，36万付费用户</p>
+              </div>
+            </div>
+            <div class="tool-features">
+              <span class="feature-tag proxy-need">🔴 需翻墙</span>
+              <span class="feature-tag diff-medium">🟡 中等</span>
+              <span class="feature-tag highlight">Agent模式</span>
+              <span class="feature-tag highlight">Composer多文件</span>
+              <span class="feature-tag">Claude 4.5</span>
+            </div>
+          </div>
+          <h4>核心功能</h4>
+          <ul>
+            <li><b>Tab补全</b>：Supermaven驱动，多行预测，项目上下文感知</li>
+            <li><b>Composer模式</b>：选择多文件描述变更，批量重构</li>
+            <li><b>Agent模式</b>：自主决定文件操作、执行终端命令、持续工作直到完成</li>
+            <li><b>Agent子代理</b>：研究代码库、并行执行任务（2026新增）</li>
+          </ul>
+          <h4>定价（2026年信用点制）</h4>
+          <table>
+            <tr>
+              <td><b>Hobby</b></td>
+              <td style="color:var(--good)">免费</td>
+              <td>2周Pro试用，有限补全</td>
+            </tr>
+            <tr>
+              <td><b>Pro</b></td>
+              <td>$20/月</td>
+              <td>无限补全，500快速请求，$20信用点</td>
+            </tr>
+            <tr>
+              <td><b>Pro+</b></td>
+              <td>$60/月</td>
+              <td>1500快速Agent请求，扩展上下文</td>
+            </tr>
+            <tr>
+              <td><b>Ultra</b></td>
+              <td>$200/月</td>
+              <td>5000快速请求，优先新功能，实验模型</td>
+            </tr>
+            <tr>
+              <td><b>Teams</b></td>
+              <td>$40/席位/月</td>
+              <td>共享聊天、SSO、用量分析</td>
+            </tr>
+          </table>
+        </section>
+
+        <!-- Windsurf -->
+        <section id="windsurf">
+          <h3>🏄 Windsurf / Codeium<span class="tag-new">AI原生开发</span></h3>
+          <div class="tool-card">
+            <div class="tool-header">
+              <div class="tool-icon blue">🏄</div>
+              <div class="tool-info">
+                <h4>Windsurf IDE (Codeium)</h4>
+                <p>AI-First IDE，Cascade智能代理驱动</p>
+              </div>
+            </div>
+            <div class="tool-features">
+              <span class="feature-tag proxy-need">🔴 需翻墙</span>
+              <span class="feature-tag diff-medium">🟡 中等</span>
+              <span class="feature-tag highlight">Cascade AI代理</span>
+              <span class="feature-tag highlight">MCP协议</span>
+              <span class="feature-tag">Turbo模式</span>
+            </div>
+          </div>
+          <h4>Cascade AI代理</h4>
+          <ul>
+            <li><b>全代码库理解</b>：理解整个项目结构，多文件协同编辑</li>
+            <li><b>自然语言指令</b>：用自然语言描述需求，自动协调文件、终端、环境变更</li>
+            <li><b>MCP协议</b>（2025.2）：连接外部工具和服务，增强自动化能力</li>
+            <li><b>Turbo模式</b>：自动执行终端命令，加速开发流程</li>
+          </ul>
+          <h4>定价</h4>
+          <table>
+            <tr>
+              <td><b>Free</b></td>
+              <td style="color:var(--good)">免费</td>
+              <td>基础功能，个人开发者</td>
+            </tr>
+            <tr>
+              <td><b>Pro</b></td>
+              <td>$15/月</td>
+              <td>完整Cascade功能，专业开发</td>
+            </tr>
+            <tr>
+              <td><b>Teams</b></td>
+              <td>定制</td>
+              <td>团队协作，企业支持</td>
+            </tr>
+          </table>
+          <div class="callout warn">
+            <b>业务动态</b><br>
+            2025年5月OpenAI计划以$30亿收购Windsurf，但7月交易终止。部分团队加入Google DeepMind，Cognition AI收购剩余资产。
+          </div>
+        </section>
+
+        <!-- Antigravity -->
+        <section id="antigravity">
+          <h3>🚀 Antigravity（Google）<span class="tag-new">Agent-First IDE</span></h3>
+          <div class="tool-card">
+            <div class="tool-header">
+              <div class="tool-icon green"><img src="assets/icons/gemini-color.png" alt="Antigravity"></div>
+              <div class="tool-info">
+                <h4>Google Antigravity</h4>
+                <p>基于Gemini 3的Agent优先开发环境</p>
+              </div>
+            </div>
+            <div class="tool-features">
+              <span class="feature-tag proxy-need">🔴 需翻墙</span>
+              <span class="feature-tag diff-medium">🟡 中等</span>
+              <span class="feature-tag highlight">Gemini 3驱动</span>
+              <span class="feature-tag highlight">Agent-First</span>
+              <span class="feature-tag">Skills技能系统</span>
+            </div>
+          </div>
+          <h4>核心理念</h4>
+          <ul>
+            <li><b>Agent优先</b>：不再逐行编码，而是调度自主AI代理规划、编码、执行命令</li>
+            <li><b>Vibe Coding</b>：描述功能意图，AI处理规划、创建文件、终端执行、浏览器测试</li>
+            <li><b>Mission Control</b>：管理多个Agent的控制台界面</li>
+            <li><b>Skills系统</b>：模块化能力扩展，执行Python/Bash脚本，连接外部API</li>
+          </ul>
+          <h4>支持模型</h4>
+          <ul>
+            <li><b>Gemini 3 Pro</b>：业务逻辑、高级推理</li>
+            <li><b>Claude 4.5</b>：代码结构优化</li>
+            <li><b>Liquid AI</b>：性能优化</li>
+          </ul>
+          <div class="callout good">
+            <b>免费公测中</b><br>
+            2025年11月开始公开预览，个人开发者免费使用。支持Mac、Windows、Linux。
+          </div>
+        </section>
+
+        <!-- Trae IDE -->
+        <section id="trae">
+          <h3>💻 Trae IDE（字节跳动）<span class="tag-new">中国首个AI原生IDE</span></h3>
+          <div class="tool-card">
+            <div class="tool-header">
+              <div class="tool-icon blue"><img src="assets/icons/trae-color.png" alt="Trae"></div>
+              <div class="tool-info">
+                <h4>Trae AI IDE</h4>
+                <p>字节跳动出品，对标Cursor的国产AI IDE</p>
+              </div>
+            </div>
+            <div class="tool-features">
+              <span class="feature-tag proxy-free">🟢 免翻墙</span>
+              <span class="feature-tag diff-easy">🟢 易上手</span>
+              <span class="feature-tag highlight">个人版免费</span>
+              <span class="feature-tag">SOLO模式</span>
+              <span class="feature-tag">Claude 3.7</span>
+            </div>
+          </div>
+          <div class="callout">
+            <b>详细教程</b><br>
+            安装/计费/模型/快捷键：<a href="trae.html" style="color:var(--accent)"><b>trae.html</b></a>
+          </div>
+          <h4>核心模式</h4>
+          <ul>
+            <li><b>Builder模式</b>：从零开始构建项目</li>
+            <li><b>Chat模式</b>：对代码库或问题进行提问和优化</li>
+            <li><b>SOLO模式</b>：理解需求，自动执行代码编写到测试的全过程</li>
+          </ul>
+          <h4>定价</h4>
+          <table>
+            <tr>
+              <td><b>个人版</b></td>
+              <td style="color:var(--good)">免费</td>
+              <td>全部功能，集成豆包、DeepSeek等国产模型</td>
+            </tr>
+            <tr>
+              <td><b>企业版</b></td>
+              <td>69元/席位/月</td>
+              <td>问答500次/月，补全不限次数</td>
+            </tr>
+          </table>
+        </section>
+
+        <!-- Claude Code -->
+        <section id="claude-code">
+          <h3>⌨️ Claude Code<span class="tag-new">项目级AI助手</span></h3>
+          <div class="tool-card">
+            <div class="tool-header">
+              <div class="tool-icon orange"><img src="assets/icons/claude-color.png" alt="Claude Code"></div>
+              <div class="tool-info">
+                <h4>Claude Code</h4>
+                <p>Anthropic官方CLI，真正的文件系统访问能力</p>
+              </div>
+            </div>
+            <div class="tool-features">
+              <span class="feature-tag proxy-need">🔴 需翻墙</span>
+              <span class="feature-tag diff-hard">🔴 高门槛</span>
+              <span class="feature-tag highlight">文件读写</span>
+              <span class="feature-tag highlight">多文件编辑</span>
+              <span class="feature-tag">Git集成</span>
+            </div>
+          </div>
+          <div class="callout warn">
+            <b>核心优势：Claude Code vs 其他AI工具的根本区别</b>
+            <ul>
+              <li><b>真实文件系统访问</b>：可读写本地文件，而非仅在对话中模拟</li>
+              <li><b>多文件编辑能力</b>：跨文件修改、重构，理解项目上下文</li>
+              <li><b>Git原生集成</b>：自动创建commit、查看diff、管理分支</li>
+              <li><b>命令执行权限</b>：运行测试、构建项目、执行脚本</li>
+            </ul>
+          </div>
+          <h4>费用说明</h4>
+          <div class="callout bad">
+            <b>需要订阅或API</b><br>
+            Claude Code依赖Claude.ai订阅或Claude API，不是独立免费产品
+            <ul>
+              <li>Claude.ai Pro订阅：$20/月（年付$17/月）</li>
+              <li>Max计划：$100/月起</li>
+              <li>Claude API：按使用量计费</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- CodeGeeX -->
+        <section id="codegeex">
+          <h3>🔧 CodeGeeX（智谱AI）</h3>
+          <div class="tool-card">
+            <div class="tool-header">
+              <div class="tool-icon green">💻</div>
+              <div class="tool-info">
+                <h4>CodeGeeX</h4>
+                <p>清华大学+智谱AI，完全免费开源</p>
+              </div>
+            </div>
+            <div class="tool-features">
+              <span class="feature-tag proxy-free">🟢 免翻墙</span>
+              <span class="feature-tag diff-easy">🟢 易上手</span>
+              <span class="feature-tag highlight">完全免费</span>
+              <span class="feature-tag highlight">开源</span>
+              <span class="feature-tag">代码翻译</span>
+            </div>
+          </div>
+          <h4>核心功能</h4>
+          <ul>
+            <li><b>代码生成</b>：根据自然语言注释自动生成代码</li>
+            <li><b>代码补全</b>：支持跨文件智能检索和信息提取</li>
+            <li><b>代码翻译</b>：多语言互译（Python、Java、C++、Go等）</li>
+          </ul>
+          <div class="callout good">
+            <b>为什么选择CodeGeeX？</b>
+            <ul>
+              <li>完全免费，代码模型已开源</li>
+              <li>国产，无需翻墙</li>
+              <li>130亿参数预训练大模型</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- Codex CLI -->
+        <section id="codex-cli">
+          <h3>🔮 OpenAI Codex CLI<span class="tag-new">开源终端Agent</span></h3>
+          <div class="tool-card">
+            <div class="tool-header">
+              <div class="tool-icon purple">🔮</div>
+              <div class="tool-info">
+                <h4>OpenAI Codex CLI</h4>
+                <p>OpenAI官方开源CLI，集成ChatGPT能力</p>
+              </div>
+            </div>
+            <div class="tool-features">
+              <span class="feature-tag proxy-need">🔴 需翻墙</span>
+              <span class="feature-tag diff-medium">🟡 中等</span>
+              <span class="feature-tag highlight">开源免费</span>
+              <span class="feature-tag highlight">自定义API</span>
+              <span class="feature-tag">终端调试</span>
+            </div>
+          </div>
+          <h4>核心能力</h4>
+          <ul>
+            <li><b>终端原生</b>：直接在命令行与AI交互，进行编码、文件编辑、调试</li>
+            <li><b>Custom API端点</b>：支持配置自定义API，集成ChatGPT或其他兼容模型</li>
+            <li><b>项目级理解</b>：自动分析项目结构，提供上下文相关建议</li>
+            <li><b>开源生态</b>：2025年4月开源，社区活跃贡献</li>
+          </ul>
+          <div class="callout good">
+            <b>完全开源</b><br>
+            MIT许可证，可自由使用和修改。支持自定义API端点，灵活集成不同模型提供商。
+          </div>
+        </section>
+
+        <!-- OpenCode -->
+        <section id="opencode">
+          <h3>📟 OpenCode<span class="tag-new">Go语言TUI</span></h3>
+          <div class="tool-card">
+            <div class="tool-header">
+              <div class="tool-icon blue"><img src="assets/icons/opencode.png" alt="OpenCode"></div>
+              <div class="tool-info">
+                <h4>OpenCode</h4>
+                <p>Go语言开发的终端AI编码代理</p>
+              </div>
+            </div>
+            <div class="tool-features">
+              <span class="feature-tag proxy-partial">🟡 视模型</span>
+              <span class="feature-tag diff-medium">🟡 中等</span>
+              <span class="feature-tag highlight">多模型支持</span>
+              <span class="feature-tag highlight">交互式TUI</span>
+              <span class="feature-tag">跨平台</span>
+            </div>
+          </div>
+          <h4>核心特性</h4>
+          <ul>
+            <li><b>终端原生</b>：交互式TUI界面，工作于任何语言、编辑器、环境</li>
+            <li><b>多Provider支持</b>：Claude、OpenAI、DeepSeek、本地模型等</li>
+            <li><b>会话管理</b>：保存和恢复编码会话，支持外部编辑器</li>
+            <li><b>供应商灵活性</b>：不锁定单一AI提供商，自由切换模型</li>
+          </ul>
+          <h4>与Claude Code对比</h4>
+          <table>
+            <tr>
+              <th>特性</th>
+              <th>OpenCode</th>
+              <th>Claude Code</th>
+            </tr>
+            <tr>
+              <td>模型</td>
+              <td style="color:var(--good)">多模型自由切换</td>
+              <td>仅Claude</td>
+            </tr>
+            <tr>
+              <td>价格</td>
+              <td style="color:var(--good)">开源免费</td>
+              <td>需订阅或API</td>
+            </tr>
+            <tr>
+              <td>定制</td>
+              <td style="color:var(--good)">高度可定制</td>
+              <td>有限</td>
+            </tr>
+          </table>
+        </section>
+
+        <!-- Kimi Code CLI -->
+        <section id="kimi-cli">
+          <h3>🌙 Kimi Code CLI<span class="tag-new">月之暗面开源</span></h3>
+          <div class="tool-card">
+            <div class="tool-header">
+              <div class="tool-icon orange"><img src="assets/icons/kimi-color.png" alt="Kimi Code CLI"></div>
+              <div class="tool-info">
+                <h4>Kimi Code CLI</h4>
+                <p>月之暗面开源命令行AI代理</p>
+              </div>
+            </div>
+            <div class="tool-features">
+              <span class="feature-tag proxy-free">🟢 免翻墙</span>
+              <span class="feature-tag diff-medium">🟡 中等</span>
+              <span class="feature-tag highlight">开源</span>
+              <span class="feature-tag highlight">K2.5模型</span>
+              <span class="feature-tag">多模态</span>
+            </div>
+          </div>
+          <h4>与Kimi K2.5集成</h4>
+          <ul>
+            <li><b>K2.5模型</b>（2026.1.26）：60秒完整项目生成，MoE架构</li>
+            <li><b>终端+IDE</b>：支持VS Code等IDE集成</li>
+            <li><b>多模态能力</b>：处理代码、文档、图像等多种输入</li>
+            <li><b>Cherry Studio兼容</b>：已被Cherry Studio v1.7.15集成支持</li>
+          </ul>
+          <div class="callout">
+            <b>2025年10月开源</b><br>
+            作为Kimi生态的一部分，CLI工具补充了Web版本的能力，适合高级开发者和自动化场景。
+          </div>
+        </section>
+
+        <!-- Aider -->
+        <section id="aider">
+          <h3>🤝 Aider<span class="tag-new">Git配对编程</span></h3>
+          <div class="tool-card">
+            <div class="tool-header">
+              <div class="tool-icon green">🤝</div>
+              <div class="tool-info">
+                <h4>Aider AI</h4>
+                <p>终端里的AI配对程序员，自动Git集成</p>
+              </div>
+            </div>
+            <div class="tool-features">
+              <span class="feature-tag proxy-partial">🟡 视模型</span>
+              <span class="feature-tag diff-medium">🟡 中等</span>
+              <span class="feature-tag highlight">Git原生</span>
+              <span class="feature-tag highlight">100+语言</span>
+              <span class="feature-tag">多聊天模式</span>
+            </div>
+          </div>
+          <h4>核心优势</h4>
+          <ul>
+            <li><b>自动Git集成</b>：编辑直接提交到Git仓库，生成描述性commit信息</li>
+            <li><b>多LLM支持</b>：Claude 3.5 Sonnet、DeepSeek R1、GPT-4o、本地模型</li>
+            <li><b>多文件项目</b>：理解项目结构，跨文件编辑</li>
+            <li><b>多聊天模式</b>：code模式（编码）、architect模式（设计）、ask模式（问答）</li>
+          </ul>
+          <h4>使用方式</h4>
+          <ul>
+            <li><b>注释驱动</b>：在代码中添加注释描述变更，Aider自动实现</li>
+            <li><b>交互式</b>：直接对话描述需求</li>
+            <li><b>批处理</b>：脚本化自动化任务</li>
+          </ul>
+          <div class="callout good">
+            <b>2025年3月Product Hunt发布</b><br>
+            持续更新至v0.86.0+，活跃开发中。完全开源，支持100+编程语言。
+          </div>
+        </section>
+
+        <!-- Cherry Studio -->
+        <section id="cherry-studio">
+          <h3>🍒 Cherry Studio<span class="tag-new">多模型聚合</span></h3>
+          <div class="tool-card">
+            <div class="tool-header">
+              <div class="tool-icon purple"><img src="assets/icons/cherrystudio.png" alt="Cherry Studio"></div>
+              <div class="tool-info">
+                <h4>Cherry Studio</h4>
+                <p>跨平台AI助手，50+模型提供商聚合</p>
+              </div>
+            </div>
+            <div class="tool-features">
+              <span class="feature-tag proxy-partial">🟡 视模型</span>
+              <span class="feature-tag diff-easy">🟢 易上手</span>
+              <span class="feature-tag highlight">50+模型</span>
+              <span class="feature-tag highlight">本地模型</span>
+              <span class="feature-tag">开源免费</span>
+            </div>
+          </div>
+          <h4>核心功能</h4>
+          <ul>
+            <li><b>统一入口</b>：整合OpenAI、Anthropic、Google、Moonshot等50+提供商</li>
+            <li><b>本地模型</b>：支持Ollama、LM Studio等本地部署</li>
+            <li><b>隐私保护</b>：数据本地存储，完全可控</li>
+            <li><b>预置助手</b>：丰富的预配置助手生态</li>
+          </ul>
+          <h4>2026年更新</h4>
+          <ul>
+            <li><b>v1.7.15</b>：支持Kimi CLI集成</li>
+            <li><b>自定义Provider</b>：添加任意兼容OpenAI API的服务</li>
+            <li><b>工作流自动化</b>：连接外部工具和服务</li>
+          </ul>
+          <div class="callout good">
+            <b>完全免费开源</b><br>
+            跨平台支持（Windows/Mac/Linux），个人开发者和团队的理想统一入口。
+          </div>
+        </section>
+
+        <!-- 综合对比表 -->
+        <section id="comparison">
+          <h3>📊 综合对比表</h3>
+          <p style="color:var(--muted);font-size:13px;">🟢 绿色=免代理/易上手 | 🟡 黄色=部分需要/中等 | 🔴 红色=需代理/高门槛</p>
+
+          <h4>Web版-国内 (免翻墙)</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>特性</th>
+                <th>豆包</th>
+                <th>Kimi</th>
+                <th>智谱清言</th>
+                <th>通义千问</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>代理需求</b></td>
+                <td style="color:var(--good)">🟢 免代理</td>
+                <td style="color:var(--good)">🟢 免代理</td>
+                <td style="color:var(--good)">🟢 免代理</td>
+                <td style="color:var(--good)">🟢 免代理</td>
+              </tr>
+              <tr>
+                <td><b>上手难度</b></td>
+                <td style="color:var(--good)">🟢 易</td>
+                <td style="color:var(--good)">🟢 易</td>
+                <td style="color:var(--good)">🟢 易</td>
+                <td style="color:var(--good)">🟢 易</td>
+              </tr>
+              <tr>
+                <td><b>对话能力</b></td>
+                <td>★★★★★</td>
+                <td>★★★★★</td>
+                <td>★★★★</td>
+                <td>★★★★★</td>
+              </tr>
+              <tr>
+                <td><b>长文本</b></td>
+                <td>256K</td>
+                <td>256K</td>
+                <td>1M</td>
+                <td>1M</td>
+              </tr>
+              <tr>
+                <td><b>免费层级</b></td>
+                <td style="color:var(--good)">✅</td>
+                <td style="color:var(--good)">✅</td>
+                <td style="color:var(--good)">✅</td>
+                <td style="color:var(--good)">✅</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>Web版-国外 (需翻墙)</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>特性</th>
+                <th>ChatGPT</th>
+                <th>Grok</th>
+                <th>NotebookLM</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>代理需求</b></td>
+                <td style="color:var(--bad)">🔴 需代理</td>
+                <td style="color:var(--bad)">🔴 需代理</td>
+                <td style="color:var(--bad)">🔴 需代理</td>
+              </tr>
+              <tr>
+                <td><b>上手难度</b></td>
+                <td style="color:var(--good)">🟢 易</td>
+                <td style="color:var(--good)">🟢 易</td>
+                <td style="color:var(--good)">🟢 易</td>
+              </tr>
+              <tr>
+                <td><b>核心强项</b></td>
+                <td>推理(o1)/生态</td>
+                <td>实时推特/无审查</td>
+                <td>播客生成/长文档</td>
+              </tr>
+              <tr>
+                <td><b>模型水平</b></td>
+                <td>T0 (GPT-4o)</td>
+                <td>T0.5 (Grok-2)</td>
+                <td>T0.5 (Gemini 1.5)</td>
+              </tr>
+              <tr>
+                <td><b>免费版</b></td>
+                <td style="color:var(--good)">✅ (GPT-4o)</td>
+                <td style="color:var(--bad)">❌ (仅付费)</td>
+                <td style="color:var(--good)">✅ 完全免费</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>AI IDE（集成开发环境）</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>特性</th>
+                <th>Cursor</th>
+                <th>Windsurf</th>
+                <th>Trae</th>
+                <th>Antigravity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>代理需求</b></td>
+                <td style="color:var(--bad)">🔴 需代理</td>
+                <td style="color:var(--bad)">🔴 需代理</td>
+                <td style="color:var(--good)">🟢 免代理</td>
+                <td style="color:var(--bad)">🔴 需代理</td>
+              </tr>
+              <tr>
+                <td><b>上手难度</b></td>
+                <td style="color:var(--warn)">🟡 中</td>
+                <td style="color:var(--warn)">🟡 中</td>
+                <td style="color:var(--good)">🟢 易</td>
+                <td style="color:var(--warn)">🟡 中</td>
+              </tr>
+              <tr>
+                <td><b>代码生成</b></td>
+                <td>★★★★★</td>
+                <td>★★★★★</td>
+                <td>★★★★★</td>
+                <td>★★★★★</td>
+              </tr>
+              <tr>
+                <td><b>Agent模式</b></td>
+                <td style="color:var(--good)">✅</td>
+                <td style="color:var(--good)">✅ Cascade</td>
+                <td style="color:var(--good)">✅ SOLO</td>
+                <td style="color:var(--good)">✅ Agent-First</td>
+              </tr>
+              <tr>
+                <td><b>免费版</b></td>
+                <td style="color:var(--warn)">有限</td>
+                <td style="color:var(--good)">✅</td>
+                <td style="color:var(--good)">✅ 完全免费</td>
+                <td style="color:var(--good)">✅ 公测免费</td>
+              </tr>
+              <tr>
+                <td><b>Pro定价</b></td>
+                <td>$20/月</td>
+                <td>$15/月</td>
+                <td>69元/席位/月</td>
+                <td>TBD</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>CLI终端工具</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>特性</th>
+                <th>Claude Code</th>
+                <th>Codex CLI</th>
+                <th>OpenCode</th>
+                <th>Aider</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>代理需求</b></td>
+                <td style="color:var(--bad)">🔴 需代理</td>
+                <td style="color:var(--bad)">🔴 需代理</td>
+                <td style="color:var(--warn)">🟡 视模型</td>
+                <td style="color:var(--warn)">🟡 视模型</td>
+              </tr>
+              <tr>
+                <td><b>上手难度</b></td>
+                <td style="color:var(--bad)">🔴 高</td>
+                <td style="color:var(--warn)">🟡 中</td>
+                <td style="color:var(--warn)">🟡 中</td>
+                <td style="color:var(--warn)">🟡 中</td>
+              </tr>
+              <tr>
+                <td><b>开源</b></td>
+                <td style="color:var(--bad)">❌</td>
+                <td style="color:var(--good)">✅</td>
+                <td style="color:var(--good)">✅</td>
+                <td style="color:var(--good)">✅</td>
+              </tr>
+              <tr>
+                <td><b>多模型</b></td>
+                <td style="color:var(--bad)">仅Claude</td>
+                <td style="color:var(--good)">✅ 自定义API</td>
+                <td style="color:var(--good)">✅ 50+模型</td>
+                <td style="color:var(--good)">✅ 多LLM</td>
+              </tr>
+              <tr>
+                <td><b>Git集成</b></td>
+                <td style="color:var(--good)">✅</td>
+                <td style="color:var(--good)">✅</td>
+                <td style="color:var(--good)">✅</td>
+                <td style="color:var(--good)">✅ 原生</td>
+              </tr>
+              <tr>
+                <td><b>费用</b></td>
+                <td>$20-100/月</td>
+                <td style="color:var(--good)">免费开源</td>
+                <td style="color:var(--good)">免费开源</td>
+                <td style="color:var(--good)">免费开源</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>AI客户端/聚合工具</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>特性</th>
+                <th>Cherry Studio</th>
+                <th>CodeGeeX</th>
+                <th>Kimi CLI</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>代理需求</b></td>
+                <td style="color:var(--warn)">🟡 视模型</td>
+                <td style="color:var(--good)">🟢 免代理</td>
+                <td style="color:var(--good)">🟢 免代理</td>
+              </tr>
+              <tr>
+                <td><b>上手难度</b></td>
+                <td style="color:var(--good)">🟢 易</td>
+                <td style="color:var(--good)">🟢 易</td>
+                <td style="color:var(--warn)">🟡 中</td>
+              </tr>
+              <tr>
+                <td><b>开源</b></td>
+                <td style="color:var(--good)">✅</td>
+                <td style="color:var(--good)">✅</td>
+                <td style="color:var(--good)">✅</td>
+              </tr>
+              <tr>
+                <td><b>本地模型</b></td>
+                <td style="color:var(--good)">✅ Ollama</td>
+                <td style="color:var(--bad)">❌</td>
+                <td style="color:var(--bad)">❌</td>
+              </tr>
+              <tr>
+                <td><b>费用</b></td>
+                <td style="color:var(--good)">免费</td>
+                <td style="color:var(--good)">免费</td>
+                <td style="color:var(--good)">免费</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 场景推荐 -->
+        <section id="recommendation">
+          <h3>💡 场景推荐</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>使用场景</th>
+                <th>推荐工具</th>
+                <th>推荐原因</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>日常问答、学习</td>
+                <td><b>豆包 / Kimi</b></td>
+                <td>免费、响应快、中文优化好</td>
+              </tr>
+              <tr>
+                <td>长文档处理</td>
+                <td><b>Kimi / 通义千问</b></td>
+                <td>256K-1M上下文窗口</td>
+              </tr>
+              <tr>
+                <td>论文/深度研读</td>
+                <td><b>NotebookLM</b></td>
+                <td>播客模式、信源磨碎、无幻觉</td>
+              </tr>
+              <tr>
+                <td>代码开发（项目级）</td>
+                <td><b>Claude Code</b></td>
+                <td>文件操作、多文件编辑、Git集成</td>
+              </tr>
+              <tr>
+                <td>代码辅助（编辑器内）</td>
+                <td><b>Trae / CodeGeeX</b></td>
+                <td>IDE集成、实时补全、免费</td>
+              </tr>
+              <tr>
+                <td>预算有限</td>
+                <td><b>智谱清言 + CodeGeeX</b></td>
+                <td>GLM-4-Flash免费、CodeGeeX免费开源</td>
+              </tr>
+              <tr>
+                <td>企业级应用</td>
+                <td><b>通义千问 API</b></td>
+                <td>阿里云生态、企业支持、多模态</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="callout good">
+            <b>最佳免费组合</b>
+            <ul>
+              <li><b>日常对话</b>：豆包 / Kimi（Web版）</li>
+              <li><b>代码开发</b>：Trae（个人版免费）+ CodeGeeX（完全免费）</li>
+            </ul>
+          </div>
+
+          <div class="callout">
+            <b>最佳付费组合</b>
+            <ul>
+              <li><b>项目级开发</b>：Claude Code（Claude Pro订阅 $20/月）</li>
+              <li><b>API调用</b>：豆包API（性价比最高）或通义千问API（阿里生态）</li>
+            </ul>
+          </div>
+        </section>
+      </div>
+
+      <div class="footer">
+        <span><a href="index.html">🏠 返回首页</a></span>
+        <span>最后更新：2026-02-02 | 数据来源：各平台官方公告</span>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // 主题切换
+    const themeBtn = document.getElementById('toolbar-theme-toggle');
+    const savedTheme = localStorage.getItem('ai-kb-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    document.body.setAttribute('data-theme', savedTheme);
+
+    themeBtn.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      document.body.setAttribute('data-theme', next);
+      localStorage.setItem('ai-kb-theme', next);
+    });
+
+    // 导航高亮
+    const navLinks = document.querySelectorAll('.nav a');
+    const sections = document.querySelectorAll('section[id]');
+
+    function highlightNav() {
+      let current = null;
+      sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= 180) current = section;
+      });
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (current && link.getAttribute('href') === `#${current.id}`) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', highlightNav);
+    highlightNav();
+  </script>
+</body>
+
+</html>

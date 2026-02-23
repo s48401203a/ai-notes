@@ -1,0 +1,601 @@
+# Windows 11 PowerShell 代理配置问题解决方案
+
+## 问题描述
+
+**场景：** Windows 11 25H2 系统下使用 Claude Code 时出现 API 连接失败
+- 错误信息：`Unable to connect to API due to poor internet connection`
+- 根本原因：代理端口变更（从 7897 更改为 10809），但环境变量未同步更新
+
+## 诊断步骤
+
+### 1. 检查当前代理设置
+
+```powershell
+# 查看系统代理
+netsh winhttp show proxy
+
+# 查看环境变量中的代理设置
+Get-ChildItem Env: | Where-Object { $_.Name -like "*proxy*" }
+
+# 直接查看代理变量
+echo $env:HTTP_PROXY
+echo $env:HTTPS_PROXY
+```
+
+**输出示例：**
+```
+Name          Value
+----          -----
+HTTP_PROXY    http://127.0.0.1:7897
+HTTPS_PROXY   http://127.0.0.1:7897
+```
+
+### 2. 确认实际代理端口
+
+检查代理软件的实际端口设置：
+- **Clash**: 主界面显示端口号
+- **V2RayN**: 参数设置 → 本地监听端口
+- **Shadowsocks**: 右键任务栏图标 → 选项设置 → 本地代理
+
+## 解决方案
+
+### 临时修改（当前会话有效）
+
+```powershell
+# 设置为正确的端口
+$env:HTTP_PROXY = "http://127.0.0.1:10809"
+$env:HTTPS_PROXY = "http://127.0.0.1:10809"
+```
+
+### 永久修改（推荐）
+
+```powershell
+# 为当前用户永久设置环境变量
+[System.Environment]::SetEnvironmentVariable("HTTP_PROXY", "http://127.0.0.1:10809", "User")
+[System.Environment]::SetEnvironmentVariable("HTTPS_PROXY", "http://127.0.0.1:10809", "User")
+```
+
+### 配置 npm 代理（重要）
+
+**问题：** 即使系统代理配置正确，`claude update` 仍可能失败，因为 npm 有独立的代理配置。
+
+**解决方法：**
+
+```powershell
+# 方案 1：设置 npm 代理
+npm config set proxy http://127.0.0.1:10809
+npm config set https-proxy http://127.0.0.1:10809
+
+# 方案 2：使用国内镜像（推荐，更稳定快速）
+npm config set registry https://registry.npmmirror.com
+
+# 验证配置
+npm config list
+npm ping
+```
+
+## 一键切换脚本
+
+### 创建 PowerShell 配置文件
+
+```powershell
+# 编辑或创建配置文件
+if (!(Test-Path $PROFILE)) {
+    New-Item -Path $PROFILE -Type File -Force
+}
+notepad $PROFILE
+```
+
+### 添加代理管理函数
+
+将以下代码添加到 `$PROFILE` 文件中：
+
+```powershell
+# ==================== 代理管理函数 ====================
+
+# 设置代理（系统 + npm + git）
+function Set-Proxy {
+    param(
+        [Parameter(Mandatory=$true)]
+        [int]$Port
+    )
+    
+    $proxyUrl = "http://127.0.0.1:$Port"
+    
+    # 设置当前会话
+    $env:HTTP_PROXY = $proxyUrl
+    $env:HTTPS_PROXY = $proxyUrl
+    
+    # 永久设置
+    [System.Environment]::SetEnvironmentVariable("HTTP_PROXY", $proxyUrl, "User")
+    [System.Environment]::SetEnvironmentVariable("HTTPS_PROXY", $proxyUrl, "User")
+    
+    # 设置 npm 代理
+    npm config set proxy $proxyUrl 2>$null
+    npm config set https-proxy $proxyUrl 2>$null
+    
+    # 设置 git 代理
+    git config --global http.proxy $proxyUrl 2>$null
+    git config --global https.proxy $proxyUrl 2>$null
+    
+    Write-Host "✓ 代理已设置为: $proxyUrl" -ForegroundColor Green
+    Write-Host "  - 系统环境变量 (已永久保存)" -ForegroundColor Gray
+    Write-Host "  - npm 配置" -ForegroundColor Gray
+    Write-Host "  - git 配置" -ForegroundColor Gray
+    Write-Host ""
+    Write-Host "提示: 重启终端/应用后生效" -ForegroundColor Yellow
+}
+
+# 查看当前代理设置
+function Get-Proxy {
+    Write-Host "`n当前代理配置:" -ForegroundColor Cyan
+    Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Gray
+    
+    Write-Host "`n【系统环境变量】" -ForegroundColor Yellow
+    Write-Host "  HTTP_PROXY  = $env:HTTP_PROXY"
+    Write-Host "  HTTPS_PROXY = $env:HTTPS_PROXY"
+    
+    Write-Host "`n【npm 配置】" -ForegroundColor Yellow
+    $npmProxy = npm config get proxy 2>$null
+    $npmHttpsProxy = npm config get https-proxy 2>$null
+    Write-Host "  proxy       = $npmProxy"
+    Write-Host "  https-proxy = $npmHttpsProxy"
+    
+    Write-Host "`n【git 配置】" -ForegroundColor Yellow
+    $gitProxy = git config --global --get http.proxy 2>$null
+    $gitHttpsProxy = git config --global --get https.proxy 2>$null
+    Write-Host "  http.proxy  = $gitProxy"
+    Write-Host "  https.proxy = $gitHttpsProxy"
+    Write-Host ""
+}
+
+# 清除所有代理设置
+function Clear-Proxy {
+    # 清除系统代理
+    $env:HTTP_PROXY = $null
+    $env:HTTPS_PROXY = $null
+    [System.Environment]::SetEnvironmentVariable("HTTP_PROXY", $null, "User")
+    [System.Environment]::SetEnvironmentVariable("HTTPS_PROXY", $null, "User")
+    
+    # 清除 npm 代理
+    npm config delete proxy 2>$null
+    npm config delete https-proxy 2>$null
+    
+    # 清除 git 代理
+    git config --global --unset http.proxy 2>$null
+    git config --global --unset https.proxy 2>$null
+    
+    Write-Host "✓ 所有代理配置已清除" -ForegroundColor Green
+}
+
+# 常用端口快捷命令
+function proxy7890 { Set-Proxy 7890 }   # Clash 默认端口
+function proxy7897 { Set-Proxy 7897 }   # Clash Meta
+function proxy10809 { Set-Proxy 10809 } # V2Ray 默认端口
+function proxy1080 { Set-Proxy 1080 }   # Shadowsocks 默认端口
+
+# 设置别名
+Set-Alias -Name proxy -Value Set-Proxy
+
+# ==================== 结束 ====================
+```
+
+### 重新加载配置
+
+```powershell
+. $PROFILE
+```
+
+## 使用示例
+
+```powershell
+# 设置代理到指定端口
+Set-Proxy 10809
+# 或使用别名
+proxy 10809
+
+# 使用快捷命令
+proxy7890
+proxy10809
+
+# 查看当前代理配置
+Get-Proxy
+
+# 清除所有代理
+Clear-Proxy
+```
+
+## 验证配置
+
+```powershell
+# 测试网络连接
+curl ipinfo.io
+
+# 测试 npm 连接
+npm ping
+
+# 更新 Claude Code
+claude update
+
+# 查看 Claude Code 版本
+claude --version
+```
+
+## 常见端口参考
+
+| 工具 | 默认端口 | 快捷命令 |
+|------|---------|---------|
+| Clash | 7890 | `proxy7890` |
+| Clash Meta | 7897 | `proxy7897` |
+| V2Ray / V2RayN | 10809 | `proxy10809` |
+| Shadowsocks | 1080 | `proxy1080` |
+
+## 故障排查
+
+### 问题：Claude Code 仍无法连接
+
+1. **重启终端**: 环境变量更改需要重启生效
+2. **检查代理软件**: 确保代理软件正在运行
+3. **验证端口**: 确认代理软件使用的实际端口
+4. **防火墙**: 检查 Windows 防火墙是否阻止连接
+
+### 问题：npm 相关命令失败
+
+```powershell
+# 使用国内镜像
+npm config set registry https://registry.npmmirror.com
+
+# 或清除代理，直接连接
+npm config delete proxy
+npm config delete https-proxy
+```
+
+### 问题：git 操作失败
+
+```powershell
+# 检查 git 代理配置
+git config --global --get http.proxy
+
+# 如果需要清除
+git config --global --unset http.proxy
+git config --global --unset https.proxy
+```
+
+## 注意事项
+
+1. **永久设置生效时间**: 环境变量的永久设置需要重启应用/终端才能生效
+2. **不同工具的配置独立**: 系统代理、npm 代理、git 代理各自独立，需分别配置
+3. **代理软件优先级**: 确保代理软件在使用前已启动
+4. **端口冲突**: 确认端口未被其他应用占用
+
+## 总结
+
+完整的代理配置应包括：
+- ✅ 系统环境变量（HTTP_PROXY, HTTPS_PROXY）
+- ✅ npm 代理配置
+- ✅ git 代理配置（可选）
+
+使用提供的脚本可以一键完成所有配置，避免遗漏导致的连接问题。
+
+---
+
+**文档版本**: v1.0  
+**更新日期**: 2025-11-06  
+**适用系统**: Windows 11 (25H2)  
+**适用工具**: Claude Code, npm, git
+
+# Claude Code API 401错误解决方案知识库
+
+## 📌 问题描述
+
+**环境信息：**
+- 操作系统：Windows 11 22H2
+- 工具：Claude Code
+- API服务商：Anyrouter
+- 错误代码：401
+
+**错误信息：**
+```
+401 {"error":{"code":"","message":"无效的令牌 (request id: 20251106092443364537608CY32OINf)","type":"new_api_error"}}
+Retrying in 4 seconds… (attempt 5/10)
+```
+
+**问题原因：**
+Claude Code在Windows环境下未能正确读取到API认证信息，导致请求被anyrouter服务器拒绝。
+
+---
+
+## ✅ 解决方案（已验证成功）
+
+### 方案一：系统环境变量配置（永久有效 ⭐推荐）
+
+#### 步骤1：获取API密钥
+1. 访问 https://anyrouter.top
+2. 登录账户
+3. 导航至 **"API令牌"** → **"添加令牌"**
+4. 配置参数：
+   - 有效期：**永不过期**
+   - 额度：**无限额度**（默认$1额度太少）
+5. 复制保存生成的Token（格式：`sk-xxxxxxxx`）
+
+#### 步骤2：配置Windows系统环境变量
+1. 右键点击 **"此电脑"** → **"属性"**
+2. 点击 **"高级系统设置"**
+3. 点击 **"环境变量"** 按钮
+4. 在 **"用户变量"** 区域点击 **"新建"**
+
+**添加变量1：**
+```
+变量名：ANTHROPIC_AUTH_TOKEN
+变量值：sk-你的实际密钥
+```
+
+**添加变量2：**
+```
+变量名：ANTHROPIC_BASE_URL
+变量值：https://anyrouter.top
+```
+
+5. 依次点击 **"确定"** 保存所有配置窗口
+6. **⚠️ 关键步骤：重启所有已打开的终端、命令提示符、PowerShell、IDE（如VSCode）**
+
+#### 步骤3：验证配置
+**在PowerShell中验证：**
+```powershell
+echo $env:ANTHROPIC_AUTH_TOKEN
+echo $env:ANTHROPIC_BASE_URL
+```
+
+**在CMD中验证：**
+```cmd
+echo %ANTHROPIC_AUTH_TOKEN%
+echo %ANTHROPIC_BASE_URL%
+```
+
+应显示你配置的实际值。
+
+#### 步骤4：启动Claude Code
+```bash
+# 进入项目目录
+cd 你的项目路径
+
+# 启动Claude Code
+claude
+```
+
+---
+
+### 方案二：Git Bash环境配置（适用于Git Bash用户）
+
+#### 配置步骤
+打开Git Bash，执行以下命令：
+
+```bash
+# 写入认证Token
+echo -e '\nexport ANTHROPIC_AUTH_TOKEN=sk-你的实际密钥' >> ~/.bashrc
+
+# 写入API地址
+echo -e '\nexport ANTHROPIC_BASE_URL=https://anyrouter.top' >> ~/.bashrc
+
+# 重新加载配置
+source ~/.bashrc
+```
+
+#### 验证配置
+```bash
+echo $ANTHROPIC_AUTH_TOKEN
+echo $ANTHROPIC_BASE_URL
+```
+
+---
+
+### 方案三：配置文件方式（备用方案）
+
+如果环境变量方式仍有问题，可使用配置文件：
+
+#### 创建配置文件
+在用户主目录（`C:\Users\你的用户名`）下创建文件 `.claude.json`
+
+**文件内容：**
+```json
+{
+  "env": {
+    "ANTHROPIC_AUTH_TOKEN": "sk-你的实际密钥",
+    "ANTHROPIC_BASE_URL": "https://anyrouter.top"
+  }
+}
+```
+
+---
+
+## 🔧 常见问题与排查
+
+### Q1: 界面显示 "offline" 状态
+**解答：** 这是正常现象，不影响使用。offline只是因为无法连接Google测速服务，使用anyrouter地址可正常工作。
+
+### Q2: 偶尔出现 "fetch failed" 错误
+**解决方法：**
+1. 按 `Ctrl+C` 退出Claude Code
+2. 重新输入 `claude` 启动
+3. 如持续失败，尝试备用地址：
+```
+ANTHROPIC_BASE_URL=https://pmpjfbhq.cn-nb1.rainapp.top
+```
+
+### Q3: 配置后仍然401错误
+**排查清单：**
+- [ ] 确认Token格式正确（以`sk-`开头）
+- [ ] 确认URL无多余空格或路径
+- [ ] 确认已重启所有终端和IDE
+- [ ] 尝试使用配置文件方式（方案三）
+- [ ] 检查anyrouter账户余额是否充足
+
+### Q4: PowerShell临时设置（仅用于测试）
+如果只是临时测试，可以在PowerShell中执行：
+```powershell
+$env:ANTHROPIC_AUTH_TOKEN = "sk-你的密钥"
+$env:ANTHROPIC_BASE_URL = "https://anyrouter.top"
+```
+⚠️ **注意：** 此方法关闭窗口后失效，不建议长期使用。
+
+---
+
+## 📊 解决方案对比
+
+| 方案 | 永久性 | 难度 | 推荐度 | 适用场景 |
+|------|--------|------|--------|----------|
+| 系统环境变量 | ✅ 永久 | ⭐ 简单 | ⭐⭐⭐⭐⭐ | 所有Windows用户 |
+| Git Bash配置 | ✅ 永久 | ⭐⭐ 中等 | ⭐⭐⭐⭐ | Git Bash用户 |
+| 配置文件 | ✅ 永久 | ⭐⭐ 中等 | ⭐⭐⭐ | 环境变量失效时 |
+| PowerShell临时 | ❌ 临时 | ⭐ 简单 | ⭐⭐ | 仅测试用 |
+
+---
+
+## ✅ 成功标志
+
+配置成功后，应该看到：
+1. ✅ Claude Code正常启动无报错
+2. ✅ 可以输入问题并获得AI回复
+3. ✅ 不再出现401认证错误
+4. ✅ 请求重试次数为0
+
+---
+
+## 📝 最佳实践建议
+
+1. **优先使用系统环境变量方式**（方案一），兼容性最好
+2. **API密钥设置为永不过期，额度设置为无限**，避免频繁更换
+3. **每次修改配置后必须重启终端/IDE**，这是最常被忽略的步骤
+4. **保存好备用API地址**，以应对主地址不稳定情况
+5. **定期检查anyrouter账户余额**，余额不足也会导致认证失败
+
+---
+
+## 🏷️ 关键词标签
+
+`#Claude-Code` `#401错误` `#无效令牌` `#Windows11` `#Anyrouter` `#环境变量配置` `#API认证` `#解决方案`
+
+---
+
+## 📅 文档信息
+
+- **创建日期：** 2025年11月6日
+- **解决状态：** ✅ 已成功解决
+- **适用版本：** Windows 11 22H2
+- **最后验证：** 2025年11月6日
+
+---
+
+*本知识库记录基于真实解决案例，经用户验证有效。*
+太好了 👍 那我们把你的问题整理成一份知识库记录，格式清晰、方便复用，像内部“技术支持知识卡”一样：
+
+---
+
+## 💡 问题标题
+
+Windows 11 PowerShell 无法联网：代理端口变更导致 API 连接失败
+
+---
+
+## 🧩 问题现象
+
+在 Windows 11 25H2 下使用 PowerShell 或命令行工具（如 Claude Code、npm、pip 等）时报错：
+
+```
+Unable to connect to API due to poor internet connection
+Retrying in 8 seconds… (attempt 6/10)
+```
+
+排查发现，系统使用了本地代理，但端口疑似变为 `10809` 或配置丢失，导致所有走 HTTP(S) 代理的命令均无法访问外网。
+
+---
+
+## 🔍 问题原因
+
+1. 系统或 WinHTTP 的代理端口配置与实际代理客户端（Clash、V2Ray、NekoRay 等）不一致；
+2. 代理客户端变更了 HTTP 代理端口（例如从 7890 → 10809）；
+3. 部分命令行工具使用独立的环境变量或配置文件（如 Git、npm、pip），未同步更新。
+
+---
+
+## 🧰 排查步骤
+
+1. **查看系统代理设置**
+
+   ```powershell
+   Get-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings" |
+   Select ProxyEnable, ProxyServer
+   ```
+
+2. **查看 WinHTTP 代理**
+
+   ```powershell
+   netsh winhttp show proxy
+   ```
+
+3. **查看环境变量代理**
+
+   ```powershell
+   echo $env:HTTP_PROXY
+   echo $env:HTTPS_PROXY
+   ```
+
+4. **确认端口是否被监听**
+
+   ```powershell
+   netstat -ano | findstr LISTENING | findstr :10809
+   ```
+
+---
+
+## 🧭 解决方案
+
+### ✅ 一键修复命令（推荐）
+
+```powershell
+$proxy="http://127.0.0.1:10809"
+$env:HTTP_PROXY=$proxy
+$env:HTTPS_PROXY=$proxy
+[System.Net.WebRequest]::DefaultWebProxy = New-Object System.Net.WebProxy($proxy)
+netsh winhttp set proxy 127.0.0.1:10809
+Invoke-WebRequest https://www.msftconnecttest.com/connecttest.txt -UseBasicParsing
+```
+
+### 🧱 永久修改（系统层）
+
+```powershell
+Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings" `
+ -Name ProxyEnable -Value 1
+Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings" `
+ -Name ProxyServer -Value "127.0.0.1:10809"
+```
+
+### 🧩 同步开发工具代理
+
+```powershell
+git config --global http.proxy  http://127.0.0.1:10809
+git config --global https.proxy http://127.0.0.1:10809
+npm config set proxy  http://127.0.0.1:10809
+npm config set https-proxy http://127.0.0.1:10809
+```
+
+---
+
+## 🧼 还原设置（排错/回退）
+
+```powershell
+netsh winhttp reset proxy
+Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings" `
+ -Name ProxyEnable -Value 0
+Remove-Item Env:HTTP_PROXY, Env:HTTPS_PROXY -ErrorAction SilentlyContinue
+```
+
+---
+
+## 🧠 经验总结
+
+* PowerShell 和 GUI 网络设置是 **两套代理体系（WinINET 与 WinHTTP）**；
+* 开发类工具往往还需要 **独立环境变量或配置文件**；
+* 最常见的错误是混用了 SOCKS 端口；
+* 统一使用 HTTP 端口（通常 7890 或 10809）并同步更新最可靠。
+

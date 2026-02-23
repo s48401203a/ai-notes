@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI实战教学 - 演示文稿</title>
+  <meta name="description" content="面向有一定基础用户的AI实战教学演示，涵盖工具选择、Claude Code实战、提示词技巧、项目案例" />
+  <style>
+    :root {
+      --bg: #0b1020;
+      --bg-secondary: #0f1530;
+      --panel: #121a2b;
+      --muted: #8fa3c7;
+      --text: #e7eef9;
+      --text-secondary: #94a3b8;
+      --accent: #6aa6ff;
+      --accent-2: #75e0a3;
+      --accent-hover: #85b3ff;
+      --border: #27324a;
+      --chip: #1a2540;
+      --warn: #f6c244;
+      --good: #49d289;
+      --code-bg: #0c132a;
+      --code-text: #f4f7ff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Inter, "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 18px;
+      line-height: 1.6;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    /* 幻灯片容器 */
+    .presentation {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      padding: 60px 80px;
+      display: none;
+      flex-direction: column;
+      background: var(--bg);
+      overflow-y: auto;
+    }
+
+    .slide.active {
+      display: flex;
+    }
+
+    /* 封面样式 */
+    .slide.cover {
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: linear-gradient(135deg, var(--bg) 0%, var(--bg-secondary) 100%);
+    }
+
+    .cover-title {
+      font-size: 56px;
+      font-weight: 800;
+      margin-bottom: 24px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .cover-subtitle {
+      font-size: 28px;
+      color: var(--text-secondary);
+      margin-bottom: 48px;
+    }
+
+    .cover-meta {
+      font-size: 18px;
+      color: var(--muted);
+    }
+
+    .cover-logo {
+      width: 120px;
+      height: 120px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 60px;
+      margin-bottom: 32px;
+      box-shadow: 0 20px 60px rgba(106, 166, 255, 0.3);
+    }
+
+    /* 通用标题 */
+    .slide-header {
+      margin-bottom: 40px;
+    }
+
+    .slide-title {
+      font-size: 42px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    .slide-subtitle {
+      font-size: 20px;
+      color: var(--muted);
+    }
+
+    /* 内容样式 */
+    .slide-content {
+      flex: 1;
+    }
+
+    h3 {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--accent);
+      margin: 32px 0 16px;
+    }
+
+    h3:first-child {
+      margin-top: 0;
+    }
+
+    p {
+      margin: 16px 0;
+      color: var(--text-secondary);
+      font-size: 20px;
+    }
+
+    ul, ol {
+      margin: 16px 0;
+      padding-left: 32px;
+    }
+
+    li {
+      margin: 12px 0;
+      font-size: 20px;
+      color: var(--text-secondary);
+    }
+
+    li strong {
+      color: var(--text);
+    }
+
+    /* 网格布局 */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin: 24px 0;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin: 24px 0;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin: 24px 0;
+    }
+
+    /* 卡片 */
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .card-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .card h4 {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    .card p {
+      font-size: 16px;
+      margin: 0;
+    }
+
+    /* 高亮框 */
+    .highlight-box {
+      background: rgba(106, 166, 255, 0.12);
+      border: 1px solid var(--accent);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+
+    .highlight-box.green {
+      background: rgba(117, 224, 163, 0.12);
+      border-color: var(--accent-2);
+    }
+
+    .highlight-box.warn {
+      background: rgba(246, 194, 68, 0.12);
+      border-color: var(--warn);
+    }
+
+    .highlight-box h4 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    /* 代码块 */
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 16px;
+      color: var(--code-text);
+      line-height: 1.5;
+    }
+
+    /* 表格 */
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 18px;
+    }
+
+    .table th, .table td {
+      border: 1px solid var(--border);
+      padding: 16px;
+      text-align: left;
+    }
+
+    .table th {
+      background: var(--chip);
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    /* 标签 */
+    .tag {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+      margin: 4px;
+      background: var(--chip);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+
+    .tag.highlight {
+      background: rgba(117, 224, 163, 0.15);
+      color: var(--good);
+      border-color: transparent;
+    }
+
+    .tag.blue {
+      background: rgba(106, 166, 255, 0.15);
+      color: var(--accent);
+      border-color: transparent;
+    }
+
+    /* 流程图 */
+    .flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin: 32px 0;
+      flex-wrap: wrap;
+    }
+
+    .flow-step {
+      background: var(--accent);
+      color: #fff;
+      padding: 16px 28px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    .flow-arrow {
+      color: var(--accent);
+      font-size: 28px;
+    }
+
+    /* 目录页 */
+    .toc-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      list-style: none;
+      padding: 0;
+      margin: 32px 0;
+    }
+
+    .toc-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 24px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      transition: all 0.2s ease;
+    }
+
+    .toc-item:hover {
+      border-color: var(--accent);
+      transform: translateX(8px);
+    }
+
+    .toc-number {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .toc-text {
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    /* 对比框 */
+    .compare-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin: 24px 0;
+    }
+
+    .compare-item {
+      padding: 24px;
+      border-radius: 12px;
+    }
+
+    .compare-item.bad {
+      background: rgba(255, 107, 107, 0.1);
+      border: 1px solid #ff6b6b;
+    }
+
+    .compare-item.good {
+      background: rgba(117, 224, 163, 0.1);
+      border: 1px solid var(--good);
+    }
+
+    .compare-item h4 {
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+
+    /* 进度条 */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width 0.3s ease;
+      z-index: 1000;
+    }
+
+    /* 导航 */
+    .nav-controls {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 24px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      z-index: 1000;
+    }
+
+    .nav-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--chip);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .page-indicator {
+      font-size: 16px;
+      color: var(--muted);
+      min-width: 80px;
+      text-align: center;
+    }
+
+    .home-btn {
+      position: fixed;
+      top: 24px;
+      left: 24px;
+      padding: 10px 20px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 14px;
+      z-index: 1000;
+      transition: all 0.2s ease;
+    }
+
+    .home-btn:hover {
+      background: var(--chip);
+      color: var(--accent);
+    }
+
+    /* 结束页 */
+    .slide.end {
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .end-title {
+      font-size: 64px;
+      font-weight: 800;
+      margin-bottom: 24px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .end-subtitle {
+      font-size: 28px;
+      color: var(--text-secondary);
+      margin-bottom: 48px;
+    }
+
+    .qr-placeholder {
+      width: 200px;
+      height: 200px;
+      background: var(--panel);
+      border: 2px dashed var(--border);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 14px;
+      margin: 0 auto;
+    }
+
+    /* 打印样式 */
+    @media print {
+      .nav-controls, .progress-bar, .home-btn { display: none; }
+      .slide {
+        display: flex !important;
+        page-break-after: always;
+        height: auto;
+        min-height: 100vh;
+      }
+      body { overflow: visible; }
+    }
+
+    /* 响应式 */
+    @media (max-width: 1024px) {
+      .slide { padding: 40px; }
+      .cover-title { font-size: 42px; }
+      .slide-title { font-size: 32px; }
+      .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; }
+      .toc-list { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .slide { padding: 24px; }
+      .cover-title { font-size: 32px; }
+      .slide-title { font-size: 26px; }
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+      .compare-box { grid-template-columns: 1fr; }
+      .flow { flex-direction: column; }
+      .flow-arrow { transform: rotate(90deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress-bar" id="progressBar"></div>
+  <a href="index.html" class="home-btn">&#127968; 返回首页</a>
+
+  <div class="presentation" id="presentation">
+    <!-- Page 1: 封面 -->
+    <div class="slide cover active" data-page="1">
+      <div class="cover-logo">AI</div>
+      <h1 class="cover-title">AI实战教学</h1>
+      <p class="cover-subtitle">从工具选择到项目落地的完整指南</p>
+      <p class="cover-meta">适用对象：有一定AI基础的用户 | 2026年1月</p>
+    </div>
+
+    <!-- Page 2: 目录 -->
+    <div class="slide" data-page="2">
+      <div class="slide-header">
+        <h2 class="slide-title">目录</h2>
+        <p class="slide-subtitle">本次分享的主要内容</p>
+      </div>
+      <div class="slide-content">
+        <ul class="toc-list">
+          <li class="toc-item">
+            <div class="toc-number">01</div>
+            <span class="toc-text">AI工具概览与选择</span>
+          </li>
+          <li class="toc-item">
+            <div class="toc-number">02</div>
+            <span class="toc-text">Trae + Cherry Studio实战</span>
+          </li>
+          <li class="toc-item">
+            <div class="toc-number">03</div>
+            <span class="toc-text">Claude Code实战演示</span>
+          </li>
+          <li class="toc-item">
+            <div class="toc-number">04</div>
+            <span class="toc-text">Kimi Code实战演示</span>
+          </li>
+          <li class="toc-item">
+            <div class="toc-number">05</div>
+            <span class="toc-text">提示词进阶技巧</span>
+          </li>
+          <li class="toc-item">
+            <div class="toc-number">06</div>
+            <span class="toc-text">项目案例精选</span>
+          </li>
+          <li class="toc-item">
+            <div class="toc-number">07</div>
+            <span class="toc-text">最佳实践与资源</span>
+          </li>
+          <li class="toc-item">
+            <div class="toc-number">08</div>
+            <span class="toc-text">Q&A 互动环节</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Page 3: AI工具概览 -->
+    <div class="slide" data-page="3">
+      <div class="slide-header">
+        <h2 class="slide-title">AI工具全景图</h2>
+        <p class="slide-subtitle">2025-2026年主流AI工具分类</p>
+      </div>
+      <div class="slide-content">
+        <div class="grid-4">
+          <div class="card">
+            <div class="card-icon">&#127760;</div>
+            <h4>Web版本</h4>
+            <p>豆包、Kimi、智谱清言、通义千问</p>
+            <div style="margin-top:12px;">
+              <span class="tag">免费可用</span>
+              <span class="tag">即开即用</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-icon">&#128187;</div>
+            <h4>浏览器端</h4>
+            <p>豆包浏览器、夸克浏览器</p>
+            <div style="margin-top:12px;">
+              <span class="tag">AI+浏览</span>
+              <span class="tag">网页总结</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-icon">&#128190;</div>
+            <h4>本地客户端</h4>
+            <p>Trae、CodeGeeX、Codeium</p>
+            <div style="margin-top:12px;">
+              <span class="tag highlight">IDE集成</span>
+              <span class="tag">代码补全</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-icon">&#9000;</div>
+            <h4>CLI工具</h4>
+            <p>Claude Code、Codex CLI</p>
+            <div style="margin-top:12px;">
+              <span class="tag blue">项目级</span>
+              <span class="tag">文件操作</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="highlight-box">
+          <h4>核心洞察</h4>
+          <p>不同工具适用不同场景，关键是理解它们的<strong>能力边界</strong>：Web版适合问答，IDE插件适合编码，CLI工具适合项目级开发。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page 4: 工具选择决策 -->
+    <div class="slide" data-page="4">
+      <div class="slide-header">
+        <h2 class="slide-title">如何选择AI工具？</h2>
+        <p class="slide-subtitle">基于场景的决策框架</p>
+      </div>
+      <div class="slide-content">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>场景</th>
+              <th>推荐工具</th>
+              <th>理由</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>日常问答、学习</strong></td>
+              <td>豆包 / Kimi</td>
+              <td>免费、响应快、中文优化好</td>
+            </tr>
+            <tr>
+              <td><strong>长文档处理</strong></td>
+              <td>Kimi / 通义千问</td>
+              <td>256K-1M 超长上下文</td>
+            </tr>
+            <tr>
+              <td><strong>编辑器内辅助</strong></td>
+              <td>Trae + CodeGeeX</td>
+              <td>免费、IDE集成、实时补全</td>
+            </tr>
+            <tr>
+              <td><strong>项目级开发</strong></td>
+              <td>Claude Code</td>
+              <td>文件操作、多文件编辑、Git集成</td>
+            </tr>
+            <tr>
+              <td><strong>预算有限</strong></td>
+              <td>智谱清言 + CodeGeeX</td>
+              <td>GLM-4-Flash免费 + 开源插件</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="highlight-box green">
+          <h4>推荐组合（个人开发者）</h4>
+          <ul>
+            <li><strong>日常</strong>：豆包/Kimi（Web）</li>
+            <li><strong>编码</strong>：Trae（个人免费）+ CodeGeeX</li>
+            <li><strong>项目</strong>：Claude Code（需订阅）</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page 5: Trae IDE介绍 -->
+    <div class="slide" data-page="5">
+      <div class="slide-header">
+        <h2 class="slide-title">Trae：中国首个AI原生IDE</h2>
+        <p class="slide-subtitle">个人版完全免费，无限使用Claude 3.7</p>
+      </div>
+      <div class="slide-content">
+        <h3>核心特点</h3>
+        <div class="grid-2">
+          <div class="card">
+            <h4>&#127775; 免费无限使用</h4>
+            <p>个人版完全免费，不限量使用Claude 3.7和DeepSeek R1模型，零门槛上手</p>
+          </div>
+          <div class="card">
+            <h4>&#128187; AI原生设计</h4>
+            <p>从底层为AI编程设计，支持Builder模式、Chat模式、Composer模式</p>
+          </div>
+          <div class="card">
+            <h4>&#127760; 多模型支持</h4>
+            <p>内置Claude 3.7、DeepSeek R1、豆包等模型，一键切换</p>
+          </div>
+          <div class="card">
+            <h4>&#128736; 完整开发环境</h4>
+            <p>基于VS Code内核，兼容所有VS Code插件和主题</p>
+          </div>
+        </div>
+
+        <h3>四大模式</h3>
+        <table class="table">
+          <thead>
+            <tr><th>模式</th><th>适用场景</th><th>特点</th><th>难度</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Solo模式</strong></td><td>快速问答</td><td>最简单的问答模式，类似网页版AI，无需项目上下文</td><td style="color:var(--good);">入门</td></tr>
+            <tr><td><strong>Chat模式</strong></td><td>对话交流</td><td>结合当前项目上下文进行对话，可以引用代码文件</td><td>基础</td></tr>
+            <tr><td><strong>Composer模式</strong></td><td>代码编辑</td><td>多文件编辑、代码重构，适合修改现有代码</td><td>进阶</td></tr>
+            <tr><td><strong>Builder模式</strong></td><td>从零创建项目</td><td>自动生成文件结构和完整代码，适合从零开始</td><td>项目级</td></tr>
+          </tbody>
+        </table>
+
+        <div class="highlight-box green">
+          <h4>模式选择建议</h4>
+          <ul>
+            <li><strong>新手入门</strong>：从Solo模式开始，零门槛体验AI编程</li>
+            <li><strong>日常开发</strong>：Chat模式最常用，边写代码边问问题</li>
+            <li><strong>重构优化</strong>：Composer模式适合跨文件修改</li>
+            <li><strong>新项目</strong>：Builder模式一键生成完整项目框架</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page 6: Trae安装使用 -->
+    <div class="slide" data-page="6">
+      <div class="slide-header">
+        <h2 class="slide-title">Trae 安装与实战演示</h2>
+        <p class="slide-subtitle">5分钟开始AI编程</p>
+      </div>
+      <div class="slide-content">
+        <h3>安装步骤</h3>
+        <pre><code># 方式1：官网下载（推荐）
+访问：https://www.trae.ai/
+下载对应系统版本（Windows/macOS/Linux）
+
+# 方式2：Homebrew (macOS)
+brew install --cask trae
+
+# 安装后首次启动
+1. 登录Trae账号（邮箱/手机号）
+2. 选择默认AI模型（Claude 3.7或DeepSeek R1）
+3. 导入VS Code设置（可选）</code></pre>
+
+        <h3>实战示例1：Solo模式快速问答（最简单）</h3>
+        <div class="flow">
+          <div class="flow-step">打开Trae</div>
+          <span class="flow-arrow">&#8594;</span>
+          <div class="flow-step">选择Solo模式</div>
+          <span class="flow-arrow">&#8594;</span>
+          <div class="flow-step">直接提问</div>
+          <span class="flow-arrow">&#8594;</span>
+          <div class="flow-step">获取回答</div>
+        </div>
+
+        <div class="highlight-box">
+          <h4>Solo模式使用场景</h4>
+          <ul>
+            <li>解释一个技术概念（如"什么是REST API？"）</li>
+            <li>快速查找代码示例（如"Python读取CSV的代码"）</li>
+            <li>调试错误信息（粘贴报错信息，询问解决方案）</li>
+            <li>学习语法（如"JavaScript箭头函数的写法"）</li>
+          </ul>
+        </div>
+
+        <h3>实战示例2：Builder模式创建项目</h3>
+        <div class="highlight-box green">
+          <h4>提示词示例（Builder模式）</h4>
+          <pre><code>帮我创建一个网站状态监控工具：
+1. 用Python实现，使用requests库
+2. 监控指定URL的可用性
+3. 发现异常时发送邮件通知
+4. 支持配置文件管理监控列表
+5. 添加日志记录功能
+
+请生成完整的项目结构和代码。</code></pre>
+          <p style="margin-top:12px;font-size:14px;">Builder模式会自动创建完整的项目结构，包括文件夹、主程序、配置文件等。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page 7: Trae使用技巧与快捷键 -->
+    <div class="slide" data-page="7">
+      <div class="slide-header">
+        <h2 class="slide-title">Trae 使用技巧与高效指令</h2>
+        <p class="slide-subtitle">提升AI编程效率的实用技巧</p>
+      </div>
+      <div class="slide-content">
+        <h3>高效快捷键</h3>
+        <table class="table">
+          <thead>
+            <tr><th>快捷键</th><th>功能</th><th>使用场景</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>Ctrl/Cmd + L</code></td><td>打开侧边栏对话</td><td>快速唤起AI助手</td></tr>
+            <tr><td><code>Ctrl/Cmd + I</code></td><td>内联编辑</td><td>在代码处直接询问AI</td></tr>
+            <tr><td><code>Ctrl/Cmd + Shift + P</code></td><td>命令面板</td><td>切换模式、执行命令</td></tr>
+            <tr><td><code>Tab</code></td><td>接受AI建议</td><td>代码补全时快速采纳</td></tr>
+            <tr><td><code>Esc</code></td><td>取消AI生成</td><td>中断不需要的输出</td></tr>
+          </tbody>
+        </table>
+
+        <h3>实用指令技巧</h3>
+        <div class="grid-2">
+          <div class="highlight-box">
+            <h4>代码相关</h4>
+            <ul>
+              <li><code>/explain</code> - 解释选中代码</li>
+              <li><code>/fix</code> - 修复代码错误</li>
+              <li><code>/test</code> - 生成单元测试</li>
+              <li><code>/doc</code> - 生成代码文档</li>
+            </ul>
+          </div>
+          <div class="highlight-box green">
+            <h4>项目相关</h4>
+            <ul>
+              <li><code>@file</code> - 引用特定文件</li>
+              <li><code>@folder</code> - 引用整个文件夹</li>
+              <li><code>@git</code> - 查看Git变更</li>
+              <li><code>@terminal</code> - 引用终端输出</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="highlight-box warn">
+          <h4>最佳实践提示</h4>
+          <ul>
+            <li><strong>上下文引用</strong>：使用@符号引用文件，让AI更准确理解代码</li>
+            <li><strong>渐进式生成</strong>：复杂任务分步骤，先生成框架再细化</li>
+            <li><strong>及时反馈</strong>：AI生成不符合预期时，立即指出具体问题</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page 8: Cherry Studio介绍 -->
+    <div class="slide" data-page="8">
+      <div class="slide-header">
+        <h2 class="slide-title">Cherry Studio：多模型聚合客户端</h2>
+        <p class="slide-subtitle">开源免费，一站式使用300+ AI模型</p>
+      </div>
+      <div class="slide-content">
+        <h3>核心优势</h3>
+        <div class="grid-2">
+          <div class="card">
+            <h4>&#128220; 多模型聚合</h4>
+            <p>支持300+国内外模型，包括GPT-4、Claude、Gemini、DeepSeek、Kimi等</p>
+          </div>
+          <div class="card">
+            <h4>&#128274; 本地数据存储</h4>
+            <p>对话数据存储在本地，支持SQLite加密，保护隐私安全</p>
+          </div>
+          <div class="card">
+            <h4>&#128421; 跨平台支持</h4>
+            <p>支持Windows、macOS、Linux，界面简洁美观</p>
+          </div>
+          <div class="card">
+            <h4>&#128193; 知识库功能</h4>
+            <p>支持本地知识库，可上传文档进行RAG问答</p>
+          </div>
+        </div>
+
+        <h3>适用场景</h3>
+        <table class="table">
+          <thead>
+            <tr><th>场景</th><th>使用方法</th><th>优势</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>模型对比</strong></td><td>同时提问多个模型</td><td>对比不同模型回答质量</td></tr>
+            <tr><td><strong>长文档处理</strong></td><td>上传PDF/Word进行问答</td><td>利用大模型长上下文能力</td></tr>
+            <tr><td><strong>知识库问答</strong></td><td>建立个人知识库</td><td>基于私有文档的智能问答</td></tr>
+            <tr><td><strong>AI绘画</strong></td><td>集成Midjourney等</td><td>文生图一站式体验</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Page 9: Cherry Studio安装使用 -->
+    <div class="slide" data-page="9">
+      <div class="slide-header">
+        <h2 class="slide-title">Cherry Studio 安装与配置</h2>
+        <p class="slide-subtitle">一站式管理你的AI模型</p>
+      </div>
+      <div class="slide-content">
+        <h3>安装步骤</h3>
+        <pre><code># 官网下载
+https://cherry-ai.com/
+
+# macOS Homebrew
+brew install --cask cherry-studio
+
+# Windows Winget
+winget install CherryStudio</code></pre>
+
+        <h3>配置API密钥</h3>
+        <div class="grid-2">
+          <div class="highlight-box">
+            <h4>配置步骤</h4>
+            <ol>
+              <li>打开设置 -> 模型服务</li>
+              <li>选择要添加的服务商（如硅基流动）</li>
+              <li>填入API密钥</li>
+              <li>测试连接</li>
+            </ol>
+          </div>
+          <div class="highlight-box green">
+            <h4>推荐配置</h4>
+            <ul>
+              <li><strong>免费尝鲜</strong>：硅基流动 + DeepSeek V3</li>
+              <li><strong>均衡选择</strong>：OpenRouter + Claude 3.5</li>
+              <li><strong>国产优先</strong>：Kimi + 智谱GLM-4</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>实战：多模型对比提问</h3>
+        <div class="highlight-box">
+          <h4>同时提问3个模型</h4>
+          <p><strong>问题</strong>：解释Python的GIL机制，并说明多线程编程的注意事项</p>
+          <ul>
+            <li>对比Claude、DeepSeek、Kimi的回答差异</li>
+            <li>观察各模型的解释风格和深度</li>
+            <li>选择最适合的答案或综合各模型优点</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page 10: Cherry Studio进阶技巧 -->
+    <div class="slide" data-page="10">
+      <div class="slide-header">
+        <h2 class="slide-title">Cherry Studio 进阶使用技巧</h2>
+        <p class="slide-subtitle">多模型协同与知识库应用</p>
+      </div>
+      <div class="slide-content">
+        <h3>多模型协同技巧</h3>
+        <div class="grid-2">
+          <div class="highlight-box">
+            <h4>&#128260; 对比模式</h4>
+            <p><strong>使用场景</strong>：同一问题问多个模型，选择最佳答案</p>
+            <p style="margin-top:8px;"><strong>操作方法</strong>：</p>
+            <ol>
+              <li>按住Ctrl/Cmd选择多个模型</li>
+              <li>输入问题，同时发送</li>
+              <li>对比各模型回答，综合判断</li>
+            </ol>
+          </div>
+          <div class="highlight-box green">
+            <h4>&#128173; 模型选择策略</h4>
+            <ul>
+              <li><strong>代码问题</strong>：Claude 3.5 / DeepSeek Coder</li>
+              <li><strong>创意写作</strong>：GPT-4 / Kimi</li>
+              <li><strong>长文档</strong>：Claude 3.5 (200K) / 通义千问</li>
+              <li><strong>中文对话</strong>：Kimi / 智谱GLM-4</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>知识库功能实战</h3>
+        <table class="table">
+          <thead>
+            <tr><th>步骤</th><th>操作</th><th>说明</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>上传文档</td><td>支持PDF、Word、TXT等格式</td></tr>
+            <tr><td>2</td><td>创建知识库</td><td>设置名称和向量模型</td></tr>
+            <tr><td>3</td><td>关联助手</td><td>选择要使用知识库的AI模型</td></tr>
+            <tr><td>4</td><td>开始问答</td><td>基于私有文档进行智能问答</td></tr>
+          </tbody>
+        </table>
+
+        <div class="highlight-box warn">
+          <h4>高级技巧</h4>
+          <ul>
+            <li><strong>会话管理</strong>：使用文件夹组织不同主题的对话</li>
+            <li><strong>导出功能</strong>：对话历史可导出为Markdown/HTML</li>
+            <li><strong>快捷指令</strong>：设置常用提示词为快捷指令，一键调用</li>
+            <li><strong>联网搜索</strong>：开启后AI可搜索最新信息补充回答</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page 11: Claude Code介绍 -->
+    <div class="slide" data-page="11">
+      <div class="slide-header">
+        <h2 class="slide-title">Claude Code：项目级AI助手</h2>
+        <p class="slide-subtitle">真正的文件系统访问能力</p>
+      </div>
+      <div class="slide-content">
+        <h3>核心优势</h3>
+        <div class="grid-2">
+          <div class="card">
+            <h4>&#128193; 真实文件操作</h4>
+            <p>不是在对话框里"模拟"，而是真正读写本地文件</p>
+          </div>
+          <div class="card">
+            <h4>&#128196; 多文件编辑</h4>
+            <p>跨文件修改、重构，理解整个项目上下文</p>
+          </div>
+          <div class="card">
+            <h4>&#128736; Git原生集成</h4>
+            <p>自动创建commit、查看diff、管理分支</p>
+          </div>
+          <div class="card">
+            <h4>&#9000; 命令执行</h4>
+            <p>运行测试、构建项目、执行脚本</p>
+          </div>
+        </div>
+
+        <h3>与其他工具的本质区别</h3>
+        <table class="table">
+          <thead>
+            <tr><th>能力</th><th>Claude Code</th><th>Web版AI</th><th>IDE插件</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>文件操作</td><td style="color:var(--good);">真实读写</td><td style="color:var(--muted);">仅对话</td><td>当前文件</td></tr>
+            <tr><td>多文件编辑</td><td style="color:var(--good);">支持</td><td style="color:var(--muted);">不支持</td><td>有限</td></tr>
+            <tr><td>项目理解</td><td style="color:var(--good);">全局</td><td>片段</td><td>当前文件</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Page 12: Claude Code实操 -->
+    <div class="slide" data-page="12">
+      <div class="slide-header">
+        <h2 class="slide-title">Claude Code 实战演示</h2>
+        <p class="slide-subtitle">从安装到项目创建</p>
+      </div>
+      <div class="slide-content">
+        <h3>安装配置</h3>
+        <pre><code># 1. 安装 Claude Code (需要 Node.js 18+)
+npm install -g @anthropic-ai/claude-code
+
+# 2. 认证登录
+claude login
+
+# 3. 进入项目目录
+cd /path/to/your/project
+
+# 4. 启动 Claude Code
+claude</code></pre>
+
+        <h3>常用命令</h3>
+        <div class="grid-2">
+          <div class="highlight-box">
+            <h4>基础操作</h4>
+            <ul>
+              <li><code>/help</code> - 查看帮助</li>
+              <li><code>/clear</code> - 清空对话</li>
+              <li><code>/compact</code> - 压缩上下文</li>
+            </ul>
+          </div>
+          <div class="highlight-box">
+            <h4>高级功能</h4>
+            <ul>
+              <li><code>Ctrl+C</code> - 中断当前操作</li>
+              <li><code>Shift+Tab</code> - 切换模式</li>
+              <li><code>/config</code> - 配置设置</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="highlight-box warn">
+          <h4>注意事项</h4>
+          <p>Claude Code 需要 Claude Pro 订阅（$20/月）或 API Key。操作前建议先 git commit，便于回滚。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page 13: Claude Code项目案例 -->
+    <div class="slide" data-page="13">
+      <div class="slide-header">
+        <h2 class="slide-title">Claude Code 项目创建示例</h2>
+        <p class="slide-subtitle">一个完整的工作流程</p>
+      </div>
+      <div class="slide-content">
+        <h3>场景：创建一个监控脚本</h3>
+
+        <div class="flow">
+          <div class="flow-step">描述需求</div>
+          <span class="flow-arrow">&#8594;</span>
+          <div class="flow-step">Claude规划</div>
+          <span class="flow-arrow">&#8594;</span>
+          <div class="flow-step">生成代码</div>
+          <span class="flow-arrow">&#8594;</span>
+          <div class="flow-step">测试验证</div>
+          <span class="flow-arrow">&#8594;</span>
+          <div class="flow-step">Git提交</div>
+        </div>
+
+        <h3>提示词示例</h3>
+        <pre><code>请帮我创建一个VPS流量监控脚本：
+1. 纯Bash实现，无需额外依赖
+2. 监控网络流量和实时网速
+3. 通过Telegram Bot发送通知
+4. 支持按钮式交互
+5. 添加进程锁防止重复执行
+
+请先分析需求，确认理解后再开始编写。</code></pre>
+
+        <div class="highlight-box green">
+          <h4>关键技巧</h4>
+          <ul>
+            <li><strong>分步确认</strong>：先让Claude理解需求，再执行</li>
+            <li><strong>约束条件</strong>：明确技术栈、性能要求</li>
+            <li><strong>验证要求</strong>：要求解释关键逻辑</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page 14: Kimi Code介绍 -->
+    <div class="slide" data-page="14">
+      <div class="slide-header">
+        <h2 class="slide-title">Kimi Code CLI：斜杠命令增强</h2>
+        <p class="slide-subtitle">支持Skills加载的强大命令行工具</p>
+      </div>
+      <div class="slide-content">
+        <h3>核心特点</h3>
+        <div class="grid-2">
+          <div class="card">
+            <h4>&#128295; 斜杠命令系统</h4>
+            <p>支持/help、/model、/skill:name等斜杠命令，快速切换功能和模型</p>
+          </div>
+          <div class="card">
+            <h4>&#128218; Skills技能加载</h4>
+            <p>支持加载自定义Skills，封装常用提示词和工作流，一键调用</p>
+          </div>
+          <div class="card">
+            <h4>&#128187; 多模型切换</h4>
+            <p>支持Kimi、OpenAI、Anthropic等多个模型，随时切换最佳模型</p>
+          </div>
+          <div class="card">
+            <h4>&#128260; 上下文管理</h4>
+            <p>支持文件引用、长上下文处理，适合复杂项目开发</p>
+          </div>
+        </div>
+
+        <h3>与其他CLI工具对比</h3>
+        <table class="table">
+          <thead>
+            <tr><th>特性</th><th>Kimi Code</th><th>Claude Code</th><th>Codex CLI</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>斜杠命令</td><td style="color:var(--good);">丰富</td><td>基础</td><td>基础</td></tr>
+            <tr><td>Skills系统</td><td style="color:var(--good);">支持</td><td>不支持</td><td>不支持</td></tr>
+            <tr><td>模型选择</td><td style="color:var(--good);">多模型</td><td>Claude系列</td><td>GPT系列</td></tr>
+            <tr><td>中文优化</td><td style="color:var(--good);">优秀</td><td>良好</td><td>良好</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Page 15: Kimi Code安装使用 -->
+    <div class="slide" data-page="15">
+      <div class="slide-header">
+        <h2 class="slide-title">Kimi Code 安装与实战演示</h2>
+        <p class="slide-subtitle">使用Skills提升开发效率</p>
+      </div>
+      <div class="slide-content">
+        <h3>安装步骤</h3>
+        <pre><code># 安装 Kimi Code CLI
+npm install -g @kimi-ai/code
+
+# 初始化配置
+kimi config
+
+# 启动 Kimi Code
+kimi</code></pre>
+
+        <h3>常用斜杠命令</h3>
+        <div class="grid-2">
+          <div class="highlight-box">
+            <h4>基础命令</h4>
+            <ul>
+              <li><code>/help</code> - 查看帮助</li>
+              <li><code>/model</code> - 切换模型</li>
+              <li><code>/config</code> - 查看配置</li>
+              <li><code>/exit</code> - 退出程序</li>
+            </ul>
+          </div>
+          <div class="highlight-box green">
+            <h4>Skills命令</h4>
+            <ul>
+              <li><code>/skill:list</code> - 列出可用Skills</li>
+              <li><code>/skill:name</code> - 加载指定Skill</li>
+              <li><code>/skill:reload</code> - 重新加载Skills</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>实战：使用Skill快速生成代码</h3>
+        <pre><code># 加载代码审查Skill
+/skill:codereview
+
+# 然后发送代码
+请审查以下Python代码的质量：
+[粘贴代码]
+
+# Skill会自动按照规范进行代码审查</code></pre>
+
+        <div class="highlight-box warn">
+          <h4>提示</h4>
+          <p>Kimi Code的Skills功能非常强大，可以将常用提示词封装成Skill，通过/skill:name快速调用。适合团队协作和标准化工作流程。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page 16: 提示词基础 -->
+    <div class="slide" data-page="16">
+      <div class="slide-header">
+        <h2 class="slide-title">提示词进阶技巧</h2>
+        <p class="slide-subtitle">从能用到用好的关键</p>
+      </div>
+      <div class="slide-content">
+        <h3>CRAFT框架</h3>
+        <div class="grid-2">
+          <div>
+            <ul>
+              <li><strong>C</strong>ontext - 上下文背景</li>
+              <li><strong>R</strong>ole - 角色定位</li>
+              <li><strong>A</strong>ction - 具体行动</li>
+              <li><strong>F</strong>ormat - 输出格式</li>
+              <li><strong>T</strong>one - 语气风格</li>
+            </ul>
+          </div>
+          <div class="highlight-box">
+            <h4>示例</h4>
+            <p><strong>角色</strong>：你是Python专家<br>
+            <strong>任务</strong>：优化这段代码<br>
+            <strong>上下文</strong>：Django 4.2项目<br>
+            <strong>格式</strong>：Markdown + 代码块</p>
+          </div>
+        </div>
+
+        <h3>好提示词 vs 差提示词</h3>
+        <div class="compare-box">
+          <div class="compare-item bad">
+            <h4>&#10060; 不好的方式</h4>
+            <p>"帮我写段代码"</p>
+            <p style="font-size:14px;margin-top:12px;">问题：需求不明确，AI只能猜测</p>
+          </div>
+          <div class="compare-item good">
+            <h4>&#9989; 好的方式</h4>
+            <p>"你是Python专家，请写一个邮箱验证函数，需要处理边界情况，用正则实现"</p>
+            <p style="font-size:14px;margin-top:12px;">包含：角色、任务、约束、技术要求</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page 17: 提示词模式 -->
+    <div class="slide" data-page="17">
+      <div class="slide-header">
+        <h2 class="slide-title">常用提示词模式</h2>
+        <p class="slide-subtitle">根据场景选择合适的模式</p>
+      </div>
+      <div class="slide-content">
+        <div class="grid-3">
+          <div class="card">
+            <h4>Zero-shot</h4>
+            <p>直接描述任务，不提供示例</p>
+            <pre style="font-size:14px;"><code>将以下文本翻译成中文：
+"Hello World"</code></pre>
+            <p style="font-size:14px;color:var(--muted);">适合：简单明确的任务</p>
+          </div>
+          <div class="card">
+            <h4>Few-shot</h4>
+            <p>提供示例，让AI学习模式</p>
+            <pre style="font-size:14px;"><code>输入：苹果CEO库克
+输出：{"人物":"库克"}
+
+输入：特斯拉马斯克
+输出：</code></pre>
+            <p style="font-size:14px;color:var(--muted);">适合：特定格式任务</p>
+          </div>
+          <div class="card">
+            <h4>Chain-of-Thought</h4>
+            <p>引导AI逐步思考</p>
+            <pre style="font-size:14px;"><code>请一步一步思考：
+水箱6小时注满...
+展示推理过程。</code></pre>
+            <p style="font-size:14px;color:var(--muted);">适合：复杂推理</p>
+          </div>
+        </div>
+
+        <h3>模式选择决策</h3>
+        <table class="table">
+          <thead>
+            <tr><th>模式</th><th>适用场景</th><th>优点</th><th>缺点</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Zero-shot</td><td>通用问题</td><td>快速简洁</td><td>复杂任务效果差</td></tr>
+            <tr><td>Few-shot</td><td>特定格式</td><td>效果好、可控</td><td>需要准备示例</td></tr>
+            <tr><td>CoT</td><td>推理、数学</td><td>准确性高</td><td>输出较长</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Page 18: 记忆文件 -->
+    <div class="slide" data-page="18">
+      <div class="slide-header">
+        <h2 class="slide-title">AI记忆文件：CLAUDE.md</h2>
+        <p class="slide-subtitle">让AI"记住"你的项目规范</p>
+      </div>
+      <div class="slide-content">
+        <h3>什么是CLAUDE.md？</h3>
+        <p>放在项目根目录的配置文件，Claude Code会自动读取，理解项目规范。</p>
+
+        <h3>推荐结构</h3>
+        <pre><code># CLAUDE.md
+
+## 项目概述
+简要描述项目的目的、技术栈
+
+## 代码规范
+- 命名约定：camelCase / PascalCase
+- 缩进：2个空格
+- 最大行长：100字符
+
+## Git规范
+- Commit格式：&lt;type&gt;(&lt;scope&gt;): &lt;description&gt;
+- 禁止force push到main
+
+## 安全检查
+- 禁止硬编码密钥
+- 敏感文件加入.gitignore</code></pre>
+
+        <div class="highlight-box green">
+          <h4>使用效果</h4>
+          <p>配置好CLAUDE.md后，无需每次对话都重复说明规范，AI会自动遵循项目约定。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page 19: 项目案例 -->
+    <div class="slide" data-page="19">
+      <div class="slide-header">
+        <h2 class="slide-title">案例二：Password Policy Manager</h2>
+        <p class="slide-subtitle">企业级Windows密码策略管理工具</p>
+      </div>
+      <div class="slide-content">
+        <div class="grid-2">
+          <div>
+            <h3>项目背景</h3>
+            <p>企业需要强制员工修改密码，通过火绒安全软件静默分发部署。</p>
+
+            <h3>技术栈</h3>
+            <ul>
+              <li><strong>部署脚本</strong>：Windows Batch</li>
+              <li><strong>监控脚本</strong>：PowerShell</li>
+              <li><strong>通知</strong>：Windows Toast API</li>
+              <li><strong>调度</strong>：Task Scheduler</li>
+            </ul>
+
+            <h3>版本演进</h3>
+            <p>v1.0 → v1.4.8，迭代8个版本，每次解决特定问题。</p>
+          </div>
+          <div>
+            <h3>核心功能</h3>
+            <div class="card" style="margin-bottom:16px;">
+              <h4>&#128276; 一次性提醒</h4>
+              <p>持续提醒直到用户修改密码</p>
+            </div>
+            <div class="card" style="margin-bottom:16px;">
+              <h4>&#128465; 自动卸载</h4>
+              <p>检测到密码修改后自动清理</p>
+            </div>
+            <div class="card">
+              <h4>&#128225; 静默部署</h4>
+              <p>SYSTEM权限静默执行</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="highlight-box warn">
+          <h4>踩坑记录</h4>
+          <p>火绒会拦截svchost.exe调用powershell.exe的行为，解决方案：清理任务改用CMD执行。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page 20: 最佳实践 -->
+    <div class="slide" data-page="20">
+      <div class="slide-header">
+        <h2 class="slide-title">AI协作最佳实践</h2>
+        <p class="slide-subtitle">提高效率的关键原则</p>
+      </div>
+      <div class="slide-content">
+        <div class="grid-2">
+          <div class="card">
+            <h4>&#127919; 1. 明确需求</h4>
+            <p>开始前清晰描述项目目标、约束条件、技术偏好。模糊的需求会得到模糊的答案。</p>
+          </div>
+          <div class="card">
+            <h4>&#128203; 2. 分步实现</h4>
+            <p>复杂项目拆分为小任务，每步验证后再继续。不要一次让AI做太多。</p>
+          </div>
+          <div class="card">
+            <h4>&#128257; 3. 持续迭代</h4>
+            <p>根据实际使用反馈不断优化。不满意就追问，通过对话逐步改进。</p>
+          </div>
+          <div class="card">
+            <h4>&#128269; 4. 验证输出</h4>
+            <p>永远不要盲信AI输出。代码要测试，事实要核查，重要内容要交叉验证。</p>
+          </div>
+        </div>
+
+        <h3>AI协作中的角色分工</h3>
+        <table class="table">
+          <thead>
+            <tr><th>阶段</th><th>AI作用</th><th>人类职责</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>需求分析</td><td>帮助梳理、识别关键点</td><td>提供业务背景、明确目标</td></tr>
+            <tr><td>方案设计</td><td>技术选型建议、架构设计</td><td>决策、权衡取舍</td></tr>
+            <tr><td>代码实现</td><td>生成代码、解释逻辑</td><td>审查、测试、调整</td></tr>
+            <tr><td>问题调试</td><td>分析错误、提供方案</td><td>执行、验证、反馈</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Page 21: 学习资源 -->
+    <div class="slide" data-page="21">
+      <div class="slide-header">
+        <h2 class="slide-title">学习资源与进阶路径</h2>
+        <p class="slide-subtitle">持续提升AI协作能力</p>
+      </div>
+      <div class="slide-content">
+        <div class="grid-2">
+          <div>
+            <h3>推荐资源</h3>
+            <div class="card" style="margin-bottom:16px;">
+              <h4>&#128218; 官方文档</h4>
+              <ul>
+                <li>Claude Code 官方文档</li>
+                <li>OpenAI Prompt 指南</li>
+                <li>各平台API文档</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h4>&#128187; 实践平台</h4>
+              <ul>
+                <li>AI知识库（本站）</li>
+                <li>GitHub AI项目</li>
+                <li>Hugging Face</li>
+              </ul>
+            </div>
+          </div>
+          <div>
+            <h3>进阶路径</h3>
+            <div class="highlight-box">
+              <h4>阶段一：入门（1-2周）</h4>
+              <p>了解基础概念，熟悉主流工具</p>
+            </div>
+            <div class="highlight-box" style="margin-top:12px;">
+              <h4>阶段二：技能提升（2-4周）</h4>
+              <p>掌握提示词技巧，学会任务分解</p>
+            </div>
+            <div class="highlight-box" style="margin-top:12px;">
+              <h4>阶段三：项目实战（持续）</h4>
+              <p>真实项目应用，形成方法论</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="highlight-box green" style="margin-top:24px;">
+          <h4>核心建议</h4>
+          <p><strong>立即开始</strong>：不要纠结选哪个工具，先用起来再说。<strong>多做实验</strong>：同一问题尝试不同方式。<strong>记录心得</strong>：有效的提示词和踩过的坑都值得记录。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page 22: Q&A -->
+    <div class="slide end" data-page="22">
+      <div class="cover-logo" style="font-size:48px;">?</div>
+      <h1 class="end-title">Q & A</h1>
+      <p class="end-subtitle">感谢聆听，欢迎提问</p>
+      <div style="margin-top:32px;">
+        <p style="color:var(--muted);font-size:16px;">更多资源请访问</p>
+        <p style="font-size:24px;color:var(--accent);margin-top:8px;">AI学习知识库</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 导航控制 -->
+  <div class="nav-controls">
+    <button class="nav-btn" id="prevBtn" title="上一页 (&#8592;)">&#8592;</button>
+    <span class="page-indicator" id="pageIndicator">1 / 22</span>
+    <button class="nav-btn" id="nextBtn" title="下一页 (&#8594;)">&#8594;</button>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    let currentSlide = 0;
+
+    const progressBar = document.getElementById('progressBar');
+    const pageIndicator = document.getElementById('pageIndicator');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function updateSlide() {
+      slides.forEach((slide, index) => {
+        slide.classList.toggle('active', index === currentSlide);
+      });
+
+      // 更新进度条
+      const progress = ((currentSlide + 1) / totalSlides) * 100;
+      progressBar.style.width = progress + '%';
+
+      // 更新页码
+      pageIndicator.textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+      // 更新按钮状态
+      prevBtn.disabled = currentSlide === 0;
+      nextBtn.disabled = currentSlide === totalSlides - 1;
+    }
+
+    function goToSlide(index) {
+      if (index >= 0 && index < totalSlides) {
+        currentSlide = index;
+        updateSlide();
+      }
+    }
+
+    function nextSlide() {
+      goToSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+      goToSlide(currentSlide - 1);
+    }
+
+    // 按钮点击
+    prevBtn.addEventListener('click', prevSlide);
+    nextBtn.addEventListener('click', nextSlide);
+
+    // 键盘导航
+    document.addEventListener('keydown', (e) => {
+      switch (e.key) {
+        case 'ArrowRight':
+        case 'ArrowDown':
+        case ' ':
+        case 'PageDown':
+          e.preventDefault();
+          nextSlide();
+          break;
+        case 'ArrowLeft':
+        case 'ArrowUp':
+        case 'PageUp':
+          e.preventDefault();
+          prevSlide();
+          break;
+        case 'Home':
+          e.preventDefault();
+          goToSlide(0);
+          break;
+        case 'End':
+          e.preventDefault();
+          goToSlide(totalSlides - 1);
+          break;
+      }
+    });
+
+    // 点击页面也可翻页（排除导航区域）
+    document.querySelector('.presentation').addEventListener('click', (e) => {
+      if (e.target.closest('.nav-controls') || e.target.closest('.home-btn')) return;
+
+      const rect = e.currentTarget.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+
+      if (clickX < rect.width / 3) {
+        prevSlide();
+      } else if (clickX > rect.width * 2 / 3) {
+        nextSlide();
+      }
+    });
+
+    // 触摸滑动支持
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+
+    document.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      const diff = touchStartX - touchEndX;
+
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) {
+          nextSlide();
+        } else {
+          prevSlide();
+        }
+      }
+    });
+
+    // 初始化
+    updateSlide();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI提示词工程学习手册 - AI学习知识库</title>
+  <meta name="description" content="提示词工程学习手册：最新技术要求、分级学习路径、案例拆解、脚本编写规范与模板库。" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      --bg: #f7f6f3;
+      --panel: #ffffff;
+      --panel-muted: #f2f1ee;
+      --text: #2f3437;
+      --muted: #6b6f72;
+      --border: #e6e3de;
+      --accent: #2f80ed;
+      --accent-strong: #1c6dd0;
+      --highlight: #f2c94c;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      --code-bg: #f6f6f5;
+      --code-text: #2f3437;
+      --code-border: #e6e3de;
+      --radius: 14px;
+      --content-width: 100ch;
+      --sidebar-width: 260px;
+      --topbar-height: 64px;
+      --font-body: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --font-heading: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    [data-theme="dark"] {
+      --bg: #202224;
+      --panel: #2a2d2e;
+      --panel-muted: #2f3334;
+      --text: #f1f1f1;
+      --muted: #c3c3c3;
+      --border: #3a3f40;
+      --accent: #4ea1ff;
+      --accent-strong: #7ab3ff;
+      --highlight: #f2c94c;
+      --shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+      --code-bg: #26292a;
+      --code-text: #f1f1f1;
+      --code-border: #3a3f40;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.72;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: var(--accent-strong);
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.92em;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      height: var(--topbar-height);
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 20px;
+      z-index: 20;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      border: 2px solid var(--text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .search {
+      flex: 1;
+      max-width: 420px;
+      position: relative;
+    }
+
+    .search input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    [data-theme="dark"] .search input {
+      background: #262626;
+    }
+
+    .search input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn {
+      border: 1px solid var(--border);
+      background: var(--panel);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      border-color: var(--accent);
+      color: var(--accent-strong);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: var(--sidebar-width) 1fr;
+      min-height: calc(100vh - var(--topbar-height));
+    }
+
+    .sidebar {
+      border-right: 1px solid var(--border);
+      background: var(--panel);
+      padding: 24px 18px;
+      position: sticky;
+      top: var(--topbar-height);
+      height: calc(100vh - var(--topbar-height));
+      overflow-y: auto;
+    }
+
+    .nav-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.8px;
+      margin-bottom: 12px;
+    }
+
+    .nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 24px;
+    }
+
+    .nav-link {
+      padding: 8px 10px;
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 14px;
+      border-left: 2px solid transparent;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      color: var(--text);
+      background: rgba(47, 128, 237, 0.12);
+      border-left-color: var(--accent);
+    }
+
+    [data-theme="dark"] .nav-link:hover,
+    [data-theme="dark"] .nav-link.active {
+      background: rgba(78, 161, 255, 0.12);
+    }
+
+    .content {
+      padding: 36px 56px 90px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .content-inner {
+      width: 100%;
+      max-width: var(--content-width);
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .hero {
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 0 0 12px 0;
+      box-shadow: none;
+    }
+
+    .hero h1 {
+      font-family: var(--font-heading);
+      font-size: 32px;
+      margin-bottom: 12px;
+      letter-spacing: -0.2px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+    }
+
+    .meta-card {
+      border: none;
+      border-radius: 10px;
+      padding: 12px 14px;
+      background: var(--panel-muted);
+      font-size: 13px;
+    }
+
+    .section {
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 6px 0;
+      box-shadow: none;
+    }
+
+    .section h2 {
+      font-family: var(--font-heading);
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+
+    .section p {
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .section ul {
+      margin: 12px 0 0 18px;
+      color: var(--muted);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+      margin-top: 16px;
+    }
+
+    .level-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: var(--panel-muted);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .level-table th,
+    .level-table td {
+      padding: 14px 16px;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .level-table th {
+      font-size: 12px;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: var(--panel);
+    }
+
+    .level-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .flat-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: var(--panel-muted);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .flat-table th,
+    .flat-table td {
+      padding: 14px 16px;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .flat-table th {
+      font-size: 12px;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: var(--panel);
+    }
+
+    .flat-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .level-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .level-desc {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    .level-points {
+      margin: 6px 0 0 18px;
+      color: var(--muted);
+    }
+
+    .card {
+      border: none;
+      border-radius: 12px;
+      padding: 18px;
+      background: var(--panel-muted);
+    }
+
+    .card h3 {
+      font-family: var(--font-heading);
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .card small {
+      color: var(--muted);
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .level-summary {
+      font-weight: 600;
+      color: var(--text);
+      margin-top: 12px;
+    }
+
+    .code-block {
+      background: var(--code-bg);
+      color: var(--code-text);
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      margin-top: 12px;
+      position: relative;
+    }
+
+    .code-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .copy-btn {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 12px;
+      padding: 4px 6px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover {
+      color: var(--text);
+    }
+
+    pre {
+      white-space: pre-wrap;
+      font-size: 12.5px;
+      line-height: 1.6;
+    }
+
+    .case-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+      margin-top: 16px;
+    }
+
+    .case-block {
+      border: none;
+      border-radius: 12px;
+      padding: 16px;
+      background: var(--panel-muted);
+    }
+
+    @media (max-width: 1100px) {
+      .level-table {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+
+    .case-block h4 {
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+
+    .tag {
+      display: inline-block;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .no-results {
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      color: var(--muted);
+      display: none;
+    }
+
+    .foot {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 20px;
+    }
+
+    .searchable.is-hidden {
+      display: none;
+    }
+
+    .mobile-toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      padding: 6px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.5);
+      z-index: 10;
+    }
+
+    @media (max-width: 980px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: fixed;
+        left: -100%;
+        top: var(--topbar-height);
+        height: calc(100vh - var(--topbar-height));
+        transition: left 0.2s ease;
+        z-index: 15;
+      }
+
+      .sidebar.open {
+        left: 0;
+      }
+
+      .overlay.show {
+        display: block;
+      }
+
+      .mobile-toggle {
+        display: inline-flex;
+      }
+
+      .content {
+        padding: 28px 20px 60px;
+      }
+    }
+  </style>
+</head>
+<body data-theme="dark">
+  <div class="page">
+    <div class="topbar">
+      <button class="mobile-toggle" id="mobileToggle">目录</button>
+      <div class="brand">
+        <div class="brand-mark">AI</div>
+        <div>
+          <div>提示词工程学习手册</div>
+          <div class="muted" style="font-size:12px;">Notion Dark Style</div>
+        </div>
+      </div>
+      <div class="search">
+        <input id="searchInput" type="text" placeholder="搜索章节或关键词 (Ctrl+K)" />
+      </div>
+      <div class="top-actions">
+        <a class="btn" href="index.html">首页</a>
+        <a class="btn" href="doc-center.html">文档中心</a>
+        <button class="btn" id="toggleTheme" type="button">切换主题</button>
+      </div>
+    </div>
+
+    <div class="layout">
+      <aside class="sidebar" id="sidebar">
+        <div class="nav-title">学习路径</div>
+        <div class="nav-list">
+          <a class="nav-link" href="#overview">概览</a>
+          <a class="nav-link" href="#latest">最新要求</a>
+          <a class="nav-link" href="#levels">分级路线</a>
+          <a class="nav-link" href="#structure">核心结构</a>
+          <a class="nav-link" href="#patterns">常用模式</a>
+          <a class="nav-link" href="#cases">案例拆解</a>
+          <a class="nav-link" href="#script-work">脚本编写</a>
+          <a class="nav-link" href="#memory">记忆文件</a>
+          <a class="nav-link" href="#templates">模板库</a>
+          <a class="nav-link" href="#review">复盘评测</a>
+          <a class="nav-link" href="#faq">常见问题</a>
+        </div>
+        <div class="nav-title">快速入口</div>
+        <div class="nav-list">
+          <a class="nav-link" href="#sources">参考资料</a>
+        </div>
+      </aside>
+
+      <main class="content">
+        <div class="content-inner">
+          <section id="overview" class="hero searchable" data-search="概览 提示词工程 学习手册">
+            <h1>AI 提示词工程学习手册</h1>
+            <p>这是一个面向学习与实践的提示词工程手册，强调清晰、可控、可复用。你可以从分级路线开始，也可以直接进入模板库。</p>
+            <div class="meta-grid">
+              <div class="meta-card"><strong>版本</strong><br>2026.02</div>
+              <div class="meta-card"><strong>适用对象</strong><br>学习者 / 工程师 / 业务同学</div>
+              <div class="meta-card"><strong>目标</strong><br>清晰输出 + 稳定复用</div>
+              <div class="meta-card"><strong>风格</strong><br>Notion 深色</div>
+            </div>
+          </section>
+
+          <section id="latest" class="section searchable" data-search="最新 技术要求 官方 指南">
+            <h2>🧭 最新提示词工程技术要求</h2>
+            <p>整理自 OpenAI、Anthropic 与 Google 官方指南，聚焦可控性与稳定性。</p>
+            <ul>
+              <li><strong>先定义成功标准：</strong>明确“什么算好”，并建立可重复评测。</li>
+              <li><strong>指令清晰具体：</strong>拆分任务、明确边界，避免模糊词。</li>
+              <li><strong>分离指令与数据：</strong>用分隔符/标签标记上下文。</li>
+              <li><strong>角色与权限层级：</strong>区分系统/开发者/用户指令优先级。</li>
+              <li><strong>示例驱动：</strong>Few-shot 让模型学习你的格式和标准。</li>
+              <li><strong>结构化输出：</strong>JSON/表格/固定模板保证可解析。</li>
+              <li><strong>长上下文管理：</strong>限定可用材料范围，避免堆叠无关信息。</li>
+              <li><strong>版本与回归验证：</strong>重要提示词需版本化与评测。</li>
+            </ul>
+          </section>
+
+          <section id="levels" class="section searchable" data-search="分级 初级 中级 高级 专家">
+            <h2>🧩 提示词工程分级路线</h2>
+            <p>从“能用”到“工程化复用”，每级都包含目标、关键要点、示例与总结。</p>
+
+            <table class="level-table">
+              <thead>
+                <tr>
+                  <th>等级</th>
+                  <th>适合</th>
+                  <th>关键要点</th>
+                  <th>Prompt 示例</th>
+                  <th>总结</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="searchable" data-search="初级 清晰任务 直接输出">
+                  <td>
+                    <div class="level-tag">🟢 初级</div>
+                    <div class="level-desc">清晰任务 + 直接输出</div>
+                  </td>
+                  <td>第一次使用 / 快速写作类任务</td>
+                  <td>
+                    <ul class="level-points">
+                      <li>一句话描述目标与输出形式。</li>
+                      <li>提供必要背景材料。</li>
+                      <li>限制输出长度。</li>
+                    </ul>
+                  </td>
+                  <td>
+                    <div class="code-block">
+                      <div class="code-title"><span>示例</span><button class="copy-btn" data-copy="lvl-1">复制</button></div>
+                      <pre><code id="lvl-1">请将下面会议记录整理成 5 条要点，使用中文，避免主观评价。
+
+会议记录：
+[粘贴内容]</code></pre>
+                    </div>
+                  </td>
+                  <td><div class="level-summary">清楚说清楚，能一次得到可用结果。</div></td>
+                </tr>
+                <tr class="searchable" data-search="中级 约束 示例 对齐">
+                  <td>
+                    <div class="level-tag">🟡 中级</div>
+                    <div class="level-desc">加入约束 + 示例对齐</div>
+                  </td>
+                  <td>结构化抽取 / 规则化输出</td>
+                  <td>
+                    <ul class="level-points">
+                      <li>明确字段与格式。</li>
+                      <li>给出 1-2 个示例。</li>
+                      <li>处理缺失字段。</li>
+                    </ul>
+                  </td>
+                  <td>
+                    <div class="code-block">
+                      <div class="code-title"><span>示例</span><button class="copy-btn" data-copy="lvl-2">复制</button></div>
+                      <pre><code id="lvl-2">请把文本抽取为 JSON，字段如下：{"公司": string, "人物": string, "事件": string}。
+如果没有提及字段，请输出 null。
+
+示例：
+输入：微软收购动视暴雪
+输出：{"公司":"微软","人物":null,"事件":"收购动视暴雪"}
+
+输入：
+[粘贴文本]</code></pre>
+                    </div>
+                  </td>
+                  <td><div class="level-summary">输出可控、易解析，适合批量自动化。</div></td>
+                </tr>
+                <tr class="searchable" data-search="高级 多步骤 可评估">
+                  <td>
+                    <div class="level-tag">🟠 高级</div>
+                    <div class="level-desc">多步骤任务 + 可评估输出</div>
+                  </td>
+                  <td>审查、诊断、策略类任务</td>
+                  <td>
+                    <ul class="level-points">
+                      <li>拆分子任务并设检查点。</li>
+                      <li>要求“结论 + 依据”。</li>
+                      <li>允许先提澄清问题。</li>
+                    </ul>
+                  </td>
+                  <td>
+                    <div class="code-block">
+                      <div class="code-title"><span>示例</span><button class="copy-btn" data-copy="lvl-3">复制</button></div>
+                      <pre><code id="lvl-3">你是资深代码审查员。请按以下步骤完成：
+1) 先列出你需要的上下文（如果缺失就提问）
+2) 识别潜在问题（性能/安全/可维护性）
+3) 给出修改建议（含原因）
+输出格式：
+- 问题清单
+- 建议与理由
+
+代码如下：
+```js
+// code here
+```</code></pre>
+                    </div>
+                  </td>
+                  <td><div class="level-summary">目标明确、结果可审阅。</div></td>
+                </tr>
+                <tr class="searchable" data-search="专家 复用 评测 版本化">
+                  <td>
+                    <div class="level-tag">🔴 专家</div>
+                    <div class="level-desc">可复用流程 + 版本化与评测</div>
+                  </td>
+                  <td>团队协作 / 产品化提示词资产</td>
+                  <td>
+                    <ul class="level-points">
+                      <li>模块化提示词。</li>
+                      <li>建立评测集与基线。</li>
+                      <li>模型升级前后回归验证。</li>
+                    </ul>
+                  </td>
+                  <td>
+                    <div class="code-block">
+                      <div class="code-title"><span>示例</span><button class="copy-btn" data-copy="lvl-4">复制</button></div>
+                      <pre><code id="lvl-4">你是技术方案负责人。请按以下流程输出：
+A. 需求澄清问题（最多5条）
+B. 2个候选方案（含优缺点）
+C. 推荐方案 + 风险清单
+D. 验证与评测计划（可执行步骤）
+输出要求：使用 Markdown，包含小标题。
+
+背景：
+[粘贴背景]</code></pre>
+                    </div>
+                  </td>
+                  <td><div class="level-summary">提示词成为可维护资产，而不是一次性对话。</div></td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section id="structure" class="section searchable" data-search="核心结构 CRAFT 角色 任务 上下文">
+            <h2>核心结构：CRAFT + 五要素</h2>
+            <p>用结构化模板降低随机性，让模型知道“我要做什么、基于什么材料、按什么格式输出”。</p>
+            <table class="flat-table">
+              <thead>
+                <tr>
+                  <th>模块</th>
+                  <th>内容</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>五要素</strong></td>
+                  <td>
+                    <ul class="level-points">
+                      <li><strong>角色：</strong>你是谁</li>
+                      <li><strong>任务：</strong>你要做什么</li>
+                      <li><strong>上下文：</strong>你能用什么材料</li>
+                      <li><strong>格式：</strong>输出长什么样</li>
+                      <li><strong>示例：</strong>你要模仿的标准</li>
+                    </ul>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>CRAFT 口诀</strong></td>
+                  <td>
+                    <ul class="level-points">
+                      <li><strong>C</strong>ontext：上下文</li>
+                      <li><strong>R</strong>ole：角色</li>
+                      <li><strong>A</strong>ction：具体行动</li>
+                      <li><strong>F</strong>ormat：输出格式</li>
+                      <li><strong>T</strong>one：语气风格</li>
+                    </ul>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section id="patterns" class="section searchable" data-search="模式 Zero-shot Few-shot CoT Self-Consistency">
+            <h2>常用提示词模式</h2>
+            <table class="flat-table">
+              <thead>
+                <tr>
+                  <th>模式</th>
+                  <th>适用场景</th>
+                  <th>示例</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Zero-shot</strong></td>
+                  <td>简单、明确的任务</td>
+                  <td>
+                    <div class="code-block">
+                      <div class="code-title"><span>示例</span><button class="copy-btn" data-copy="p-1">复制</button></div>
+                      <pre><code id="p-1">将以下英文翻译成中文：
+"The quick brown fox jumps over the lazy dog."</code></pre>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Few-shot</strong></td>
+                  <td>固定格式输出</td>
+                  <td>
+                    <div class="code-block">
+                      <div class="code-title"><span>示例</span><button class="copy-btn" data-copy="p-2">复制</button></div>
+                      <pre><code id="p-2">输入：苹果公司CEO蒂姆·库克宣布新iPhone发布
+输出：{"公司":"苹果公司","人物":"蒂姆·库克","产品":"iPhone"}
+
+输入：特斯拉创始人马斯克在推特上发布消息
+输出：{"公司":"特斯拉","人物":"马斯克","平台":"推特"}
+
+输入：微软收购动视暴雪游戏公司
+输出：</code></pre>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Chain-of-Thought</strong></td>
+                  <td>复杂推理任务</td>
+                  <td>
+                    <div class="code-block">
+                      <div class="code-title"><span>示例</span><button class="copy-btn" data-copy="p-3">复制</button></div>
+                      <pre><code id="p-3">请先在心里推理，然后只输出：
+1) 关键步骤（不超过5条）
+2) 最终答案
+
+问题：一个水箱两个水管同时注满，分别需6小时和4小时。</code></pre>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Self-Consistency</strong></td>
+                  <td>高准确性要求</td>
+                  <td>
+                    <div class="code-block">
+                      <div class="code-title"><span>示例</span><button class="copy-btn" data-copy="p-4">复制</button></div>
+                      <pre><code id="p-4">请用三种不同的方法解决这个问题，然后比较结果，给出最可靠的答案。
+
+[问题描述]</code></pre>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section id="cases" class="section searchable" data-search="案例 拆解 输入 输出">
+            <h2>案例拆解：输入/输出对照</h2>
+            <p>每个案例只解决一个问题，确保一眼理解。</p>
+            <table class="flat-table">
+              <thead>
+                <tr>
+                  <th>场景</th>
+                  <th>目标</th>
+                  <th>输入</th>
+                  <th>输出</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="tag">结构化抽取</span><br>新闻摘要抽取要素</td>
+                  <td>输出标准 JSON，便于后续处理</td>
+                  <td>
+                    <div class="code-block">
+                      <div class="code-title"><span>输入</span><button class="copy-btn" data-copy="c-1">复制</button></div>
+                      <pre><code id="c-1">请从文本中抽取：公司、人物、事件。输出 JSON。
+
+文本：字节跳动推出新模型豆包X。</code></pre>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="code-block">
+                      <div class="code-title"><span>输出</span><button class="copy-btn" data-copy="c-2">复制</button></div>
+                      <pre><code id="c-2">{"公司":"字节跳动","人物":null,"事件":"推出新模型豆包X"}</code></pre>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="tag">代码评审</span><br>API 代码审查</td>
+                  <td>问题清单 + 修改建议</td>
+                  <td>
+                    <div class="code-block">
+                      <div class="code-title"><span>输入</span><button class="copy-btn" data-copy="c-3">复制</button></div>
+                      <pre><code id="c-3">你是资深代码审查员。列出问题与修复建议。
+代码如下：
+```js
+// code here
+```</code></pre>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="code-block">
+                      <div class="code-title"><span>输出</span><button class="copy-btn" data-copy="c-4">复制</button></div>
+                      <pre><code id="c-4">问题清单：
+1. 缺少参数校验
+2. 异常未捕获
+
+建议：
+1. 添加输入校验
+2. 增加 try/catch</code></pre>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="tag">用户研究</span><br>访谈摘要</td>
+                  <td>结论 + 证据</td>
+                  <td>
+                    <div class="code-block">
+                      <div class="code-title"><span>输入</span><button class="copy-btn" data-copy="c-5">复制</button></div>
+                      <pre><code id="c-5">请输出：结论 + 证据（引用原文）。
+
+访谈记录：
+[粘贴内容]</code></pre>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="code-block">
+                      <div class="code-title"><span>输出</span><button class="copy-btn" data-copy="c-6">复制</button></div>
+                      <pre><code id="c-6">结论：用户对注册流程不满。
+证据：“注册步骤太多，我常常中途放弃。”</code></pre>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section id="script-work" class="section searchable" data-search="脚本 编写 自动化 bash powershell python">
+            <h2>🧰 脚本编写：案例、提示词与规范</h2>
+            <p>脚本类任务需要明确输入、输出、边界与安全策略，避免“能跑但不可维护”。</p>
+            <table class="flat-table">
+              <thead>
+                <tr>
+                  <th>场景</th>
+                  <th>目标</th>
+                  <th>输入</th>
+                  <th>输出</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="tag">运维脚本</span><br>日志巡检与告警</td>
+                  <td>输出可复用脚本，并包含错误处理</td>
+                  <td>
+                    <div class="code-block">
+                      <div class="code-title"><span>输入</span><button class="copy-btn" data-copy="s-1">复制</button></div>
+                      <pre><code id="s-1">你是运维脚本工程师，请写一个 Bash 脚本：
+1) 检查 /var/log/app.log 最近 30 分钟 ERROR 次数
+2) 超过阈值则输出告警信息
+3) 支持参数：--window --threshold
+4) 需要错误处理和使用说明</code></pre>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="code-block">
+                      <div class="code-title"><span>输出</span><button class="copy-btn" data-copy="s-2">复制</button></div>
+                      <pre><code id="s-2">#!/usr/bin/env bash
+set -euo pipefail
+
+WINDOW_MIN=30
+THRESHOLD=20
+
+usage() {
+  echo "Usage: $0 [--window MIN] [--threshold N]";
+}
+
+# parse args ...
+# main logic ...</code></pre>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="tag">数据脚本</span><br>批量重命名</td>
+                  <td>可回滚、可预览的批量改名脚本</td>
+                  <td>
+                    <div class="code-block">
+                      <div class="code-title"><span>输入</span><button class="copy-btn" data-copy="s-3">复制</button></div>
+                      <pre><code id="s-3">请写一个 PowerShell 脚本：
+1) 将目录下所有 .log 改名为 .txt
+2) 支持 -WhatIf 预览
+3) 输出改名前后映射表</code></pre>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="code-block">
+                      <div class="code-title"><span>输出</span><button class="copy-btn" data-copy="s-4">复制</button></div>
+                      <pre><code id="s-4">Get-ChildItem *.log | ForEach-Object {
+  $new = $_.BaseName + ".txt"
+  Write-Output "${_} -> $new"
+  Rename-Item $_.FullName $new -WhatIf
+}</code></pre>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="flat-table">
+              <thead>
+                <tr>
+                  <th>模块</th>
+                  <th>内容</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>脚本提示词模板</strong></td>
+                  <td>
+                    <div class="code-block">
+                      <div class="code-title"><span>通用脚本提示词</span><button class="copy-btn" data-copy="s-5">复制</button></div>
+                      <pre><code id="s-5">请编写一个 [Bash/PowerShell/Python] 脚本，实现以下目标：
+1) 任务：[说明任务]
+2) 输入：[说明输入]
+3) 输出：[说明输出]
+4) 约束：错误处理、参数支持、日志输出
+5) 兼容性：运行环境/版本
+
+输出要求：
+- 提供脚本完整代码
+- 给出使用示例
+- 说明关键步骤</code></pre>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>脚本使用规范</strong></td>
+                  <td>
+                    <ul class="level-points">
+                      <li><strong>安全：</strong>避免删除类操作默认执行，先给预览/确认。</li>
+                      <li><strong>幂等：</strong>重复运行不应产生副作用。</li>
+                      <li><strong>参数化：</strong>路径、阈值、模式通过参数控制。</li>
+                      <li><strong>错误处理：</strong>失败要提示原因，并返回非 0 状态码。</li>
+                      <li><strong>日志：</strong>输出关键步骤，必要时支持 --verbose。</li>
+                      <li><strong>可回滚：</strong>重命名或批量修改需提供回滚方案。</li>
+                    </ul>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section id="memory" class="section searchable" data-search="记忆文件 CLAUDE.md cursorrules">
+            <h2>记忆文件：规范与使用场景</h2>
+            <table class="flat-table">
+              <thead>
+                <tr>
+                  <th>模块</th>
+                  <th>内容</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>主流文件类型</strong></td>
+                  <td>
+                    <ul class="level-points">
+                      <li><strong>CLAUDE.md</strong>：项目规范与工作流</li>
+                      <li><strong>.cursorrules</strong>：代码生成规则</li>
+                      <li><strong>.github/copilot-instructions.md</strong>：Copilot 行为指导</li>
+                      <li><strong>AGENTS.md</strong>：多代理协作说明</li>
+                    </ul>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>编写清单</strong></td>
+                  <td>
+                    <ul class="level-points">
+                      <li>控制长度，避免上下文负担。</li>
+                      <li>用“必须/禁止”替代模糊词。</li>
+                      <li>给出正确/错误示例。</li>
+                      <li>版本化并记录变更。</li>
+                    </ul>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section id="templates" class="section searchable" data-search="模板库 代码 文档 数据 运维">
+            <h2>模板库：常用场景提示词</h2>
+            <table class="flat-table">
+              <thead>
+                <tr>
+                  <th>场景</th>
+                  <th>示例</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>代码开发</strong></td>
+                  <td>
+                    <div class="code-block">
+                      <div class="code-title"><span>示例</span><button class="copy-btn" data-copy="t-1">复制</button></div>
+                      <pre><code id="t-1">请帮我重构以下代码：
+目标：可读性、错误处理、性能优化。
+约束：功能不变，遵循项目规范。
+
+代码：
+```js
+// code here
+```</code></pre>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>文档写作</strong></td>
+                  <td>
+                    <div class="code-block">
+                      <div class="code-title"><span>示例</span><button class="copy-btn" data-copy="t-2">复制</button></div>
+                      <pre><code id="t-2">请生成 API 文档，包含：接口概述、请求参数、响应结构、成功/错误示例。</code></pre>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>数据分析</strong></td>
+                  <td>
+                    <div class="code-block">
+                      <div class="code-title"><span>示例</span><button class="copy-btn" data-copy="t-3">复制</button></div>
+                      <pre><code id="t-3">请对以下数据进行清洗，并输出清洗规则与统计摘要。
+
+数据来源：[CSV/JSON]</code></pre>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>运维排障</strong></td>
+                  <td>
+                    <div class="code-block">
+                      <div class="code-title"><span>示例</span><button class="copy-btn" data-copy="t-4">复制</button></div>
+                      <pre><code id="t-4">请按“可能原因 -> 验证方法 -> 修复步骤”输出排障方案。
+
+错误日志：
+[粘贴日志]</code></pre>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section id="review" class="section searchable" data-search="复盘 评测 版本">
+            <h2>复盘与评测</h2>
+            <ul>
+              <li><strong>建立基线：</strong>收集 10-30 条代表性输入作为评测集。</li>
+              <li><strong>改动可回归：</strong>每次迭代都跑同一批评测。</li>
+              <li><strong>记录版本：</strong>提示词也需要版本号与变更说明。</li>
+              <li><strong>模型切换：</strong>升级模型前后对比输出差异。</li>
+            </ul>
+          </section>
+
+          <section id="faq" class="section searchable" data-search="常见问题 FAQ">
+            <h2>常见问题</h2>
+            <ul>
+              <li><strong>输出总是跑偏：</strong>检查是否给出了明确边界与示例。</li>
+              <li><strong>格式不稳定：</strong>改为结构化输出或模板化格式。</li>
+              <li><strong>结果不一致：</strong>加入自洽性或多次采样。</li>
+              <li><strong>上下文太长：</strong>删掉无关材料或做检索摘要。</li>
+            </ul>
+          </section>
+
+          <section id="sources" class="section searchable" data-search="参考资料 来源">
+            <h2>参考资料</h2>
+            <ul>
+              <li><a href="https://platform.openai.com/docs/guides/prompt-engineering" target="_blank" rel="noopener">OpenAI Prompt Engineering</a></li>
+              <li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview" target="_blank" rel="noopener">Anthropic Prompt Engineering</a></li>
+              <li><a href="https://support.google.com/a/users/answer/14200040" target="_blank" rel="noopener">Google Gemini 提示词技巧</a></li>
+            </ul>
+          </section>
+
+          <div id="noResults" class="no-results">未找到匹配内容，请尝试其他关键词。</div>
+
+          <div class="foot">AI学习知识库 · 提示词工程学习手册</div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay"></div>
+
+  <script>
+    const root = document.documentElement;
+    const themeBtn = document.getElementById('toggleTheme');
+    const storedTheme = localStorage.getItem('ai-kb-theme') || 'dark';
+    root.setAttribute('data-theme', storedTheme);
+
+    themeBtn.addEventListener('click', () => {
+      const current = root.getAttribute('data-theme') || 'light';
+      const next = current === 'light' ? 'dark' : 'light';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('ai-kb-theme', next);
+    });
+
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('section[id]');
+
+    function highlightNav() {
+      let currentSection = null;
+      sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= 120) {
+          currentSection = section;
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (currentSection && link.getAttribute('href') === `#${currentSection.id}`) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', highlightNav);
+    highlightNav();
+
+    const searchInput = document.getElementById('searchInput');
+    const searchable = document.querySelectorAll('.searchable');
+    const noResults = document.getElementById('noResults');
+
+    function normalize(text) {
+      return text.toLowerCase();
+    }
+
+    function applySearch() {
+      const query = normalize(searchInput.value.trim());
+      if (!query) {
+        searchable.forEach(item => item.classList.remove('is-hidden'));
+        noResults.style.display = 'none';
+        return;
+      }
+      let matchCount = 0;
+      searchable.forEach(item => {
+        const content = `${item.dataset.search || ''} ${item.innerText}`;
+        if (normalize(content).includes(query)) {
+          item.classList.remove('is-hidden');
+          matchCount += 1;
+        } else {
+          item.classList.add('is-hidden');
+        }
+      });
+      noResults.style.display = matchCount === 0 ? 'block' : 'none';
+    }
+
+    searchInput.addEventListener('input', applySearch);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.key === 'k') {
+        e.preventDefault();
+        searchInput.focus();
+      }
+    });
+
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.getAttribute('data-copy');
+        const code = document.getElementById(targetId);
+        if (!code) return;
+        navigator.clipboard.writeText(code.textContent).then(() => {
+          const original = btn.textContent;
+          btn.textContent = '已复制';
+          setTimeout(() => { btn.textContent = original; }, 1400);
+        });
+      });
+    });
+
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const mobileToggle = document.getElementById('mobileToggle');
+
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('show');
+    }
+
+    mobileToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('show');
+    });
+
+    overlay.addEventListener('click', closeSidebar);
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 980) {
+          closeSidebar();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

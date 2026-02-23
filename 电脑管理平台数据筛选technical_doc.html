@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电脑管理平台周报工具 - 技术文档</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            margin: 0 auto;
+            padding: 30px;
+            max-width: 900px;
+            background: #f8f9fa;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            border-left: 4px solid #3498db;
+            padding-left: 12px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #555;
+            margin-top: 20px;
+        }
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background: #3498db;
+            color: white;
+        }
+        tr:nth-child(even) { background: #f9f9f9; }
+        tr:hover { background: #f5f5f5; }
+        code {
+            background: #ecf0f1;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+        }
+        pre {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 13px;
+        }
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .note {
+            background: #e8f4fd;
+            border-left: 4px solid #3498db;
+            padding: 12px 15px;
+            margin: 15px 0;
+        }
+        .warning {
+            background: #fdf2e9;
+            border-left: 4px solid #e67e22;
+            padding: 12px 15px;
+            margin: 15px 0;
+        }
+        ul, ol { padding-left: 25px; }
+        li { margin: 5px 0; }
+        .version {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        .toc {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+        }
+        .toc a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .toc a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+<!-- 统一工具栏组件 - AI知识库文档系统 -->
+<style>
+  /* ===== 工具栏CSS变量（与doc-center.html保持一致）===== */
+  :root {
+    /* Linear-inspired Dark Theme Colors */
+    --bg-primary: #0e0e10;
+    --bg-secondary: #121214;
+    --bg-tertiary: #1a1a1e;
+    --bg-elevated: #1f1f23;
+    --bg-hover: #27272a;
+    
+    /* Linear Gradients */
+    --accent-purple: #8b5cf6;
+    --accent-blue: #3b82f6;
+    --accent-cyan: #06b6d4;
+    --accent-pink: #ec4899;
+    --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+    --gradient-glow: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.1) 100%);
+    --gradient-border: linear-gradient(135deg, rgba(99, 102, 241, 0.5), rgba(139, 92, 246, 0.3));
+    
+    /* Text Colors */
+    --text-primary: #fafafa;
+    --text-secondary: #a1a1aa;
+    --text-muted: #71717a;
+    --text-tertiary: #52525b;
+    
+    /* Border & Shadow */
+    --border-subtle: rgba(255, 255, 255, 0.06);
+    --border-default: rgba(255, 255, 255, 0.1);
+    --border-hover: rgba(255, 255, 255, 0.15);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+    --shadow-glow: 0 0 40px rgba(139, 92, 246, 0.15);
+    
+    /* Spacing - Notion Style */
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    
+    /* Toolbar specific */
+    --toolbar-height: 56px;
+    
+    /* Transitions */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Light Theme */
+  [data-theme="light"] {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --bg-tertiary: #f3f4f6;
+    --bg-elevated: #ffffff;
+    --bg-hover: #e5e7eb;
+    
+    --text-primary: #111827;
+    --text-secondary: #4b5563;
+    --text-muted: #9ca3af;
+    --text-tertiary: #d1d5db;
+    
+    --border-subtle: rgba(0, 0, 0, 0.04);
+    --border-default: rgba(0, 0, 0, 0.08);
+    --border-hover: rgba(0, 0, 0, 0.12);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  /* ===== 统一工具栏样式 ===== */
+  #unified-toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--toolbar-height);
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-subtle);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* 为页面内容添加顶部间距 */
+  body.has-unified-toolbar {
+    padding-top: var(--toolbar-height);
+  }
+
+  /* 左侧区域 */
+  .toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* 返回文档中心链接 */
+  .toolbar-back-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .toolbar-back-link:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+  }
+
+  .toolbar-back-link svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  /* 分隔线 */
+  .toolbar-divider {
+    width: 1px;
+    height: 20px;
+    background: var(--border-default);
+    flex-shrink: 0;
+  }
+
+  /* 当前文档标题 */
+  .toolbar-doc-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    max-width: 300px;
+  }
+
+  /* 中间区域 - 搜索框 */
+  .toolbar-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    max-width: 400px;
+  }
+
+  .toolbar-search {
+    position: relative;
+    width: 100%;
+  }
+
+  .toolbar-search-input {
+    width: 100%;
+    padding: 8px 12px 8px 36px;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    font-size: 14px;
+    transition: all var(--transition-fast);
+    font-family: inherit;
+  }
+
+  .toolbar-search-input:focus {
+    outline: none;
+    border-color: var(--accent-purple);
+    background: var(--bg-elevated);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+  }
+
+  .toolbar-search-input::placeholder {
+    color: var(--text-muted);
+  }
+
+  .toolbar-search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+
+  .toolbar-search-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* 右侧区域 */
+  .toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    justify-content: flex-end;
+  }
+
+  /* 工具栏按钮 */
+  .toolbar-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: inherit;
+  }
+
+  .toolbar-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+    border-color: var(--border-hover);
+  }
+
+  .toolbar-btn:active {
+    transform: scale(0.96);
+  }
+
+  .toolbar-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* 图标按钮 */
+  .toolbar-btn-icon {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+  }
+
+  /* 字体大小控制组 */
+  .toolbar-fontsize-group {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    padding: 2px;
+  }
+
+  .toolbar-fontsize-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: inherit;
+  }
+
+  .toolbar-fontsize-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+  }
+
+  .toolbar-fontsize-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .toolbar-fontsize-value {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    height: 28px;
+    padding: 0 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: var(--bg-elevated);
+    border-radius: var(--radius-sm);
+  }
+
+  /* 主题切换按钮 */
+  .toolbar-theme-btn {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .toolbar-theme-btn .icon-sun,
+  .toolbar-theme-btn .icon-moon {
+    transition: transform var(--transition-normal), opacity var(--transition-normal);
+  }
+
+  [data-theme="light"] .toolbar-theme-btn .icon-moon,
+  .toolbar-theme-btn .icon-sun {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+  }
+
+  [data-theme="light"] .toolbar-theme-btn .icon-sun,
+  .toolbar-theme-btn .icon-moon {
+    opacity: 0;
+    transform: rotate(90deg) scale(0.5);
+    position: absolute;
+  }
+
+  /* 响应式适配 */
+  @media (max-width: 768px) {
+    #unified-toolbar {
+      padding: 0 12px;
+    }
+
+    .toolbar-doc-title {
+      max-width: 150px;
+      font-size: 13px;
+    }
+
+    .toolbar-center {
+      max-width: 200px;
+    }
+
+    .toolbar-back-link span {
+      display: none;
+    }
+
+    .toolbar-fontsize-group {
+      display: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .toolbar-center {
+      display: none;
+    }
+  }
+</style>
+
+<!-- 工具栏HTML结构 -->
+<div id="unified-toolbar">
+  <!-- 左侧：返回链接 + 文档标题 -->
+  <div class="toolbar-left">
+    <a href="doc-center.html" class="toolbar-back-link" title="返回文档中心">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      <span>文档中心</span>
+    </a>
+    <div class="toolbar-divider"></div>
+    <div class="toolbar-doc-title" id="toolbar-doc-title">文档标题</div>
+  </div>
+
+  <!-- 中间：搜索框 -->
+  <div class="toolbar-center">
+    <div class="toolbar-search">
+      <div class="toolbar-search-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.35-4.35"/>
+        </svg>
+      </div>
+      <input 
+        type="text" 
+        class="toolbar-search-input" 
+        id="toolbar-search-input"
+        placeholder="搜索文档..."
+        autocomplete="off"
+      />
+    </div>
+  </div>
+
+  <!-- 右侧：主题切换 + 字体大小调节 -->
+  <div class="toolbar-right">
+    <!-- 字体大小控制组 -->
+    <div class="toolbar-fontsize-group">
+      <button class="toolbar-fontsize-btn" id="toolbar-fontsize-minus" title="减小字体">A-</button>
+      <div class="toolbar-fontsize-value" id="toolbar-fontsize-value">100%</div>
+      <button class="toolbar-fontsize-btn" id="toolbar-fontsize-plus" title="增大字体">A+</button>
+    </div>
+
+    <!-- 主题切换按钮 -->
+    <button class="toolbar-btn toolbar-btn-icon toolbar-theme-btn" id="toolbar-theme-toggle" title="切换主题">
+      <!-- 太阳图标（亮色模式） -->
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"/>
+        <line x1="12" y1="1" x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/>
+        <line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+      <!-- 月亮图标（暗色模式） -->
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script>
+  /**
+   * 统一工具栏组件脚本
+   * 功能：字体大小调节、主题切换、搜索跳转
+   * 所有状态保存到localStorage
+   */
+  (function() {
+    'use strict';
+
+    // ===== 配置常量 =====
+    const CONFIG = {
+      // localStorage键名
+      STORAGE_KEYS: {
+        FONT_SIZE: 'ai-kb-font-size',
+        THEME: 'ai-kb-theme'
+      },
+      // 字体大小设置
+      FONT_SIZE: {
+        BASE: 14,           // 基准字体大小(px)
+        MIN_PERCENT: 80,    // 最小百分比
+        MAX_PERCENT: 150,   // 最大百分比
+        STEP: 10,           // 每次调节步长(%)
+        DEFAULT: 100        // 默认百分比
+      },
+      // 主题设置
+      THEME: {
+        DARK: 'dark',
+        LIGHT: 'light',
+        DEFAULT: 'dark'
+      },
+      // 文档中心路径
+      DOC_CENTER_PATH: 'doc-center.html'
+    };
+
+    // ===== 工具函数 =====
+    
+    /**
+     * 获取localStorage值
+     */
+    function getStorage(key, defaultValue) {
+      try {
+        const value = localStorage.getItem(key);
+        return value !== null ? value : defaultValue;
+      } catch (e) {
+        return defaultValue;
+      }
+    }
+
+    /**
+     * 设置localStorage值
+     */
+    function setStorage(key, value) {
+      try {
+        localStorage.setItem(key, value);
+      } catch (e) {
+        console.warn('无法保存到localStorage:', e);
+      }
+    }
+
+    /**
+     * 计算并应用字体大小
+     */
+    function applyFontSize(percent) {
+      // 限制在有效范围内
+      percent = Math.max(CONFIG.FONT_SIZE.MIN_PERCENT, 
+               Math.min(CONFIG.FONT_SIZE.MAX_PERCENT, percent));
+      
+      // 计算实际字体大小
+      const fontSize = (CONFIG.FONT_SIZE.BASE * percent / 100).toFixed(2);
+      
+      // 应用到html元素
+      document.documentElement.style.fontSize = fontSize + 'px';
+      
+      // 更新显示
+      updateFontSizeDisplay(percent);
+      
+      // 保存到localStorage
+      setStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, percent.toString());
+      
+      return percent;
+    }
+
+    /**
+     * 更新字体大小显示
+     */
+    function updateFontSizeDisplay(percent) {
+      const valueEl = document.getElementById('toolbar-fontsize-value');
+      const minusBtn = document.getElementById('toolbar-fontsize-minus');
+      const plusBtn = document.getElementById('toolbar-fontsize-plus');
+      
+      if (valueEl) {
+        valueEl.textContent = percent + '%';
+      }
+      
+      // 更新按钮禁用状态
+      if (minusBtn) {
+        minusBtn.disabled = percent <= CONFIG.FONT_SIZE.MIN_PERCENT;
+      }
+      if (plusBtn) {
+        plusBtn.disabled = percent >= CONFIG.FONT_SIZE.MAX_PERCENT;
+      }
+    }
+
+    /**
+     * 应用主题
+     */
+    function applyTheme(theme) {
+      // 验证主题值
+      if (theme !== CONFIG.THEME.DARK && theme !== CONFIG.THEME.LIGHT) {
+        theme = CONFIG.THEME.DEFAULT;
+      }
+      
+      // 设置data-theme属性
+      document.documentElement.setAttribute('data-theme', theme);
+      
+      // 保存到localStorage
+      setStorage(CONFIG.STORAGE_KEYS.THEME, theme);
+      
+      return theme;
+    }
+
+    /**
+     * 切换主题
+     */
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme') || CONFIG.THEME.DEFAULT;
+      const newTheme = currentTheme === CONFIG.THEME.DARK ? CONFIG.THEME.LIGHT : CONFIG.THEME.DARK;
+      applyTheme(newTheme);
+    }
+
+    /**
+     * 执行搜索
+     */
+    function performSearch(query) {
+      if (!query || !query.trim()) return;
+      
+      // 构建跳转URL
+      const currentPath = window.location.pathname;
+      const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+      const targetUrl = basePath + CONFIG.DOC_CENTER_PATH + '#search=' + encodeURIComponent(query.trim());
+      
+      // 跳转到文档中心
+      window.location.href = targetUrl;
+    }
+
+    /**
+     * 设置文档标题
+     */
+    function setDocumentTitle(title) {
+      const titleEl = document.getElementById('toolbar-doc-title');
+      if (titleEl && title) {
+        titleEl.textContent = title;
+      }
+    }
+
+    /**
+     * 从页面自动获取文档标题
+     */
+    function autoDetectDocumentTitle() {
+      // 优先级：1. h1标题 2. title标签 3. 文件名
+      let title = '';
+      
+      // 尝试获取h1标题
+      const h1 = document.querySelector('h1');
+      if (h1 && h1.textContent.trim()) {
+        title = h1.textContent.trim();
+      } else {
+        // 尝试从title标签获取
+        const titleTag = document.querySelector('title');
+        if (titleTag && titleTag.textContent.trim()) {
+          title = titleTag.textContent.trim();
+          // 移除常见的后缀
+          title = title.replace(/[-_].*?(?:知识库|文档|AI)/i, '').trim();
+        } else {
+          // 从文件名获取
+          const path = window.location.pathname;
+          const filename = path.substring(path.lastIndexOf('/') + 1);
+          title = filename.replace(/\.html?$/i, '').replace(/[_-]/g, ' ');
+        }
+      }
+      
+      setDocumentTitle(title);
+    }
+
+    // ===== 事件处理 =====
+
+    /**
+     * 初始化事件监听
+     */
+    function initEventListeners() {
+      // 字体大小减小按钮
+      const minusBtn = document.getElementById('toolbar-fontsize-minus');
+      if (minusBtn) {
+        minusBtn.addEventListener('click', function() {
+          const currentPercent = parseInt(getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString()));
+          applyFontSize(currentPercent - CONFIG.FONT_SIZE.STEP);
+        });
+      }
+
+      // 字体大小增大按钮
+      const plusBtn = document.getElementById('toolbar-fontsize-plus');
+      if (plusBtn) {
+        plusBtn.addEventListener('click', function() {
+          const currentPercent = parseInt(getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString()));
+          applyFontSize(currentPercent + CONFIG.FONT_SIZE.STEP);
+        });
+      }
+
+      // 主题切换按钮
+      const themeBtn = document.getElementById('toolbar-theme-toggle');
+      if (themeBtn) {
+        themeBtn.addEventListener('click', toggleTheme);
+      }
+
+      // 搜索框
+      const searchInput = document.getElementById('toolbar-search-input');
+      if (searchInput) {
+        // 回车键搜索
+        searchInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            performSearch(this.value);
+          }
+        });
+      }
+    }
+
+    /**
+     * 从URL参数初始化搜索框
+     */
+    function initSearchFromURL() {
+      const hash = window.location.hash;
+      if (hash && hash.startsWith('#search=')) {
+        const query = decodeURIComponent(hash.substring(8));
+        const searchInput = document.getElementById('toolbar-search-input');
+        if (searchInput) {
+          searchInput.value = query;
+        }
+      }
+    }
+
+    // ===== 初始化 =====
+
+    /**
+     * 主初始化函数
+     */
+    function init() {
+      // 1. 恢复保存的字体大小
+      const savedFontSize = getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString());
+      applyFontSize(parseInt(savedFontSize));
+
+      // 2. 恢复保存的主题
+      const savedTheme = getStorage(CONFIG.STORAGE_KEYS.THEME, CONFIG.THEME.DEFAULT);
+      applyTheme(savedTheme);
+
+      // 3. 为body添加工具栏标识类
+      document.body.classList.add('has-unified-toolbar');
+
+      // 4. 自动检测文档标题
+      autoDetectDocumentTitle();
+
+      // 5. 初始化事件监听
+      initEventListeners();
+
+      // 6. 从URL初始化搜索框
+      initSearchFromURL();
+    }
+
+    // ===== 公共API =====
+
+    // 将工具栏API暴露到全局命名空间
+    window.UnifiedToolbar = {
+      // 设置文档标题
+      setTitle: setDocumentTitle,
+      
+      // 获取/设置字体大小
+      getFontSize: function() {
+        return parseInt(getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString()));
+      },
+      setFontSize: applyFontSize,
+      
+      // 获取/设置主题
+      getTheme: function() {
+        return document.documentElement.getAttribute('data-theme') || CONFIG.THEME.DEFAULT;
+      },
+      setTheme: applyTheme,
+      toggleTheme: toggleTheme,
+      
+      // 执行搜索
+      search: performSearch,
+      
+      // 配置常量
+      config: CONFIG
+    };
+
+    // 启动初始化
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+</script>
+
+    <h1>电脑管理平台周报工具</h1>
+    <p class="version">文档版本: 1.0 | 最后更新: 2025-12-28</p>
+
+    <div class="toc">
+        <strong>目录</strong>
+        <ol>
+            <li><a href="#overview">工具概述</a></li>
+            <li><a href="#files">文件结构</a></li>
+            <li><a href="#datasource">数据源要求</a></li>
+            <li><a href="#filter">筛选规则</a></li>
+            <li><a href="#output">输出格式</a></li>
+            <li><a href="#usage">使用方法</a></li>
+            <li><a href="#fields">字段映射</a></li>
+            <li><a href="#changelog">更新日志</a></li>
+        </ol>
+    </div>
+
+    <div class="section" id="overview">
+        <h2>1. 工具概述</h2>
+        <p>本工具用于每周处理电脑管理平台导出的数据文件，自动筛选华南区域相关数据，生成可视化HTML周报。</p>
+
+        <h3>主要功能</h3>
+        <ul>
+            <li>自动识别3类数据文件（未安装火绒、未编辑、可利旧）</li>
+            <li>按区域筛选数据（华南区域 + 指定省份城市）</li>
+            <li>MAC地址去重</li>
+            <li>生成可折叠的HTML报告</li>
+            <li>周数据汇总与环比分析</li>
+            <li>历史数据保留</li>
+        </ul>
+    </div>
+
+    <div class="section" id="files">
+        <h2>2. 文件结构</h2>
+        <table>
+            <tr>
+                <th>文件名</th>
+                <th>类型</th>
+                <th>说明</th>
+            </tr>
+            <tr>
+                <td><code>weekly_report.py</code></td>
+                <td>主脚本</td>
+                <td>数据处理和报告生成的核心脚本</td>
+            </tr>
+            <tr>
+                <td><code>weekly_report.html</code></td>
+                <td>输出文件</td>
+                <td>生成的HTML周报，包含历史数据</td>
+            </tr>
+            <tr>
+                <td><code>weekly_history.json</code></td>
+                <td>历史数据</td>
+                <td>存储每周统计数据，用于环比计算</td>
+            </tr>
+            <tr>
+                <td><code>负责的省份和城市列表.txt</code></td>
+                <td>配置文件</td>
+                <td>华南区域省份和城市关键词列表</td>
+            </tr>
+            <tr>
+                <td><code>technical_doc.html</code></td>
+                <td>文档</td>
+                <td>本技术文档</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="section" id="datasource">
+        <h2>3. 数据源要求</h2>
+        <p>工具会自动扫描工作目录，根据文件名规则识别数据文件：</p>
+
+        <table>
+            <tr>
+                <th>数据类型</th>
+                <th>文件名规则</th>
+                <th>格式</th>
+            </tr>
+            <tr>
+                <td>未安装火绒终端</td>
+                <td>文件名包含 <code>unmanaged_devices</code></td>
+                <td>xlsx</td>
+            </tr>
+            <tr>
+                <td>未编辑终端</td>
+                <td>文件名包含 <code>edit_status_report</code></td>
+                <td>csv</td>
+            </tr>
+            <tr>
+                <td>可利旧终端</td>
+                <td>文件名包含 <code>use_status_report</code></td>
+                <td>csv</td>
+            </tr>
+        </table>
+
+        <div class="note">
+            <strong>注意：</strong>每种类型只会识别一个文件。如有多个同类文件，请保留最新的一个。
+        </div>
+    </div>
+
+    <div class="section" id="filter">
+        <h2>4. 筛选规则</h2>
+
+        <h3>4.1 未安装火绒终端</h3>
+        <table>
+            <tr><th>项目</th><th>说明</th></tr>
+            <tr><td>筛选字段</td><td><code>计算机位置</code></td></tr>
+            <tr><td>筛选条件</td><td>包含指定省份/城市关键词</td></tr>
+            <tr><td>去重规则</td><td>按MAC地址去重</td></tr>
+        </table>
+
+        <p><strong>覆盖区域（10省）：</strong></p>
+        <ul>
+            <li>重庆、四川、云南、贵州、广东</li>
+            <li>福建、湖南、江西、海南、广西</li>
+        </ul>
+
+        <h3>4.2 未编辑终端 / 可利旧终端</h3>
+        <table>
+            <tr><th>项目</th><th>说明</th></tr>
+            <tr><td>筛选字段</td><td><code>分组名称</code></td></tr>
+            <tr><td>筛选条件</td><td>包含"华南"关键词</td></tr>
+            <tr><td>去重规则</td><td>按MAC地址去重</td></tr>
+        </table>
+    </div>
+
+    <div class="section" id="output">
+        <h2>5. 输出格式</h2>
+
+        <h3>5.1 报告结构</h3>
+        <ul>
+            <li>按周分区，新数据追加到顶部</li>
+            <li>周标识格式：<code>2025年第52周</code></li>
+            <li>每周包含数据汇总卡片和环比变化</li>
+            <li>支持折叠/展开详细数据</li>
+        </ul>
+
+        <h3>5.2 未安装火绒终端 - 输出字段</h3>
+        <table>
+            <tr>
+                <th>统计信息</th>
+                <th>明细表格</th>
+            </tr>
+            <tr>
+                <td>
+                    <ul>
+                        <li>各城市数量（含环比）</li>
+                        <li>总数汇总</li>
+                        <li>Top3城市</li>
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                        <li>IP地址</li>
+                        <li>MAC地址</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+
+        <h3>5.3 未编辑终端 - 输出字段</h3>
+        <table>
+            <tr><th>序号</th><th>字段名</th><th>来源</th></tr>
+            <tr><td>1</td><td>IP地址</td><td>火绒IP地址</td></tr>
+            <tr><td>2</td><td>MAC地址</td><td>火绒MAC地址</td></tr>
+            <tr><td>3</td><td>计算机名称</td><td>火绒主机名</td></tr>
+            <tr><td>4</td><td>分组名称</td><td>分组名称</td></tr>
+            <tr><td>5</td><td>服务编码</td><td>火绒读取的序列号</td></tr>
+        </table>
+
+        <h3>5.4 可利旧终端 - 输出字段</h3>
+        <table>
+            <tr><th>序号</th><th>字段名</th><th>来源</th></tr>
+            <tr><td>1</td><td>IP地址</td><td>火绒IP地址</td></tr>
+            <tr><td>2</td><td>MAC地址</td><td>火绒MAC地址</td></tr>
+            <tr><td>3</td><td>计算机名称</td><td>火绒主机名</td></tr>
+            <tr><td>4</td><td>分组名称</td><td>分组名称</td></tr>
+            <tr><td>5</td><td>位置</td><td>位置</td></tr>
+            <tr><td>6</td><td>仓库名称</td><td>仓库名称</td></tr>
+            <tr><td>7</td><td>服务编码</td><td>火绒读取的序列号</td></tr>
+        </table>
+    </div>
+
+    <div class="section" id="usage">
+        <h2>6. 使用方法</h2>
+
+        <h3>6.1 运行前准备</h3>
+        <ol>
+            <li>将3类数据文件放入工作目录 <code>D:\\data\\powerquery\\</code></li>
+            <li>确保文件名符合识别规则</li>
+            <li>确保 Python 环境已安装依赖库</li>
+        </ol>
+
+        <h3>6.2 依赖库</h3>
+        <pre>pip install pandas openpyxl</pre>
+
+        <h3>6.3 运行命令</h3>
+        <pre>python D:\\data\\powerquery\\weekly_report.py</pre>
+
+        <h3>6.4 运行输出</h3>
+        <p>脚本会显示处理进度：</p>
+        <ul>
+            <li>[1/6] 解析城市列表</li>
+            <li>[2/6] 加载历史数据</li>
+            <li>[3/6] 识别数据文件</li>
+            <li>[4/6] 处理未安装火绒数据</li>
+            <li>[5/6] 处理未编辑和可利旧数据</li>
+            <li>[6/6] 生成HTML报告</li>
+        </ul>
+
+        <div class="warning">
+            <strong>注意：</strong>每次运行会在报告顶部追加新的周数据。如需重新生成当周数据，请先删除 <code>weekly_report.html</code> 文件。
+        </div>
+    </div>
+
+    <div class="section" id="fields">
+        <h2>7. 字段映射</h2>
+        <p>以下是源数据字段与输出字段的对应关系：</p>
+
+        <table>
+            <tr>
+                <th>输出字段</th>
+                <th>CSV/Excel 源字段</th>
+            </tr>
+            <tr><td>IP地址</td><td>火绒IP地址</td></tr>
+            <tr><td>MAC地址</td><td>火绒MAC地址</td></tr>
+            <tr><td>计算机名称</td><td>火绒主机名</td></tr>
+            <tr><td>分组名称</td><td>分组名称</td></tr>
+            <tr><td>位置</td><td>位置</td></tr>
+            <tr><td>仓库名称</td><td>仓库名称</td></tr>
+            <tr><td>服务编码</td><td>火绒读取的序列号</td></tr>
+            <tr><td>计算机位置（未安装火绒）</td><td>计算机位置</td></tr>
+        </table>
+    </div>
+
+    <div class="section" id="changelog">
+        <h2>8. 更新日志</h2>
+        <table>
+            <tr>
+                <th>日期</th>
+                <th>版本</th>
+                <th>更新内容</th>
+            </tr>
+            <tr>
+                <td>2025-12-28</td>
+                <td>1.0</td>
+                <td>
+                    <ul>
+                        <li>初始版本</li>
+                        <li>支持3类数据文件处理</li>
+                        <li>HTML周报生成</li>
+                        <li>周数据汇总与环比分析</li>
+                        <li>城市级别环比显示</li>
+                        <li>可利旧增加仓库名称列</li>
+                        <li>未编辑/可利旧增加分组名称列</li>
+                        <li>页面宽度优化（1000px）</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</body>
+</html>

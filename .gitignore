@@ -1,0 +1,12 @@
+# Claude Code 本地配置（含本地设置，不提交）
+.claude/
+
+# 二进制压缩包（不适合 Web 部署）
+*.rar
+*.zip
+*.7z
+
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo

@@ -1,0 +1,315 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Google Antigravity 使用手册 (Agentic IDE 技术详解)</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111c33;
+      --panel2: #0b1224;
+      --card: #152244;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --border: rgba(148, 163, 184, 0.18);
+      --accent: #3b82f6;
+      --accent2: #f43f5e;
+      --radius: 14px;
+      --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+
+    [data-theme="light"] {
+      --bg: #f8fafc;
+      --panel: #ffffff;
+      --panel2: #f1f5f9;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: rgba(2, 6, 23, 0.12);
+      --accent: #2563eb;
+      --accent2: #dc2626;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .toolbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      background: rgba(17, 28, 51, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      justify-content: space-between;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 80px auto 40px;
+      padding: 0 20px;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 40px 0;
+      margin-bottom: 40px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero h1 {
+      font-size: 2.8rem;
+      margin: 0;
+      background: linear-gradient(135deg, #4285F4, #EA4335, #FBBC04, #34A853);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .tags {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    section {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 25px;
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+      margin-top: 0;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      color: var(--text);
+      margin: 20px 0 10px;
+      border-left: 3px solid var(--accent);
+      padding-left: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+    }
+
+    th,
+    td {
+      border: 1px solid var(--border);
+      padding: 10px;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: var(--panel2);
+      color: var(--text);
+    }
+
+    code {
+      font-family: var(--font-mono);
+      background: rgba(59, 130, 246, 0.1);
+      color: var(--accent);
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+
+    kbd {
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      border-bottom: 2px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+    }
+
+    .callout {
+      background: rgba(59, 130, 246, 0.05);
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      padding: 15px;
+      margin: 15px 0;
+    }
+  </style>
+</head>
+
+<body data-theme="dark">
+
+  <div class="toolbar">
+    <a href="doc-center.html">⬅ 返回文档中心</a>
+    <span>Antigravity 使用手册</span>
+    <span>2026 Preview</span>
+  </div>
+
+  <div class="container">
+    <div class="hero">
+      <h1><img src="assets/icons/Google-Antigravity-logo.png" alt="Antigravity"
+          style="width: 42px; height: 42px; vertical-align: bottom; margin-right: 12px;">Google Antigravity</h1>
+      <p>Agent-First IDE: 重塑人机协作的代理式开发环境</p>
+      <div class="tags">
+        <span class="tag">技术架构: Client-Server (MCP)</span>
+        <span class="tag">上手难度: ⭐⭐⭐⭐ (高)</span>
+        <span class="tag">是否需要代理: 是 (Gemini)</span>
+        <span class="tag">核心理念: 自主代理 (Autonomous Agents)</span>
+      </div>
+    </div>
+
+    <section id="architecture">
+      <h2>🛠️ 技术架构 (Agent-First Architecture)</h2>
+      <p>不同于 Copilot 的"补全"模式，Antigravity 采用<strong>代理优先</strong>架构：</p>
+      <ul>
+        <li><strong>双视图设计</strong>:
+          <ul>
+            <li><strong>Editor View</strong>: 传统代码编辑器，用于人类编写。</li>
+            <li><strong>Manager View</strong>: 代理工作区，AI 在此拆解任务、运行终端命令、浏览网页。</li>
+          </ul>
+        </li>
+        <li><strong>MCP 协议集成</strong>: 通过 Model Context Protocol 连接外部工具（如 PostgreSQL, Linear, GitHub）。AI
+          不仅能写代码，还能直接操作数据库或管理工单。</li>
+        <li><strong>Artifacts 系统</strong>: AI 生成的中间件（技术方案 <code>implementation_plan.md</code>, 任务列表
+          <code>task.md</code>）均以文件形式存在，确保可追溯、可版本控制。
+        </li>
+      </ul>
+    </section>
+
+    <section id="features">
+      <h2>⚡ 核心功能与环境要求</h2>
+      <ul>
+        <li><strong>Browser Subagent</strong>: 内置无头 Chrome，AI 可自主查阅文档、抓取网页内容甚至测试 Web UI。</li>
+        <li><strong>Terminal Control</strong>: AI 拥有 Shell 访问权限，可执行 <code>npm install</code>, <code>git commit</code>,
+          <code>pytest</code> 等操作。
+        </li>
+        <li><strong>环境要求</strong>:
+          <ul>
+            <li><strong>OS</strong>: macOS / Windows (WSL2 推荐) / Linux。</li>
+            <li><strong>网络</strong>: 必须能访问 Google API (Gemini)。中国大陆用户<strong>必须配置 VPN/代理</strong>。</li>
+            <li><strong>依赖</strong>: 需安装 Chrome 浏览器以供 Subagent 使用。</li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+    <section id="shortcuts">
+      <h2>⌨️ 常用指令与快捷键</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>功能</th>
+            <th>快捷键 (Mac/Win)</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Toggle Agent (唤出代理)</strong></td>
+            <td><kbd>⌘/Ctrl</kbd> + <kbd>E</kbd></td>
+            <td>在 Editor 和 Manager 视图间切换。</td>
+          </tr>
+          <tr>
+            <td><strong>Inline Command (内联指令)</strong></td>
+            <td><kbd>⌘/Ctrl</kbd> + <kbd>I</kbd></td>
+            <td>在光标处直接下达修改指令（Diff模式）。</td>
+          </tr>
+          <tr>
+            <td>Toggle Terminal</td>
+            <td><kbd>Ctrl</kbd> + <kbd>`</kbd></td>
+            <td>显示/隐藏终端面板。</td>
+          </tr>
+          <tr>
+            <td>Accept Suggestion</td>
+            <td><kbd>Tab</kbd></td>
+            <td>接受 AI 的灰色预测代码。</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="workflow">
+      <h2>📖 使用教程: 标准工作流 (SOP)</h2>
+
+      <h3>Step 1: 任务定义 (Prompting)</h3>
+      <p>不要只说"修复Bug"，要像给初级工程师写 Ticket 一样描述：</p>
+      <div class="callout">
+        "请把登录页面的背景色改为深蓝色 #0f172a，并添加 Google OAuth 登录按钮。参考官方文档实现。"
+      </div>
+
+      <h3>Step 2: 规划与审核 (Planning)</h3>
+      <p>AI 会生成 <code>task.md</code> 和 <code>implementation_plan.md</code>。<strong>务必阅读这些文档！</strong></p>
+      <ul>
+        <li>检查它是否理解了你的需求。</li>
+        <li>检查它是否准备修改正确的文件。</li>
+        <li>点击 "Approve" 继续，或 "Reject" 并提供反馈。</li>
+      </ul>
+
+      <h3>Step 3: 执行与干预 (Execution)</h3>
+      <p>AI 开始写代码。你可以看着它操作终端和编辑器。如果发现它走偏了，随时按 <kbd>Ctrl+C</kbd> 中断并给出新的指示。</p>
+
+      <h3>Step 4: 验证 (Verification)</h3>
+      <p>任务结束后，查看 <code>walkthrough.md</code>。AI 会贴出它的测试截图或运行结果。确认无误后，让它提交 Git Commit。</p>
+    </section>
+
+    <section id="cases">
+      <h2>💡 实战案例 (Practical Cases)</h2>
+
+      <h3>案例一：老旧项目重构</h3>
+      <p><strong>挑战</strong>: 接手一个没有文档的 Python 遗留项目。<br>
+        <strong>操作</strong>: 让 Antigravity 扫描全项目 (<code>list_dir</code>, <code>view_file</code>)，生成一份
+        <code>README.md</code> 和架构图。它会自动分析依赖关系并理清逻辑。
+      </p>
+
+      <h3>案例二：自动化测试编写</h3>
+      <p><strong>挑战</strong>: 为 React 组件补全单元测试。<br>
+        <strong>操作</strong>: "为 components 目录下的所有 .tsx 文件编写 Jest 测试用例，要求覆盖率 80% 以上。" AI 会自动运行测试，看报错，修代码，直到测试通过。
+      </p>
+    </section>
+
+  </div>
+</body>
+
+</html>

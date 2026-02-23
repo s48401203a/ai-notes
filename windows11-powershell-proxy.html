@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Windows 11 PowerShell 代理配置问题解决方案</title>
+  <meta name="description" content="Windows 11 下排查 Claude Code / npm 更新失败：代理端口变更、环境变量、npm 代理与一键切换脚本。" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+      line-height: 1.8;
+      padding: 36px;
+      max-width: 1100px;
+      margin: 0 auto;
+      background: #f5f7fa;
+      color: #1f2937;
+    }
+
+    .container {
+      background: #ffffff;
+      padding: 36px;
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+      border: 1px solid #e5e7eb;
+    }
+
+    h1 {
+      font-size: 30px;
+      color: #111827;
+      border-bottom: 3px solid #2563eb;
+      padding-bottom: 14px;
+      margin-bottom: 22px;
+    }
+
+    h2 {
+      font-size: 22px;
+      margin-top: 34px;
+      margin-bottom: 14px;
+      border-left: 4px solid #2563eb;
+      padding-left: 12px;
+      color: #111827;
+    }
+
+    h3 {
+      font-size: 16px;
+      margin-top: 18px;
+      margin-bottom: 10px;
+      color: #374151;
+    }
+
+    p {
+      margin: 10px 0;
+      color: #374151;
+    }
+
+    ul, ol {
+      padding-left: 22px;
+      margin: 10px 0;
+      color: #374151;
+    }
+
+    li {
+      margin: 6px 0;
+    }
+
+    .box {
+      padding: 14px 16px;
+      border-radius: 10px;
+      margin: 14px 0;
+      border-left: 4px solid #e5e7eb;
+      background: #f9fafb;
+    }
+
+    .box.warn {
+      border-left-color: #f59e0b;
+      background: #fff7ed;
+    }
+
+    .box.ok {
+      border-left-color: #10b981;
+      background: #ecfdf5;
+    }
+
+    code {
+      background: #f3f4f6;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.95em;
+      color: #be123c;
+    }
+
+    pre {
+      background: #0f172a;
+      color: #e5e7eb;
+      padding: 14px;
+      border-radius: 10px;
+      overflow-x: auto;
+      margin: 12px 0;
+      border: 1px solid #111827;
+    }
+
+    pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 14px;
+    }
+
+    th {
+      background: #2563eb;
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .meta {
+      margin-top: -6px;
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    .footer {
+      margin-top: 34px;
+      padding-top: 18px;
+      border-top: 1px solid #e5e7eb;
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    @media (max-width: 768px) {
+      body { padding: 16px; }
+      .container { padding: 18px; }
+      h1 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+<!-- 统一工具栏组件 - AI知识库文档系统 -->
+<style>
+  /* ===== 工具栏CSS变量（与doc-center.html保持一致）===== */
+  :root {
+    /* Linear-inspired Dark Theme Colors */
+    --bg-primary: #0e0e10;
+    --bg-secondary: #121214;
+    --bg-tertiary: #1a1a1e;
+    --bg-elevated: #1f1f23;
+    --bg-hover: #27272a;
+    
+    /* Linear Gradients */
+    --accent-purple: #8b5cf6;
+    --accent-blue: #3b82f6;
+    --accent-cyan: #06b6d4;
+    --accent-pink: #ec4899;
+    --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+    --gradient-glow: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.1) 100%);
+    --gradient-border: linear-gradient(135deg, rgba(99, 102, 241, 0.5), rgba(139, 92, 246, 0.3));
+    
+    /* Text Colors */
+    --text-primary: #fafafa;
+    --text-secondary: #a1a1aa;
+    --text-muted: #71717a;
+    --text-tertiary: #52525b;
+    
+    /* Border & Shadow */
+    --border-subtle: rgba(255, 255, 255, 0.06);
+    --border-default: rgba(255, 255, 255, 0.1);
+    --border-hover: rgba(255, 255, 255, 0.15);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+    --shadow-glow: 0 0 40px rgba(139, 92, 246, 0.15);
+    
+    /* Spacing - Notion Style */
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    
+    /* Toolbar specific */
+    --toolbar-height: 56px;
+    
+    /* Transitions */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Light Theme */
+  [data-theme="light"] {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --bg-tertiary: #f3f4f6;
+    --bg-elevated: #ffffff;
+    --bg-hover: #e5e7eb;
+    
+    --text-primary: #111827;
+    --text-secondary: #4b5563;
+    --text-muted: #9ca3af;
+    --text-tertiary: #d1d5db;
+    
+    --border-subtle: rgba(0, 0, 0, 0.04);
+    --border-default: rgba(0, 0, 0, 0.08);
+    --border-hover: rgba(0, 0, 0, 0.12);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  /* ===== 统一工具栏样式 ===== */
+  #unified-toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--toolbar-height);
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-subtle);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* 为页面内容添加顶部间距 */
+  body.has-unified-toolbar {
+    padding-top: var(--toolbar-height);
+  }
+
+  /* 左侧区域 */
+  .toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* 返回文档中心链接 */
+  .toolbar-back-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .toolbar-back-link:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+  }
+
+  .toolbar-back-link svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  /* 分隔线 */
+  .toolbar-divider {
+    width: 1px;
+    height: 20px;
+    background: var(--border-default);
+    flex-shrink: 0;
+  }
+
+  /* 当前文档标题 */
+  .toolbar-doc-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    max-width: 300px;
+  }
+
+  /* 中间区域 - 搜索框 */
+  .toolbar-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    max-width: 400px;
+  }
+
+  .toolbar-search {
+    position: relative;
+    width: 100%;
+  }
+
+  .toolbar-search-input {
+    width: 100%;
+    padding: 8px 12px 8px 36px;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    font-size: 14px;
+    transition: all var(--transition-fast);
+    font-family: inherit;
+  }
+
+  .toolbar-search-input:focus {
+    outline: none;
+    border-color: var(--accent-purple);
+    background: var(--bg-elevated);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+  }
+
+  .toolbar-search-input::placeholder {
+    color: var(--text-muted);
+  }
+
+  .toolbar-search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+
+  .toolbar-search-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* 右侧区域 */
+  .toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    justify-content: flex-end;
+  }
+
+  /* 工具栏按钮 */
+  .toolbar-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: inherit;
+  }
+
+  .toolbar-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+    border-color: var(--border-hover);
+  }
+
+  .toolbar-btn:active {
+    transform: scale(0.96);
+  }
+
+  .toolbar-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* 图标按钮 */
+  .toolbar-btn-icon {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+  }
+
+  /* 字体大小控制组 */
+  .toolbar-fontsize-group {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    padding: 2px;
+  }
+
+  .toolbar-fontsize-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: inherit;
+  }
+
+  .toolbar-fontsize-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+  }
+
+  .toolbar-fontsize-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .toolbar-fontsize-value {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    height: 28px;
+    padding: 0 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: var(--bg-elevated);
+    border-radius: var(--radius-sm);
+  }
+
+  /* 主题切换按钮 */
+  .toolbar-theme-btn {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .toolbar-theme-btn .icon-sun,
+  .toolbar-theme-btn .icon-moon {
+    transition: transform var(--transition-normal), opacity var(--transition-normal);
+  }
+
+  [data-theme="light"] .toolbar-theme-btn .icon-moon,
+  .toolbar-theme-btn .icon-sun {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+  }
+
+  [data-theme="light"] .toolbar-theme-btn .icon-sun,
+  .toolbar-theme-btn .icon-moon {
+    opacity: 0;
+    transform: rotate(90deg) scale(0.5);
+    position: absolute;
+  }
+
+  /* 响应式适配 */
+  @media (max-width: 768px) {
+    #unified-toolbar {
+      padding: 0 12px;
+    }
+
+    .toolbar-doc-title {
+      max-width: 150px;
+      font-size: 13px;
+    }
+
+    .toolbar-center {
+      max-width: 200px;
+    }
+
+    .toolbar-back-link span {
+      display: none;
+    }
+
+    .toolbar-fontsize-group {
+      display: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .toolbar-center {
+      display: none;
+    }
+  }
+</style>
+
+<!-- 工具栏HTML结构 -->
+<div id="unified-toolbar">
+  <!-- 左侧：返回链接 + 文档标题 -->
+  <div class="toolbar-left">
+    <a href="doc-center.html" class="toolbar-back-link" title="返回文档中心">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      <span>文档中心</span>
+    </a>
+    <div class="toolbar-divider"></div>
+    <div class="toolbar-doc-title" id="toolbar-doc-title">文档标题</div>
+  </div>
+
+  <!-- 中间：搜索框 -->
+  <div class="toolbar-center">
+    <div class="toolbar-search">
+      <div class="toolbar-search-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.35-4.35"/>
+        </svg>
+      </div>
+      <input 
+        type="text" 
+        class="toolbar-search-input" 
+        id="toolbar-search-input"
+        placeholder="搜索文档..."
+        autocomplete="off"
+      />
+    </div>
+  </div>
+
+  <!-- 右侧：主题切换 + 字体大小调节 -->
+  <div class="toolbar-right">
+    <!-- 字体大小控制组 -->
+    <div class="toolbar-fontsize-group">
+      <button class="toolbar-fontsize-btn" id="toolbar-fontsize-minus" title="减小字体">A-</button>
+      <div class="toolbar-fontsize-value" id="toolbar-fontsize-value">100%</div>
+      <button class="toolbar-fontsize-btn" id="toolbar-fontsize-plus" title="增大字体">A+</button>
+    </div>
+
+    <!-- 主题切换按钮 -->
+    <button class="toolbar-btn toolbar-btn-icon toolbar-theme-btn" id="toolbar-theme-toggle" title="切换主题">
+      <!-- 太阳图标（亮色模式） -->
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"/>
+        <line x1="12" y1="1" x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/>
+        <line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+      <!-- 月亮图标（暗色模式） -->
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script>
+  /**
+   * 统一工具栏组件脚本
+   * 功能：字体大小调节、主题切换、搜索跳转
+   * 所有状态保存到localStorage
+   */
+  (function() {
+    'use strict';
+
+    // ===== 配置常量 =====
+    const CONFIG = {
+      // localStorage键名
+      STORAGE_KEYS: {
+        FONT_SIZE: 'ai-kb-font-size',
+        THEME: 'ai-kb-theme'
+      },
+      // 字体大小设置
+      FONT_SIZE: {
+        BASE: 14,           // 基准字体大小(px)
+        MIN_PERCENT: 80,    // 最小百分比
+        MAX_PERCENT: 150,   // 最大百分比
+        STEP: 10,           // 每次调节步长(%)
+        DEFAULT: 100        // 默认百分比
+      },
+      // 主题设置
+      THEME: {
+        DARK: 'dark',
+        LIGHT: 'light',
+        DEFAULT: 'dark'
+      },
+      // 文档中心路径
+      DOC_CENTER_PATH: 'doc-center.html'
+    };
+
+    // ===== 工具函数 =====
+    
+    /**
+     * 获取localStorage值
+     */
+    function getStorage(key, defaultValue) {
+      try {
+        const value = localStorage.getItem(key);
+        return value !== null ? value : defaultValue;
+      } catch (e) {
+        return defaultValue;
+      }
+    }
+
+    /**
+     * 设置localStorage值
+     */
+    function setStorage(key, value) {
+      try {
+        localStorage.setItem(key, value);
+      } catch (e) {
+        console.warn('无法保存到localStorage:', e);
+      }
+    }
+
+    /**
+     * 计算并应用字体大小
+     */
+    function applyFontSize(percent) {
+      // 限制在有效范围内
+      percent = Math.max(CONFIG.FONT_SIZE.MIN_PERCENT, 
+               Math.min(CONFIG.FONT_SIZE.MAX_PERCENT, percent));
+      
+      // 计算实际字体大小
+      const fontSize = (CONFIG.FONT_SIZE.BASE * percent / 100).toFixed(2);
+      
+      // 应用到html元素
+      document.documentElement.style.fontSize = fontSize + 'px';
+      
+      // 更新显示
+      updateFontSizeDisplay(percent);
+      
+      // 保存到localStorage
+      setStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, percent.toString());
+      
+      return percent;
+    }
+
+    /**
+     * 更新字体大小显示
+     */
+    function updateFontSizeDisplay(percent) {
+      const valueEl = document.getElementById('toolbar-fontsize-value');
+      const minusBtn = document.getElementById('toolbar-fontsize-minus');
+      const plusBtn = document.getElementById('toolbar-fontsize-plus');
+      
+      if (valueEl) {
+        valueEl.textContent = percent + '%';
+      }
+      
+      // 更新按钮禁用状态
+      if (minusBtn) {
+        minusBtn.disabled = percent <= CONFIG.FONT_SIZE.MIN_PERCENT;
+      }
+      if (plusBtn) {
+        plusBtn.disabled = percent >= CONFIG.FONT_SIZE.MAX_PERCENT;
+      }
+    }
+
+    /**
+     * 应用主题
+     */
+    function applyTheme(theme) {
+      // 验证主题值
+      if (theme !== CONFIG.THEME.DARK && theme !== CONFIG.THEME.LIGHT) {
+        theme = CONFIG.THEME.DEFAULT;
+      }
+      
+      // 设置data-theme属性
+      document.documentElement.setAttribute('data-theme', theme);
+      
+      // 保存到localStorage
+      setStorage(CONFIG.STORAGE_KEYS.THEME, theme);
+      
+      return theme;
+    }
+
+    /**
+     * 切换主题
+     */
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme') || CONFIG.THEME.DEFAULT;
+      const newTheme = currentTheme === CONFIG.THEME.DARK ? CONFIG.THEME.LIGHT : CONFIG.THEME.DARK;
+      applyTheme(newTheme);
+    }
+
+    /**
+     * 执行搜索
+     */
+    function performSearch(query) {
+      if (!query || !query.trim()) return;
+      
+      // 构建跳转URL
+      const currentPath = window.location.pathname;
+      const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+      const targetUrl = basePath + CONFIG.DOC_CENTER_PATH + '#search=' + encodeURIComponent(query.trim());
+      
+      // 跳转到文档中心
+      window.location.href = targetUrl;
+    }
+
+    /**
+     * 设置文档标题
+     */
+    function setDocumentTitle(title) {
+      const titleEl = document.getElementById('toolbar-doc-title');
+      if (titleEl && title) {
+        titleEl.textContent = title;
+      }
+    }
+
+    /**
+     * 从页面自动获取文档标题
+     */
+    function autoDetectDocumentTitle() {
+      // 优先级：1. h1标题 2. title标签 3. 文件名
+      let title = '';
+      
+      // 尝试获取h1标题
+      const h1 = document.querySelector('h1');
+      if (h1 && h1.textContent.trim()) {
+        title = h1.textContent.trim();
+      } else {
+        // 尝试从title标签获取
+        const titleTag = document.querySelector('title');
+        if (titleTag && titleTag.textContent.trim()) {
+          title = titleTag.textContent.trim();
+          // 移除常见的后缀
+          title = title.replace(/[-_].*?(?:知识库|文档|AI)/i, '').trim();
+        } else {
+          // 从文件名获取
+          const path = window.location.pathname;
+          const filename = path.substring(path.lastIndexOf('/') + 1);
+          title = filename.replace(/\.html?$/i, '').replace(/[_-]/g, ' ');
+        }
+      }
+      
+      setDocumentTitle(title);
+    }
+
+    // ===== 事件处理 =====
+
+    /**
+     * 初始化事件监听
+     */
+    function initEventListeners() {
+      // 字体大小减小按钮
+      const minusBtn = document.getElementById('toolbar-fontsize-minus');
+      if (minusBtn) {
+        minusBtn.addEventListener('click', function() {
+          const currentPercent = parseInt(getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString()));
+          applyFontSize(currentPercent - CONFIG.FONT_SIZE.STEP);
+        });
+      }
+
+      // 字体大小增大按钮
+      const plusBtn = document.getElementById('toolbar-fontsize-plus');
+      if (plusBtn) {
+        plusBtn.addEventListener('click', function() {
+          const currentPercent = parseInt(getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString()));
+          applyFontSize(currentPercent + CONFIG.FONT_SIZE.STEP);
+        });
+      }
+
+      // 主题切换按钮
+      const themeBtn = document.getElementById('toolbar-theme-toggle');
+      if (themeBtn) {
+        themeBtn.addEventListener('click', toggleTheme);
+      }
+
+      // 搜索框
+      const searchInput = document.getElementById('toolbar-search-input');
+      if (searchInput) {
+        // 回车键搜索
+        searchInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            performSearch(this.value);
+          }
+        });
+      }
+    }
+
+    /**
+     * 从URL参数初始化搜索框
+     */
+    function initSearchFromURL() {
+      const hash = window.location.hash;
+      if (hash && hash.startsWith('#search=')) {
+        const query = decodeURIComponent(hash.substring(8));
+        const searchInput = document.getElementById('toolbar-search-input');
+        if (searchInput) {
+          searchInput.value = query;
+        }
+      }
+    }
+
+    // ===== 初始化 =====
+
+    /**
+     * 主初始化函数
+     */
+    function init() {
+      // 1. 恢复保存的字体大小
+      const savedFontSize = getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString());
+      applyFontSize(parseInt(savedFontSize));
+
+      // 2. 恢复保存的主题
+      const savedTheme = getStorage(CONFIG.STORAGE_KEYS.THEME, CONFIG.THEME.DEFAULT);
+      applyTheme(savedTheme);
+
+      // 3. 为body添加工具栏标识类
+      document.body.classList.add('has-unified-toolbar');
+
+      // 4. 自动检测文档标题
+      autoDetectDocumentTitle();
+
+      // 5. 初始化事件监听
+      initEventListeners();
+
+      // 6. 从URL初始化搜索框
+      initSearchFromURL();
+    }
+
+    // ===== 公共API =====
+
+    // 将工具栏API暴露到全局命名空间
+    window.UnifiedToolbar = {
+      // 设置文档标题
+      setTitle: setDocumentTitle,
+      
+      // 获取/设置字体大小
+      getFontSize: function() {
+        return parseInt(getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString()));
+      },
+      setFontSize: applyFontSize,
+      
+      // 获取/设置主题
+      getTheme: function() {
+        return document.documentElement.getAttribute('data-theme') || CONFIG.THEME.DEFAULT;
+      },
+      setTheme: applyTheme,
+      toggleTheme: toggleTheme,
+      
+      // 执行搜索
+      search: performSearch,
+      
+      // 配置常量
+      config: CONFIG
+    };
+
+    // 启动初始化
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+</script>
+
+  <div class="container">
+    <h1>Windows 11 PowerShell 代理配置问题解决方案</h1>
+    <p class="meta">聚焦：Claude Code / npm 连接失败、代理端口变更、环境变量未同步等常见问题。</p>
+
+    <h2>问题描述</h2>
+    <p><strong>场景：</strong>Windows 11（例如 25H2）下使用 Claude Code 时出现 API 连接失败。</p>
+    <ul>
+      <li>错误信息示例：<code>Unable to connect to API due to poor internet connection</code></li>
+      <li>常见根因：代理端口变更（例如从 <code>7897</code> 改为 <code>10809</code>），但环境变量未更新</li>
+    </ul>
+
+    <h2>诊断步骤</h2>
+    <h3>1) 检查当前代理设置</h3>
+    <pre><code># 查看系统 WinHTTP 代理
+netsh winhttp show proxy
+
+# 查看环境变量中的代理设置
+Get-ChildItem Env: | Where-Object { $_.Name -like "*proxy*" }
+
+# 直接查看代理变量
+echo $env:HTTP_PROXY
+echo $env:HTTPS_PROXY</code></pre>
+
+    <h3>2) 确认实际代理端口</h3>
+    <p>检查代理软件的实际端口设置（示例）：</p>
+    <ul>
+      <li><strong>Clash</strong>：主界面显示端口号</li>
+      <li><strong>V2RayN</strong>：参数设置 → 本地监听端口</li>
+      <li><strong>Shadowsocks</strong>：托盘菜单 → 选项设置 → 本地代理</li>
+    </ul>
+
+    <h2>解决方案</h2>
+    <h3>临时修改（仅当前会话）</h3>
+    <pre><code>$env:HTTP_PROXY = "http://127.0.0.1:10809"
+$env:HTTPS_PROXY = "http://127.0.0.1:10809"</code></pre>
+
+    <h3>永久修改（推荐）</h3>
+    <pre><code>[System.Environment]::SetEnvironmentVariable("HTTP_PROXY", "http://127.0.0.1:10809", "User")
+[System.Environment]::SetEnvironmentVariable("HTTPS_PROXY", "http://127.0.0.1:10809", "User")</code></pre>
+
+    <h3>配置 npm 代理（常见关键点）</h3>
+    <div class="box warn">
+      <p><strong>现象：</strong>即使系统代理正确，<code>claude update</code> 或 npm 相关命令仍可能失败，因为 npm 有独立的代理配置。</p>
+    </div>
+    <pre><code># 方案 1：设置 npm 代理
+npm config set proxy http://127.0.0.1:10809
+npm config set https-proxy http://127.0.0.1:10809
+
+# 方案 2：使用镜像（更稳定快速）
+npm config set registry https://registry.npmmirror.com
+
+# 验证配置
+npm config list
+npm ping</code></pre>
+
+    <h2>一键切换脚本（推荐）</h2>
+    <h3>创建 PowerShell 配置文件</h3>
+    <pre><code>if (!(Test-Path $PROFILE)) {
+  New-Item -Path $PROFILE -Type File -Force
+}
+notepad $PROFILE</code></pre>
+
+    <h3>添加代理管理函数</h3>
+    <pre><code># ==================== 代理管理函数 ====================
+
+function Set-Proxy {
+  param(
+    [Parameter(Mandatory=$true)]
+    [int]$Port
+  )
+
+  $proxyUrl = "http://127.0.0.1:$Port"
+
+  # 当前会话
+  $env:HTTP_PROXY = $proxyUrl
+  $env:HTTPS_PROXY = $proxyUrl
+
+  # 永久设置（当前用户）
+  [System.Environment]::SetEnvironmentVariable("HTTP_PROXY", $proxyUrl, "User")
+  [System.Environment]::SetEnvironmentVariable("HTTPS_PROXY", $proxyUrl, "User")
+
+  # npm 代理
+  npm config set proxy $proxyUrl 2>$null
+  npm config set https-proxy $proxyUrl 2>$null
+
+  # git 代理（注意：会写入 global 配置）
+  git config --global http.proxy $proxyUrl 2>$null
+  git config --global https.proxy $proxyUrl 2>$null
+
+  Write-Host "✓ 代理已设置为: $proxyUrl" -ForegroundColor Green
+  Write-Host "提示: 重启终端/应用后更稳定" -ForegroundColor Yellow
+}
+
+function Get-Proxy {
+  Write-Host "`n当前代理配置:" -ForegroundColor Cyan
+  Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Gray
+
+  Write-Host "`n【系统环境变量】" -ForegroundColor Yellow
+  Write-Host "  HTTP_PROXY  = $env:HTTP_PROXY"
+  Write-Host "  HTTPS_PROXY = $env:HTTPS_PROXY"
+
+  Write-Host "`n【npm 配置】" -ForegroundColor Yellow
+  $npmProxy = npm config get proxy 2>$null
+  $npmHttpsProxy = npm config get https-proxy 2>$null
+  Write-Host "  proxy       = $npmProxy"
+  Write-Host "  https-proxy = $npmHttpsProxy"
+
+  Write-Host "`n【git 配置】" -ForegroundColor Yellow
+  $gitProxy = git config --global --get http.proxy 2>$null
+  $gitHttpsProxy = git config --global --get https.proxy 2>$null
+  Write-Host "  http.proxy  = $gitProxy"
+  Write-Host "  https.proxy = $gitHttpsProxy"
+}
+
+function Clear-Proxy {
+  $env:HTTP_PROXY = $null
+  $env:HTTPS_PROXY = $null
+  [System.Environment]::SetEnvironmentVariable("HTTP_PROXY", $null, "User")
+  [System.Environment]::SetEnvironmentVariable("HTTPS_PROXY", $null, "User")
+
+  npm config delete proxy 2>$null
+  npm config delete https-proxy 2>$null
+
+  git config --global --unset http.proxy 2>$null
+  git config --global --unset https.proxy 2>$null
+
+  Write-Host "✓ 所有代理配置已清除" -ForegroundColor Green
+}
+
+function proxy7890 { Set-Proxy 7890 }
+function proxy7897 { Set-Proxy 7897 }
+function proxy10809 { Set-Proxy 10809 }
+function proxy1080 { Set-Proxy 1080 }
+
+Set-Alias -Name proxy -Value Set-Proxy
+
+# ==================== 结束 ====================</code></pre>
+
+    <h3>重新加载配置</h3>
+    <pre><code>. $PROFILE</code></pre>
+
+    <h2>使用示例</h2>
+    <pre><code># 设置代理到指定端口
+Set-Proxy 10809
+
+# 使用别名
+proxy 10809
+
+# 使用快捷命令
+proxy7890
+proxy10809
+
+# 查看当前代理配置
+Get-Proxy
+
+# 清除所有代理
+Clear-Proxy</code></pre>
+
+    <h2>验证配置</h2>
+    <pre><code># 测试网络连接
+curl ipinfo.io
+
+# 测试 npm 连接
+npm ping
+
+# 更新 Claude Code
+claude update
+
+# 查看 Claude Code 版本
+claude --version</code></pre>
+
+    <h2>常见端口参考</h2>
+    <table>
+      <tr><th>工具</th><th>默认端口</th><th>快捷命令</th></tr>
+      <tr><td>Clash</td><td>7890</td><td><code>proxy7890</code></td></tr>
+      <tr><td>Clash Meta</td><td>7897</td><td><code>proxy7897</code></td></tr>
+      <tr><td>V2Ray / V2RayN</td><td>10809</td><td><code>proxy10809</code></td></tr>
+      <tr><td>Shadowsocks</td><td>1080</td><td><code>proxy1080</code></td></tr>
+    </table>
+
+    <h2>故障排查</h2>
+    <h3>问题：Claude Code 仍无法连接</h3>
+    <ol>
+      <li>重启终端/应用：环境变量更改需要新进程读取</li>
+      <li>确认代理软件正在运行，且端口与脚本一致</li>
+      <li>检查 Windows 防火墙/安全软件是否阻止连接</li>
+    </ol>
+
+    <h3>问题：npm 相关命令失败</h3>
+    <pre><code># 使用镜像
+npm config set registry https://registry.npmmirror.com
+
+# 或清除 npm 代理，直接连接
+npm config delete proxy
+npm config delete https-proxy</code></pre>
+
+    <h3>问题：git 操作失败</h3>
+    <pre><code># 检查 git 代理配置
+git config --global --get http.proxy
+
+# 清除
+git config --global --unset http.proxy
+git config --global --unset https.proxy</code></pre>
+
+    <div class="box ok">
+      <p><strong>建议：</strong>如果你需要对外分享/教学，避免在课堂现场修改他人的全局 git 配置。可以先讲“原理 + 排查方法”，再按需选择是否写入 global。</p>
+    </div>
+
+    <div class="footer">
+      <p>最后更新：2026-01-21</p>
+    </div>
+  </div>
+</body>
+</html>

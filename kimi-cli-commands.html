@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kimi Code CLI - 斜杠命令参考</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .header p {
+      font-size: 1.1em;
+      opacity: 0.9;
+    }
+
+    .content {
+      padding: 40px;
+    }
+
+    .section {
+      margin-bottom: 40px;
+    }
+
+    .section-title {
+      font-size: 1.8em;
+      color: #667eea;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 3px solid #667eea;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title .icon {
+      font-size: 1.2em;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    thead {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+    }
+
+    th {
+      padding: 16px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.95em;
+    }
+
+    td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover {
+      background: #f8fafc;
+    }
+
+    .command {
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      background: #f1f5f9;
+      padding: 6px 12px;
+      border-radius: 4px;
+      color: #667eea;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    .alias {
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      background: #fef3c7;
+      padding: 4px 8px;
+      border-radius: 4px;
+      color: #92400e;
+      font-size: 0.9em;
+    }
+
+    .tips {
+      background: #f0f9ff;
+      border-left: 4px solid #0ea5e9;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 30px;
+    }
+
+    .tips h3 {
+      color: #0369a1;
+      margin-bottom: 15px;
+      font-size: 1.3em;
+    }
+
+    .tips ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .tips li {
+      padding: 10px 0;
+      padding-left: 30px;
+      position: relative;
+    }
+
+    .tips li:before {
+      content: "💡";
+      position: absolute;
+      left: 0;
+      top: 10px;
+    }
+
+    .tips code {
+      background: #e0f2fe;
+      padding: 2px 6px;
+      border-radius: 3px;
+      color: #0369a1;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    }
+
+    .warning {
+      background: #fef2f2;
+      border-left: 4px solid #ef4444;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+
+    .warning p {
+      color: #991b1b;
+      margin: 0;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 30px;
+      background: #f8fafc;
+      color: #64748b;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 1.8em;
+      }
+
+      .content {
+        padding: 20px;
+      }
+
+      th,
+      td {
+        padding: 10px;
+        font-size: 0.9em;
+      }
+
+      .section-title {
+        font-size: 1.4em;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 统一工具栏组件 - AI知识库文档系统 -->
+  <style>
+    /* ===== 工具栏CSS变量（与doc-center.html保持一致）===== */
+    :root {
+      /* Linear-inspired Dark Theme Colors */
+      --bg-primary: #0e0e10;
+      --bg-secondary: #121214;
+      --bg-tertiary: #1a1a1e;
+      --bg-elevated: #1f1f23;
+      --bg-hover: #27272a;
+
+      /* Linear Gradients */
+      --accent-purple: #8b5cf6;
+      --accent-blue: #3b82f6;
+      --accent-cyan: #06b6d4;
+      --accent-pink: #ec4899;
+      --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+      --gradient-glow: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.1) 100%);
+      --gradient-border: linear-gradient(135deg, rgba(99, 102, 241, 0.5), rgba(139, 92, 246, 0.3));
+
+      /* Text Colors */
+      --text-primary: #fafafa;
+      --text-secondary: #a1a1aa;
+      --text-muted: #71717a;
+      --text-tertiary: #52525b;
+
+      /* Border & Shadow */
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-default: rgba(255, 255, 255, 0.1);
+      --border-hover: rgba(255, 255, 255, 0.15);
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+      --shadow-glow: 0 0 40px rgba(139, 92, 246, 0.15);
+
+      /* Spacing - Notion Style */
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+
+      /* Toolbar specific */
+      --toolbar-height: 56px;
+
+      /* Transitions */
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Light Theme */
+    [data-theme="light"] {
+      --bg-primary: #ffffff;
+      --bg-secondary: #f9fafb;
+      --bg-tertiary: #f3f4f6;
+      --bg-elevated: #ffffff;
+      --bg-hover: #e5e7eb;
+
+      --text-primary: #111827;
+      --text-secondary: #4b5563;
+      --text-muted: #9ca3af;
+      --text-tertiary: #d1d5db;
+
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --border-default: rgba(0, 0, 0, 0.08);
+      --border-hover: rgba(0, 0, 0, 0.12);
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    /* ===== 统一工具栏样式 ===== */
+    #unified-toolbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--toolbar-height);
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* 为页面内容添加顶部间距 */
+    body.has-unified-toolbar {
+      padding-top: var(--toolbar-height);
+    }
+
+    /* 左侧区域 */
+    .toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* 返回文档中心链接 */
+    .toolbar-back-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: var(--radius-md);
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all var(--transition-fast);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .toolbar-back-link:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .toolbar-back-link svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    /* 分隔线 */
+    .toolbar-divider {
+      width: 1px;
+      height: 20px;
+      background: var(--border-default);
+      flex-shrink: 0;
+    }
+
+    /* 当前文档标题 */
+    .toolbar-doc-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+      max-width: 300px;
+    }
+
+    /* 中间区域 - 搜索框 */
+    .toolbar-center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      max-width: 400px;
+    }
+
+    .toolbar-search {
+      position: relative;
+      width: 100%;
+    }
+
+    .toolbar-search-input {
+      width: 100%;
+      padding: 8px 12px 8px 36px;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      font-size: 14px;
+      transition: all var(--transition-fast);
+      font-family: inherit;
+    }
+
+    .toolbar-search-input:focus {
+      outline: none;
+      border-color: var(--accent-purple);
+      background: var(--bg-elevated);
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+    }
+
+    .toolbar-search-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .toolbar-search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .toolbar-search-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* 右侧区域 */
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      justify-content: flex-end;
+    }
+
+    /* 工具栏按钮 */
+    .toolbar-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      font-family: inherit;
+    }
+
+    .toolbar-btn:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+      border-color: var(--border-hover);
+    }
+
+    .toolbar-btn:active {
+      transform: scale(0.96);
+    }
+
+    .toolbar-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* 图标按钮 */
+    .toolbar-btn-icon {
+      width: 36px;
+      height: 36px;
+      padding: 0;
+    }
+
+    /* 字体大小控制组 */
+    .toolbar-fontsize-group {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      padding: 2px;
+    }
+
+    .toolbar-fontsize-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      font-family: inherit;
+    }
+
+    .toolbar-fontsize-btn:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .toolbar-fontsize-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .toolbar-fontsize-value {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      height: 28px;
+      padding: 0 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+      background: var(--bg-elevated);
+      border-radius: var(--radius-sm);
+    }
+
+    /* 主题切换按钮 */
+    .toolbar-theme-btn {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .toolbar-theme-btn .icon-sun,
+    .toolbar-theme-btn .icon-moon {
+      transition: transform var(--transition-normal), opacity var(--transition-normal);
+    }
+
+    [data-theme="light"] .toolbar-theme-btn .icon-moon,
+    .toolbar-theme-btn .icon-sun {
+      opacity: 1;
+      transform: rotate(0deg) scale(1);
+    }
+
+    [data-theme="light"] .toolbar-theme-btn .icon-sun,
+    .toolbar-theme-btn .icon-moon {
+      opacity: 0;
+      transform: rotate(90deg) scale(0.5);
+      position: absolute;
+    }
+
+    /* 响应式适配 */
+    @media (max-width: 768px) {
+      #unified-toolbar {
+        padding: 0 12px;
+      }
+
+      .toolbar-doc-title {
+        max-width: 150px;
+        font-size: 13px;
+      }
+
+      .toolbar-center {
+        max-width: 200px;
+      }
+
+      .toolbar-back-link span {
+        display: none;
+      }
+
+      .toolbar-fontsize-group {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .toolbar-center {
+        display: none;
+      }
+    }
+  </style>
+
+  <!-- 工具栏HTML结构 -->
+  <div id="unified-toolbar">
+    <!-- 左侧：返回链接 + 文档标题 -->
+    <div class="toolbar-left">
+      <a href="doc-center.html" class="toolbar-back-link" title="返回文档中心">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M19 12H5M12 19l-7-7 7-7" />
+        </svg>
+        <span>文档中心</span>
+      </a>
+      <div class="toolbar-divider"></div>
+      <div class="toolbar-doc-title" id="toolbar-doc-title">文档标题</div>
+    </div>
+
+    <!-- 中间：搜索框 -->
+    <div class="toolbar-center">
+      <div class="toolbar-search">
+        <div class="toolbar-search-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+        </div>
+        <input type="text" class="toolbar-search-input" id="toolbar-search-input" placeholder="搜索文档..."
+          autocomplete="off" />
+      </div>
+    </div>
+
+    <!-- 右侧：主题切换 + 字体大小调节 -->
+    <div class="toolbar-right">
+      <!-- 字体大小控制组 -->
+      <div class="toolbar-fontsize-group">
+        <button class="toolbar-fontsize-btn" id="toolbar-fontsize-minus" title="减小字体">A-</button>
+        <div class="toolbar-fontsize-value" id="toolbar-fontsize-value">100%</div>
+        <button class="toolbar-fontsize-btn" id="toolbar-fontsize-plus" title="增大字体">A+</button>
+      </div>
+
+      <!-- 主题切换按钮 -->
+      <button class="toolbar-btn toolbar-btn-icon toolbar-theme-btn" id="toolbar-theme-toggle" title="切换主题">
+        <!-- 太阳图标（亮色模式） -->
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5" />
+          <line x1="12" y1="1" x2="12" y2="3" />
+          <line x1="12" y1="21" x2="12" y2="23" />
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+          <line x1="1" y1="12" x2="3" y2="12" />
+          <line x1="21" y1="12" x2="23" y2="12" />
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+        </svg>
+        <!-- 月亮图标（暗色模式） -->
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * 统一工具栏组件脚本
+     * 功能：字体大小调节、主题切换、搜索跳转
+     * 所有状态保存到localStorage
+     */
+    (function () {
+      'use strict';
+
+      // ===== 配置常量 =====
+      const CONFIG = {
+        // localStorage键名
+        STORAGE_KEYS: {
+          FONT_SIZE: 'ai-kb-font-size',
+          THEME: 'ai-kb-theme'
+        },
+        // 字体大小设置
+        FONT_SIZE: {
+          BASE: 14,           // 基准字体大小(px)
+          MIN_PERCENT: 80,    // 最小百分比
+          MAX_PERCENT: 150,   // 最大百分比
+          STEP: 10,           // 每次调节步长(%)
+          DEFAULT: 100        // 默认百分比
+        },
+        // 主题设置
+        THEME: {
+          DARK: 'dark',
+          LIGHT: 'light',
+          DEFAULT: 'dark'
+        },
+        // 文档中心路径
+        DOC_CENTER_PATH: 'doc-center.html'
+      };
+
+      // ===== 工具函数 =====
+
+      /**
+       * 获取localStorage值
+       */
+      function getStorage(key, defaultValue) {
+        try {
+          const value = localStorage.getItem(key);
+          return value !== null ? value : defaultValue;
+        } catch (e) {
+          return defaultValue;
+        }
+      }
+
+      /**
+       * 设置localStorage值
+       */
+      function setStorage(key, value) {
+        try {
+          localStorage.setItem(key, value);
+        } catch (e) {
+          console.warn('无法保存到localStorage:', e);
+        }
+      }
+
+      /**
+       * 计算并应用字体大小
+       */
+      function applyFontSize(percent) {
+        // 限制在有效范围内
+        percent = Math.max(CONFIG.FONT_SIZE.MIN_PERCENT,
+          Math.min(CONFIG.FONT_SIZE.MAX_PERCENT, percent));
+
+        // 计算实际字体大小
+        const fontSize = (CONFIG.FONT_SIZE.BASE * percent / 100).toFixed(2);
+
+        // 应用到html元素
+        document.documentElement.style.fontSize = fontSize + 'px';
+
+        // 更新显示
+        updateFontSizeDisplay(percent);
+
+        // 保存到localStorage
+        setStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, percent.toString());
+
+        return percent;
+      }
+
+      /**
+       * 更新字体大小显示
+       */
+      function updateFontSizeDisplay(percent) {
+        const valueEl = document.getElementById('toolbar-fontsize-value');
+        const minusBtn = document.getElementById('toolbar-fontsize-minus');
+        const plusBtn = document.getElementById('toolbar-fontsize-plus');
+
+        if (valueEl) {
+          valueEl.textContent = percent + '%';
+        }
+
+        // 更新按钮禁用状态
+        if (minusBtn) {
+          minusBtn.disabled = percent <= CONFIG.FONT_SIZE.MIN_PERCENT;
+        }
+        if (plusBtn) {
+          plusBtn.disabled = percent >= CONFIG.FONT_SIZE.MAX_PERCENT;
+        }
+      }
+
+      /**
+       * 应用主题
+       */
+      function applyTheme(theme) {
+        // 验证主题值
+        if (theme !== CONFIG.THEME.DARK && theme !== CONFIG.THEME.LIGHT) {
+          theme = CONFIG.THEME.DEFAULT;
+        }
+
+        // 设置data-theme属性
+        document.documentElement.setAttribute('data-theme', theme);
+
+        // 保存到localStorage
+        setStorage(CONFIG.STORAGE_KEYS.THEME, theme);
+
+        return theme;
+      }
+
+      /**
+       * 切换主题
+       */
+      function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || CONFIG.THEME.DEFAULT;
+        const newTheme = currentTheme === CONFIG.THEME.DARK ? CONFIG.THEME.LIGHT : CONFIG.THEME.DARK;
+        applyTheme(newTheme);
+      }
+
+      /**
+       * 执行搜索
+       */
+      function performSearch(query) {
+        if (!query || !query.trim()) return;
+
+        // 构建跳转URL
+        const currentPath = window.location.pathname;
+        const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+        const targetUrl = basePath + CONFIG.DOC_CENTER_PATH + '#search=' + encodeURIComponent(query.trim());
+
+        // 跳转到文档中心
+        window.location.href = targetUrl;
+      }
+
+      /**
+       * 设置文档标题
+       */
+      function setDocumentTitle(title) {
+        const titleEl = document.getElementById('toolbar-doc-title');
+        if (titleEl && title) {
+          titleEl.textContent = title;
+        }
+      }
+
+      /**
+       * 从页面自动获取文档标题
+       */
+      function autoDetectDocumentTitle() {
+        // 优先级：1. h1标题 2. title标签 3. 文件名
+        let title = '';
+
+        // 尝试获取h1标题
+        const h1 = document.querySelector('h1');
+        if (h1 && h1.textContent.trim()) {
+          title = h1.textContent.trim();
+        } else {
+          // 尝试从title标签获取
+          const titleTag = document.querySelector('title');
+          if (titleTag && titleTag.textContent.trim()) {
+            title = titleTag.textContent.trim();
+            // 移除常见的后缀
+            title = title.replace(/[-_].*?(?:知识库|文档|AI)/i, '').trim();
+          } else {
+            // 从文件名获取
+            const path = window.location.pathname;
+            const filename = path.substring(path.lastIndexOf('/') + 1);
+            title = filename.replace(/\.html?$/i, '').replace(/[_-]/g, ' ');
+          }
+        }
+
+        setDocumentTitle(title);
+      }
+
+      // ===== 事件处理 =====
+
+      /**
+       * 初始化事件监听
+       */
+      function initEventListeners() {
+        // 字体大小减小按钮
+        const minusBtn = document.getElementById('toolbar-fontsize-minus');
+        if (minusBtn) {
+          minusBtn.addEventListener('click', function () {
+            const currentPercent = parseInt(getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString()));
+            applyFontSize(currentPercent - CONFIG.FONT_SIZE.STEP);
+          });
+        }
+
+        // 字体大小增大按钮
+        const plusBtn = document.getElementById('toolbar-fontsize-plus');
+        if (plusBtn) {
+          plusBtn.addEventListener('click', function () {
+            const currentPercent = parseInt(getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString()));
+            applyFontSize(currentPercent + CONFIG.FONT_SIZE.STEP);
+          });
+        }
+
+        // 主题切换按钮
+        const themeBtn = document.getElementById('toolbar-theme-toggle');
+        if (themeBtn) {
+          themeBtn.addEventListener('click', toggleTheme);
+        }
+
+        // 搜索框
+        const searchInput = document.getElementById('toolbar-search-input');
+        if (searchInput) {
+          // 回车键搜索
+          searchInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+              performSearch(this.value);
+            }
+          });
+        }
+      }
+
+      /**
+       * 从URL参数初始化搜索框
+       */
+      function initSearchFromURL() {
+        const hash = window.location.hash;
+        if (hash && hash.startsWith('#search=')) {
+          const query = decodeURIComponent(hash.substring(8));
+          const searchInput = document.getElementById('toolbar-search-input');
+          if (searchInput) {
+            searchInput.value = query;
+          }
+        }
+      }
+
+      // ===== 初始化 =====
+
+      /**
+       * 主初始化函数
+       */
+      function init() {
+        // 1. 恢复保存的字体大小
+        const savedFontSize = getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString());
+        applyFontSize(parseInt(savedFontSize));
+
+        // 2. 恢复保存的主题
+        const savedTheme = getStorage(CONFIG.STORAGE_KEYS.THEME, CONFIG.THEME.DEFAULT);
+        applyTheme(savedTheme);
+
+        // 3. 为body添加工具栏标识类
+        document.body.classList.add('has-unified-toolbar');
+
+        // 4. 自动检测文档标题
+        autoDetectDocumentTitle();
+
+        // 5. 初始化事件监听
+        initEventListeners();
+
+        // 6. 从URL初始化搜索框
+        initSearchFromURL();
+      }
+
+      // ===== 公共API =====
+
+      // 将工具栏API暴露到全局命名空间
+      window.UnifiedToolbar = {
+        // 设置文档标题
+        setTitle: setDocumentTitle,
+
+        // 获取/设置字体大小
+        getFontSize: function () {
+          return parseInt(getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString()));
+        },
+        setFontSize: applyFontSize,
+
+        // 获取/设置主题
+        getTheme: function () {
+          return document.documentElement.getAttribute('data-theme') || CONFIG.THEME.DEFAULT;
+        },
+        setTheme: applyTheme,
+        toggleTheme: toggleTheme,
+
+        // 执行搜索
+        search: performSearch,
+
+        // 配置常量
+        config: CONFIG
+      };
+
+      // 启动初始化
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    })();
+  </script>
+
+  <div class="container">
+    <div class="header">
+      <h1><img src="assets/icons/kimi-color.png" alt="Kimi Code"
+          style="width: 48px; height: 48px; vertical-align: bottom; margin-right: 12px;">Kimi Code CLI</h1>
+      <p>斜杠命令参考文档</p>
+    </div>
+
+    <div class="content">
+      <div class="section">
+        <h2 class="section-title"><span class="icon">📚</span> 帮助与信息</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>命令</th>
+              <th>别名</th>
+              <th>说明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="command">/help</span></td>
+              <td><span class="alias">/h</span>, <span class="alias">/?</span></td>
+              <td>显示帮助信息（键盘快捷键、斜杠命令、已加载的 Skills）</td>
+            </tr>
+            <tr>
+              <td><span class="command">/version</span></td>
+              <td>-</td>
+              <td>显示 Kimi Code CLI 版本号</td>
+            </tr>
+            <tr>
+              <td><span class="command">/changelog</span></td>
+              <td><span class="alias">/release-notes</span></td>
+              <td>显示最近版本的变更记录</td>
+            </tr>
+            <tr>
+              <td><span class="command">/feedback</span></td>
+              <td>-</td>
+              <td>打开 GitHub Issues 页面提交反馈</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title"><span class="icon">🔐</span> 账号与配置</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>命令</th>
+              <th>别名</th>
+              <th>说明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="command">/login</span></td>
+              <td><span class="alias">/setup</span></td>
+              <td>登录或配置 API 平台（Kimi Code 或其他平台）</td>
+            </tr>
+            <tr>
+              <td><span class="command">/logout</span></td>
+              <td>-</td>
+              <td>登出当前平台，清理存储的凭据</td>
+            </tr>
+            <tr>
+              <td><span class="command">/model</span></td>
+              <td>-</td>
+              <td>切换模型和 Thinking 模式</td>
+            </tr>
+            <tr>
+              <td><span class="command">/reload</span></td>
+              <td>-</td>
+              <td>重新加载配置文件，无需退出</td>
+            </tr>
+            <tr>
+              <td><span class="command">/debug</span></td>
+              <td>-</td>
+              <td>显示当前上下文的调试信息（消息数量、token 数、消息历史）</td>
+            </tr>
+            <tr>
+              <td><span class="command">/usage</span></td>
+              <td><span class="alias">/status</span></td>
+              <td>显示 API 用量和配额信息（仅 Kimi Code 平台）</td>
+            </tr>
+            <tr>
+              <td><span class="command">/mcp</span></td>
+              <td>-</td>
+              <td>显示当前连接的 MCP 服务器和工具列表</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title"><span class="icon">💬</span> 会话管理</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>命令</th>
+              <th>别名</th>
+              <th>说明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="command">/sessions</span></td>
+              <td><span class="alias">/resume</span></td>
+              <td>列出当前工作目录下的所有会话，可切换到其他会话</td>
+            </tr>
+            <tr>
+              <td><span class="command">/clear</span></td>
+              <td><span class="alias">/reset</span></td>
+              <td>清空当前会话的上下文，开始新的对话</td>
+            </tr>
+            <tr>
+              <td><span class="command">/compact</span></td>
+              <td>-</td>
+              <td>手动压缩上下文，减少 token 使用</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title"><span class="icon">🛠️</span> Skills</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>命令</th>
+              <th>说明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="command">/skill:&lt;name&gt;</span></td>
+              <td>加载指定的 Skill，如 <code>/skill:pptx</code>、<code>/skill:code-style</code></td>
+            </tr>
+            <tr>
+              <td><span class="command">/flow:&lt;name&gt;</span></td>
+              <td>执行指定的 Flow Skill（带流程图的 Skill），如 <code>/flow:code-review</code>、<code>/flow:release</code></td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="margin-top: 15px; color: #64748b;"><strong>提示：</strong><code>/skill:&lt;name&gt;</code> 后可附带额外文本，如
+          <code>/skill:git-commits 修复登录问题</code></p>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title"><span class="icon">⚡</span> 其他</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>命令</th>
+              <th>说明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="command">/init</span></td>
+              <td>分析当前项目并生成 <code>AGENTS.md</code> 文件，帮助 Agent 更好地理解项目</td>
+            </tr>
+            <tr>
+              <td><span class="command">/yolo</span></td>
+              <td>切换 YOLO 模式（自动批准所有操作，开启后底部状态栏显示黄色 YOLO 标识）</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tips">
+        <h3>💡 使用技巧</h3>
+        <ul>
+          <li><strong>命令补全</strong>：输入 <code>/</code> 后会自动显示可用命令列表，支持模糊匹配</li>
+          <li><strong>模糊匹配</strong>：输入 <code>/ses</code> 会匹配到 <code>/sessions</code>，输入 <code>/clog</code> 会匹配到
+            <code>/changelog</code></li>
+          <li><strong>别名支持</strong>：命令别名也可触发，如输入 <code>/h</code> 会匹配到 <code>/help</code></li>
+          <li><strong>Skill 参数</strong>：<code>/skill:&lt;name&gt;</code> 后可附带额外文本，如
+            <code>/skill:git-commits 修复登录问题</code></li>
+          <li><strong>Shell 模式可用</strong>：部分斜杠命令在 Shell 模式下也可以使用，包括
+            <code>/help</code>、<code>/exit</code>、<code>/version</code>、<code>/changelog</code>、<code>/feedback</code>
+          </li>
+          <li><strong>键盘操作</strong>：使用方向键选择命令，按 <code>Enter</code> 确认，按 <code>Ctrl-C</code> 取消</li>
+        </ul>
+      </div>
+
+      <div class="warning">
+        <p>⚠️ <strong>注意事项：</strong><code>/login</code>、<code>/model</code> 命令仅在使用默认配置文件时可用。如果通过 <code>--config</code> 或
+          <code>--config-file</code> 指定了配置，则无法使用上述命令。YOLO 模式会跳过所有确认，请确保了解可能的风险。</p>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>© 2026 Kimi Code CLI - 斜杠命令参考文档</p>
+    </div>
+  </div>
+</body>
+
+</html>

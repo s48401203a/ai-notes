@@ -1,0 +1,341 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cherry Studio 使用手册 (2026 技术详解版)</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111c33;
+      --panel2: #0b1224;
+      --card: #152244;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --border: rgba(148, 163, 184, 0.18);
+      --accent: #ec4899;
+      --accent2: #8b5cf6;
+      --radius: 14px;
+      --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+
+    [data-theme="light"] {
+      --bg: #fff1f2;
+      --panel: #ffffff;
+      --panel2: #fff5f7;
+      --card: #ffffff;
+      --text: #0b1224;
+      --muted: #475569;
+      --border: rgba(2, 6, 23, 0.12);
+      --accent: #db2777;
+      --accent2: #9333ea;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .toolbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      background: rgba(17, 28, 51, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      justify-content: space-between;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 80px auto 40px;
+      padding: 0 20px;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 40px 0;
+      margin-bottom: 40px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero h1 {
+      font-size: 2.8rem;
+      margin: 0;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .tags {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    section {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 25px;
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+      margin-top: 0;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      color: var(--text);
+      margin: 20px 0 10px;
+      border-left: 3px solid var(--accent);
+      padding-left: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+    }
+
+    th,
+    td {
+      border: 1px solid var(--border);
+      padding: 10px;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: var(--panel2);
+      color: var(--text);
+    }
+
+    code {
+      font-family: var(--font-mono);
+      background: rgba(236, 72, 153, 0.1);
+      color: var(--accent);
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+
+    kbd {
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      border-bottom: 2px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+    }
+
+    .level-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 0.8rem;
+      color: #fff;
+    }
+
+    .level-easy {
+      background: #10b981;
+    }
+
+    .level-med {
+      background: #f59e0b;
+    }
+
+    .callout {
+      background: rgba(236, 72, 153, 0.05);
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      padding: 15px;
+      margin: 15px 0;
+    }
+  </style>
+</head>
+
+<body data-theme="dark">
+
+  <div class="toolbar">
+    <a href="doc-center.html">⬅ 返回文档中心</a>
+    <span>Cherry Studio 使用手册</span>
+    <span>v1.6+</span>
+  </div>
+
+  <div class="container">
+    <div class="hero">
+      <h1><img src="assets/icons/cherrystudio.png" alt="Cherry Studio"
+          style="width: 42px; height: 42px; vertical-align: bottom; margin-right: 12px;">Cherry Studio</h1>
+      <p>基于 Electron 的全能跨平台 AI 桌面客户端</p>
+      <div class="tags">
+        <span class="tag">技术架构: Electron</span>
+        <span class="tag">上手难度: ⭐⭐</span>
+        <span class="tag">是否需要代理: 是(云端) / 否(本地)</span>
+        <span class="tag">适用场景: 聚合聊天 / 知识库 / 翻译</span>
+      </div>
+    </div>
+
+    <section id="architecture">
+      <h2>🛠️ 技术架构与环境</h2>
+      <ul>
+        <li><strong>核心框架</strong>: Electron (Chromium + Node.js)，确保了 Windows, macOS, Linux 三端一致的体验。</li>
+        <li><strong>本地数据</strong>: 采用 SQLite/LocalForage 存储对话记录，隐私数据（API Key）加密存储于本地，不上传云端。</li>
+        <li><strong>扩展机制</strong>: 支持 MCP (Model Context Protocol) 协议连接外部服务，支持插件系统（如 Web 搜索）。</li>
+        <li><strong>环境要求</strong>:
+          <ul>
+            <li>Windows 10/11 (x64)</li>
+            <li>macOS 12+ (Apple Silicon/Intel)</li>
+            <li>网络: 访问 OpenAI/DeepSeek API 需确保网络连通性（或配置代理）。</li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+    <section id="shortcuts">
+      <h2>⌨️ 常用指令与快捷键</h2>
+      <p>Cherry Studio 为键盘党提供了丰富的快捷键，支持在设置中自定义。</p>
+      <table>
+        <thead>
+          <tr>
+            <th>功能</th>
+            <th>macOS</th>
+            <th>Windows</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Boss Key (老板键)</strong></td>
+            <td><kbd>Opt</kbd> + <kbd>Space</kbd></td>
+            <td><kbd>Alt</kbd> + <kbd>Space</kbd></td>
+            <td>全局唤醒/隐藏窗口，随时随地呼出 AI。</td>
+          </tr>
+          <tr>
+            <td>新建话题</td>
+            <td><kbd>⌘</kbd> + <kbd>N</kbd></td>
+            <td><kbd>Ctrl</kbd> + <kbd>N</kbd></td>
+            <td>开启新对话，重置上下文。</td>
+          </tr>
+          <tr>
+            <td>清空上下文</td>
+            <td><kbd>⌘</kbd> + <kbd>K</kbd></td>
+            <td><kbd>Ctrl</kbd> + <kbd>K</kbd></td>
+            <td>保留历史记录但重置 AI 记忆（Restart）。</td>
+          </tr>
+          <tr>
+            <td>快速设置</td>
+            <td><kbd>⌘</kbd> + <kbd>,</kbd></td>
+            <td><kbd>Ctrl</kbd> + <kbd>,</kbd></td>
+            <td>打开偏好设置面板。</td>
+          </tr>
+          <tr>
+            <td>切换侧边栏</td>
+            <td><kbd>⌘</kbd> + <kbd>[</kbd></td>
+            <td><kbd>Ctrl</kbd> + <kbd>[</kbd></td>
+            <td>显示/隐藏左侧助手列表。</td>
+          </tr>
+          <tr>
+            <td>快捷翻译</td>
+            <td>输入文本后连按 3 次空格</td>
+            <td>同左</td>
+            <td>触发快捷翻译功能（需在设置中开启）。</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="tutorials">
+      <h2>📖 核心功能使用教程</h2>
+
+      <h3>1. 接入 DeepSeek R1/V3 (硅基流动版)</h3>
+      <div class="callout">
+        <strong>为什么用硅基流动？</strong> DeepSeek 官方 API 常不稳定，硅基流动 (SiliconFlow) 提供更稳定的企业级服务，且 Cherry Studio 内置了专有配置项。
+      </div>
+      <ol>
+        <li>注册 SiliconCloud 获取 API Key。</li>
+        <li>打开 Cherry Studio 设置 -> <strong>模型服务</strong> -> 选择 <strong>SiliconFlow</strong>。</li>
+        <li>粘贴 API Key -> 点击“检查” -> 开启 <code>deepseek-ai/DeepSeek-R1</code> 模型开关。</li>
+        <li>回到对话页，顶部模型选择器选中 R1，即可开始“深度思考”。</li>
+      </ol>
+
+      <h3>2. 搭建本地 RAG 知识库</h3>
+      <ol>
+        <li>点击左侧边栏的“知识库”图标 -> 新建知识库。</li>
+        <li>拖入 PDF / Word / Markdown 文件（支持批量）。</li>
+        <li>系统会自动进行切片和向量化（Embedding）。</li>
+        <li>在对话框下方的“关联知识库”按钮中勾选该库，AI 回答时将自动检索文档内容。</li>
+      </ol>
+    </section>
+
+    <section id="cases">
+      <h2>💡 可实践案例 (Use Cases)</h2>
+
+      <h3>案例一：沉浸式翻译阅读</h3>
+      <p><strong>场景</strong>: 阅读英文论文或技术文档。<br>
+        <strong>操作</strong>: 将 PDF 拖入知识库。使用 <code>Gemini 1.5 Pro</code> (长窗口模型)。<br>
+        <strong>指令</strong>: "请总结这篇论文的核心创新点，并用中文解释第三章的技术细节。"
+      </p>
+
+      <h3>案例二：多模型交叉验证 (MoE)</h3>
+      <p><strong>场景</strong>: 编写复杂的正则代码。<br>
+        <strong>操作</strong>: 开启“多模型并发”模式（需 v1.6+）。<br>
+        <strong>配置</strong>: 同时勾选 <code>Claude 3.5 Sonnet</code> 和 <code>DeepSeek V3</code>。<br>
+        <strong>结果</strong>: 发送同一个 Prompts，左右分屏对比两者的代码实现，取长补短。
+      </p>
+    </section>
+
+    <section id="tips">
+      <h2>⚠️ 注意事项</h2>
+      <ul>
+        <li><strong>代理配置</strong>: 若无法检查更新或连接 OpenAI，请在设置 -> 网络 -> 代理中填入 <code>http://127.0.0.1:7890</code> (端口视你的软件而定)。
+        </li>
+        <li><strong>Ollama 连接</strong>: 若使用 Docker 版 Ollama，需配置环境变量 <code>OLLAMA_HOST=0.0.0.0</code> 允许外部连接。</li>
+      </ul>
+    </section>
+
+  </div>
+</body>
+
+</html>

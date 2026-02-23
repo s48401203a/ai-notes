@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI知识库技术文档 - 文档中心</title>
+  <meta name="description" content="AI学习知识库项目技术文档，覆盖架构设计、页面说明、CSS设计系统、JavaScript模块与维护指南。" />
+  <style>
+    :root {
+      --bg: #0b1020;
+      --bg-secondary: #0f1530;
+      --panel: #121a2b;
+      --muted: #8fa3c7;
+      --text: #e7eef9;
+      --text-secondary: #94a3b8;
+      --accent: #6aa6ff;
+      --accent-2: #75e0a3;
+      --accent-hover: #85b3ff;
+      --border: #27324a;
+      --border-light: #1e2840;
+      --chip: #1a2540;
+      --warn: #f6c244;
+      --good: #49d289;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.25);
+      --navbar-height: 60px;
+      --sidebar-width: 260px;
+      --radius: 12px;
+    }
+
+    [data-theme="light"] {
+      --bg: #ffffff;
+      --bg-secondary: #f6f8fc;
+      --panel: #ffffff;
+      --muted: #5d6b8a;
+      --text: #0e1b31;
+      --text-secondary: #475569;
+      --accent: #2b6bff;
+      --accent-2: #0f9d58;
+      --accent-hover: #1e54d9;
+      --border: #e6ecf5;
+      --border-light: #f1f5f9;
+      --chip: #eef3fb;
+      --warn: #b47b00;
+      --good: #1f8d52;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: var(--accent-hover);
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.92em;
+    }
+
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--navbar-height);
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 20px;
+      z-index: 1000;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .navbar-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .navbar-actions {
+      margin-left: auto;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .navbar-btn {
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--chip);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    .navbar-btn:hover {
+      background: var(--bg-secondary);
+      text-decoration: none;
+    }
+
+    .main-wrapper {
+      margin-top: var(--navbar-height);
+      display: flex;
+      min-height: calc(100vh - var(--navbar-height));
+    }
+
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      flex-shrink: 0;
+      position: sticky;
+      top: var(--navbar-height);
+      height: calc(100vh - var(--navbar-height));
+    }
+
+    .sidebar-content {
+      padding: 20px 16px;
+    }
+
+    .nav-group {
+      margin-bottom: 24px;
+    }
+
+    .nav-group-title {
+      padding: 8px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-radius: 6px;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-top: 6px;
+    }
+
+    .nav-link {
+      padding: 8px 12px;
+      border-radius: 8px;
+      color: var(--text-secondary);
+      font-size: 14px;
+      display: block;
+      border-left: 3px solid transparent;
+    }
+
+    .nav-link:hover {
+      background: var(--chip);
+      color: var(--text);
+      border-left-color: var(--accent);
+      text-decoration: none;
+    }
+
+    .nav-link.active {
+      background: var(--chip);
+      color: var(--accent);
+      font-weight: 600;
+      border-left-color: var(--accent);
+    }
+
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      background: var(--bg);
+      padding: 32px 48px;
+      max-width: 980px;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 24px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .breadcrumb a {
+      color: var(--muted);
+    }
+
+    .breadcrumb a:hover {
+      color: var(--accent);
+    }
+
+    h1 {
+      font-size: 30px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    h2 {
+      margin: 0 0 16px 0;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text);
+      padding-top: 8px;
+    }
+
+    h3 {
+      margin: 20px 0 10px 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    p {
+      margin: 12px 0;
+      color: var(--text-secondary);
+    }
+
+    ul, ol {
+      margin: 12px 0;
+      padding-left: 24px;
+      color: var(--text-secondary);
+    }
+
+    li {
+      margin: 8px 0;
+    }
+
+    li strong {
+      color: var(--text);
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+
+    .table th,
+    .table td {
+      border: 1px solid var(--border);
+      padding: 12px;
+      text-align: left;
+    }
+
+    .table th {
+      background: var(--chip);
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    pre {
+      margin: 14px 0;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-light);
+      border-radius: 10px;
+      overflow-x: auto;
+      padding: 16px;
+    }
+
+    pre code {
+      color: var(--text-secondary);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    code:not(pre code) {
+      background: var(--chip);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--accent);
+    }
+
+    .file-tree {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 16px 0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.8;
+      color: var(--text-secondary);
+    }
+
+    .version-info {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin: 16px 0 24px 0;
+    }
+
+    .version-info p {
+      margin: 4px 0;
+      font-size: 14px;
+    }
+
+    .foot {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    @media (max-width: 960px) {
+      .sidebar {
+        display: none;
+      }
+
+      .content {
+        padding: 24px 20px;
+      }
+
+      h1 {
+        font-size: 26px;
+      }
+    }
+
+    @media print {
+      .navbar,
+      .sidebar {
+        display: none;
+      }
+
+      .content {
+        max-width: 100%;
+        padding: 20px;
+      }
+
+      .card {
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body data-theme="dark">
+  <div class="app-container">
+    <nav class="navbar">
+      <div class="navbar-brand">
+        <div class="navbar-logo">AI</div>
+        <span>AI 知识库技术文档</span>
+      </div>
+      <div class="navbar-actions">
+        <a href="index.html" class="navbar-btn">返回首页</a>
+        <a href="doc-center.html" class="navbar-btn">文档中心</a>
+        <button class="navbar-btn" id="toggleTheme" type="button">切换主题</button>
+      </div>
+    </nav>
+
+    <div class="main-wrapper">
+      <aside class="sidebar">
+        <div class="sidebar-content">
+          <nav>
+            <div class="nav-group">
+              <div class="nav-group-title">项目概览</div>
+              <div class="nav-links">
+                <a href="#overview" class="nav-link">项目概述</a>
+                <a href="#goals" class="nav-link">项目目标</a>
+                <a href="#audience" class="nav-link">目标用户</a>
+              </div>
+            </div>
+            <div class="nav-group">
+              <div class="nav-group-title">架构与实现</div>
+              <div class="nav-links">
+                <a href="#structure" class="nav-link">项目结构</a>
+                <a href="#architecture" class="nav-link">设计架构</a>
+                <a href="#features" class="nav-link">核心功能</a>
+                <a href="#doc-center" class="nav-link">文档中心结构</a>
+                <a href="#css-system" class="nav-link">CSS 设计系统</a>
+                <a href="#js-modules" class="nav-link">JavaScript 模块</a>
+              </div>
+            </div>
+            <div class="nav-group">
+              <div class="nav-group-title">维护与演进</div>
+              <div class="nav-links">
+                <a href="#maintenance" class="nav-link">维护指南</a>
+                <a href="#history" class="nav-link">版本历史</a>
+                <a href="#roadmap" class="nav-link">技术债务与计划</a>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </aside>
+
+      <main class="content">
+        <div class="breadcrumb">
+          <a href="index.html">首页</a>
+          <span>&#8250;</span>
+          <span>AI 知识库技术文档</span>
+        </div>
+
+        <h1>AI 学习知识库技术文档</h1>
+
+        <div class="version-info">
+          <p><strong>版本：</strong>3.0</p>
+          <p><strong>最近更新：</strong>2026-02-02</p>
+          <p><strong>维护人员：</strong>作者</p>
+          <p><strong>项目类型：</strong>离线可用的单文件 HTML 知识库</p>
+        </div>
+
+        <section id="overview" class="card">
+          <h2>1. 项目概述</h2>
+          <p><strong>项目名称：</strong>技术知识库（Tech Knowledge Base）</p>
+          <p><strong>创建时间：</strong>2025 年</p>
+          <p><strong>定位：</strong>聚合 AI 学习、工具说明、运维实践与项目技术文档的离线知识库。</p>
+          <p><strong>设计方向：</strong>Notion 布局 + Linear 配色，强调清晰层级、可读性与可维护性。</p>
+        </section>
+
+        <section id="goals" class="card">
+          <h2>2. 项目目标</h2>
+          <ul>
+            <li><strong>收敛知识入口：</strong>把分散的 AI 工具、运维经验与项目实践统一收敛到一个离线入口。</li>
+            <li><strong>可复用输出：</strong>沉淀可复用的教程、提示词、流程与技术说明文档。</li>
+            <li><strong>离线可用：</strong>所有文档为单文件 HTML，可在无网络环境直接浏览。</li>
+            <li><strong>低维护成本：</strong>不依赖构建工具或框架，修改即生效。</li>
+          </ul>
+        </section>
+
+        <section id="audience" class="card">
+          <h2>3. 目标用户</h2>
+          <ul>
+            <li>具备基础工程背景，想系统掌握 AI 协作工具与流程的用户。</li>
+            <li>需要可复制实践模板的运维、产品、研发与技术管理人员。</li>
+            <li>需要面向分享/教学的项目案例与文档素材的团队。</li>
+          </ul>
+        </section>
+
+        <section id="structure" class="card">
+          <h2>4. 项目结构</h2>
+          <div class="file-tree">
+            知识库/
+            <br />├── *.html              # HTML 格式知识文档
+            <br />├── index.html          # 首页入口
+            <br />├── doc-center.html     # 文档中心
+            <br />├── AGENTS.md           # 代码库规范（如存在）
+            <br />├── CLAUDE.md           # Claude Code 项目说明（如存在）
+            <br />├── todo.md             # 任务追踪（可选）
+            <br />└── assets/             # 共享资源目录
+          </div>
+        </section>
+
+        <section id="architecture" class="card">
+          <h2>5. 设计架构</h2>
+          <h3>5.1 布局风格</h3>
+          <ul>
+            <li><strong>双栏布局：</strong>左侧导航 + 中间内容区，便于快速定位章节。</li>
+            <li><strong>顶部导航：</strong>站点名称、返回入口与主题切换。</li>
+            <li><strong>响应式：</strong>移动端隐藏侧栏，仅保留正文阅读区。</li>
+          </ul>
+          <h3>5.2 视觉方向</h3>
+          <ul>
+            <li><strong>配色：</strong>Linear 深色体系 + 亮色对照主题。</li>
+            <li><strong>组件形态：</strong>卡片化段落承载内容，边界与间距清晰。</li>
+            <li><strong>内容密度：</strong>以可读性优先，避免重度装饰。</li>
+          </ul>
+        </section>
+
+        <section id="features" class="card">
+          <h2>6. 核心功能</h2>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>功能</th>
+                <th>说明</th>
+                <th>实现方式</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>离线可用</td>
+                <td>所有文档均为单文件 HTML，无后端依赖</td>
+                <td>原生 HTML + 内联 CSS/JS</td>
+              </tr>
+              <tr>
+                <td>主题切换</td>
+                <td>深色/浅色主题可切换</td>
+                <td>CSS 变量 + localStorage</td>
+              </tr>
+              <tr>
+                <td>文档中心检索</td>
+                <td>基于标题/描述/标签过滤</td>
+                <td>前端实时筛选</td>
+              </tr>
+              <tr>
+                <td>章节导航</td>
+                <td>滚动时高亮当前章节</td>
+                <td>滚动监听 + anchor 匹配</td>
+              </tr>
+              <tr>
+                <td>移动端适配</td>
+                <td>在手机/平板正常阅读</td>
+                <td>媒体查询</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="doc-center" class="card">
+          <h2>7. 文档中心页面结构</h2>
+          <p><code>doc-center.html</code> 是整个知识库的入口，结构与内容分类如下：</p>
+          <ul>
+            <li><strong>AI 编程助手：</strong>国外服务（需翻墙）与国内工具（直连）两类分区。</li>
+            <li><strong>AI 学习与提示工程：</strong>工具对比、提示词工程、学习经验、项目实战。</li>
+            <li><strong>项目文档与技术规范：</strong>知识库技术文档与其他项目技术说明。</li>
+            <li><strong>IT 运维与系统工具：</strong>运维实践、系统故障排查与工具说明。</li>
+            <li><strong>知识库项目文档：</strong>项目说明、规范、进展与协作指南。</li>
+            <li><strong>归档文档：</strong>旧版与合并内容的归档记录。</li>
+          </ul>
+          <p>页面包含 Hero 区、教学导览区、卡片化文档列表与归档列表，支持搜索与折叠。</p>
+        </section>
+
+        <section id="css-system" class="card">
+          <h2>8. CSS 设计系统</h2>
+          <ul>
+            <li><strong>主题体系：</strong>使用 <code>:root</code> 定义变量，<code>[data-theme="light"]</code> 覆盖。</li>
+            <li><strong>颜色语义：</strong>背景、文本、边框、强调色分离，便于整体换肤。</li>
+            <li><strong>组件尺寸：</strong>统一圆角与边距，避免视觉不一致。</li>
+            <li><strong>命名规范：</strong>小写、连字符命名（如 <code>.nav-link</code>）。</li>
+          </ul>
+          <pre><code>:root {
+  --bg: #0b1020;
+  --panel: #121a2b;
+  --accent: #6aa6ff;
+}
+
+[data-theme="light"] {
+  --bg: #ffffff;
+  --panel: #ffffff;
+  --accent: #2b6bff;
+}</code></pre>
+        </section>
+
+        <section id="js-modules" class="card">
+          <h2>9. JavaScript 模块</h2>
+          <p>核心页面的 JS 主要用于交互增强，保持轻量、无框架依赖：</p>
+          <ul>
+            <li><strong>主题切换：</strong>使用 <code>localStorage</code> 保存 <code>ai-kb-theme</code>。</li>
+            <li><strong>导航高亮：</strong>滚动时匹配当前 <code>section</code> 并高亮。</li>
+            <li><strong>文档中心搜索：</strong>标题/描述/标签/关键词过滤。</li>
+            <li><strong>折叠状态：</strong>保存 <code>ai-kb-collapsed</code> 到本地。</li>
+            <li><strong>统一工具栏：</strong>部分页面提供字体大小与搜索跳转能力。</li>
+          </ul>
+        </section>
+
+        <section id="maintenance" class="card">
+          <h2>10. 维护指南</h2>
+          <h3>10.1 更新现有文档</h3>
+          <ol>
+            <li>定位目标 HTML 文件并编辑对应 <code>&lt;section&gt;</code> 内容。</li>
+            <li>保持语义标签与层级一致，避免破坏布局。</li>
+            <li>更新 <code>&lt;title&gt;</code> 与 <code>&lt;meta description&gt;</code>。</li>
+          </ol>
+          <h3>10.2 新增文档</h3>
+          <ol>
+            <li>复制现有模板文件作为起点。</li>
+            <li>更新标题、描述、正文与导航。</li>
+            <li>在 <code>doc-center.html</code> 中增加文档卡片与关键词。</li>
+          </ol>
+          <h3>10.3 本地预览</h3>
+          <pre><code>python3 -m http.server 8000
+# 浏览器打开 http://localhost:8000</code></pre>
+          <p>修改后建议检查：页面布局、目录锚点、链接可用性与移动端阅读体验。</p>
+        </section>
+
+        <section id="history" class="card">
+          <h2>11. 版本历史与进展</h2>
+          <h3>11.1 版本更新</h3>
+          <ul>
+            <li><strong>v3.1 - 2026-02-02：</strong>更新核心 AI 工具文档 (Cherry Studio, Antigravity, Trae)，修复字符编码问题，同步最新模型列表。</li>
+            <li><strong>v3.0 - 2026-01-22：</strong>Notion + Linear 混合风格重构，优化深色主题与微交互。</li>
+            <li><strong>v2.1 - 2025-11-06：</strong>整理内容、补全知识文档并完善进展记录。</li>
+            <li><strong>v2.0 - 2025-11-01：</strong>三栏布局与智能搜索引入，结构化归档。</li>
+          </ul>
+          <h3>11.2 里程碑</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>里程碑</th>
+                <th>状态</th>
+                <th>完成时间</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>M1：初始版本上线</td>
+                <td>已完成</td>
+                <td>2025 年初</td>
+              </tr>
+              <tr>
+                <td>M2：内容整合与修复</td>
+                <td>已完成</td>
+                <td>2025-11-01</td>
+              </tr>
+              <tr>
+                <td>M3：UI/UX 重新设计</td>
+                <td>已完成</td>
+                <td>2025-11-01</td>
+              </tr>
+              <tr>
+                <td>M4：Notion + Linear 风格重构</td>
+                <td>已完成</td>
+                <td>2026-01-22</td>
+              </tr>
+              <tr>
+                <td>M5：高级功能开发</td>
+                <td>未开始</td>
+                <td>-</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="roadmap" class="card">
+          <h2>12. 技术债务与后续计划</h2>
+          <ul>
+            <li><strong>语法高亮：</strong>当前仅基础样式，待接入 Prism.js 或 Highlight.js。</li>
+            <li><strong>拼音搜索：</strong>计划在文档中心加入拼音匹配。</li>
+            <li><strong>搜索历史：</strong>拟使用 localStorage 保存用户搜索记录。</li>
+            <li><strong>移动端测试：</strong>需要覆盖更多机型与浏览器。</li>
+          </ul>
+        </section>
+
+        <footer class="foot">
+          <p><a href="doc-center.html">返回文档中心</a></p>
+          <p style="margin-top: 8px;">AI 学习知识库技术文档 | 最后更新：2026-02-02</p>
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const themeBtn = document.getElementById('toggleTheme');
+      const root = document.documentElement;
+      const storedTheme = localStorage.getItem('ai-kb-theme') || 'dark';
+      root.setAttribute('data-theme', storedTheme);
+
+      if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+          const current = root.getAttribute('data-theme') || 'dark';
+          const next = current === 'dark' ? 'light' : 'dark';
+          root.setAttribute('data-theme', next);
+          localStorage.setItem('ai-kb-theme', next);
+        });
+      }
+
+      const navLinks = document.querySelectorAll('.nav-link');
+      const sections = document.querySelectorAll('section[id]');
+
+      function highlightNav() {
+        let currentSection = null;
+        sections.forEach(section => {
+          const rect = section.getBoundingClientRect();
+          if (rect.top <= 140) {
+            currentSection = section;
+          }
+        });
+
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (currentSection && link.getAttribute('href') === `#${currentSection.id}`) {
+            link.classList.add('active');
+          }
+        });
+      }
+
+      window.addEventListener('scroll', highlightNav);
+      highlightNav();
+    })();
+  </script>
+</body>
+</html>

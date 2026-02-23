@@ -1,0 +1,3943 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI 知识库 - 文档中心</title>
+  <meta name="description" content="AI学习知识库文档中心 - 整合AI学习、技术文档、运维工具等资源" />
+  <style>
+    /* ===== Linear Color Palette + Notion Layout ===== */
+    :root {
+      /* Linear-inspired Dark Theme Colors */
+      --bg-primary: #0e0e10;
+      --bg-secondary: #121214;
+      --bg-tertiary: #1a1a1e;
+      --bg-elevated: #1f1f23;
+      --bg-hover: #27272a;
+
+      /* Linear Gradients */
+      --accent-purple: #8b5cf6;
+      --accent-blue: #3b82f6;
+      --accent-cyan: #06b6d4;
+      --accent-pink: #ec4899;
+      --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+      --gradient-glow: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.1) 100%);
+      --gradient-border: linear-gradient(135deg, rgba(99, 102, 241, 0.5), rgba(139, 92, 246, 0.3));
+
+      /* Text Colors */
+      --text-primary: #fafafa;
+      --text-secondary: #a1a1aa;
+      --text-muted: #71717a;
+      --text-tertiary: #52525b;
+
+      /* Border & Shadow */
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-default: rgba(255, 255, 255, 0.1);
+      --border-hover: rgba(255, 255, 255, 0.15);
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+      --shadow-glow: 0 0 40px rgba(139, 92, 246, 0.15);
+
+      /* Spacing - Notion Style */
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+
+      /* Sidebar */
+      --sidebar-width: 260px;
+      --header-height: 60px;
+
+      /* Transitions */
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Light Theme */
+    [data-theme="light"] {
+      --bg-primary: #ffffff;
+      --bg-secondary: #f9fafb;
+      --bg-tertiary: #f3f4f6;
+      --bg-elevated: #ffffff;
+      --bg-hover: #e5e7eb;
+
+      --text-primary: #111827;
+      --text-secondary: #4b5563;
+      --text-muted: #9ca3af;
+      --text-tertiary: #d1d5db;
+
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --border-default: rgba(0, 0, 0, 0.08);
+      --border-hover: rgba(0, 0, 0, 0.12);
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    html {
+      font-size: 14px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+      font-size: 1rem;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ===== Header - Notion Style ===== */
+    .header {
+      position: fixed;
+      top: 56px;
+      left: 0;
+      right: 0;
+      height: var(--header-height);
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .logo {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-md);
+      background: var(--gradient-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1rem;
+      color: white;
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+    }
+
+    .brand-text {
+      font-size: 1.143rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.3px;
+    }
+
+    .header-divider {
+      width: 1px;
+      height: 20px;
+      background: var(--border-default);
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1rem;
+      color: var(--text-secondary);
+    }
+
+    .breadcrumb-current {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .search-box {
+      position: relative;
+      width: 240px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 8px 12px 8px 36px;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      font-size: 1rem;
+      transition: all var(--transition-fast);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent-purple);
+      background: var(--bg-elevated);
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+    }
+
+    .search-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    .btn {
+      padding: 8px 12px;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 0.929rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all var(--transition-fast);
+      background: transparent;
+      color: var(--text-secondary);
+    }
+
+    .btn:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .btn-icon {
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      justify-content: center;
+      font-size: 1.143rem;
+    }
+
+    .btn-primary {
+      background: var(--gradient-primary);
+      color: white;
+      box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+    }
+
+    /* ===== Main Layout ===== */
+    .main {
+      margin-top: var(--header-height);
+      display: flex;
+      min-height: calc(100vh - var(--header-height));
+    }
+
+    /* ===== Sidebar - Notion Style ===== */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border-subtle);
+      padding: 12px 8px;
+      position: fixed;
+      top: var(--header-height);
+      left: 0;
+      bottom: 0;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+
+    .sidebar-section {
+      margin-bottom: 20px;
+    }
+
+    .sidebar-title {
+      font-size: 0.786rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      padding: 4px 12px;
+      margin-bottom: 4px;
+    }
+
+    .nav-list {
+      list-style: none;
+    }
+
+    .nav-item {
+      margin-bottom: 2px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 12px;
+      border-radius: var(--radius-md);
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 450;
+      transition: all var(--transition-fast);
+      cursor: pointer;
+    }
+
+    .nav-link:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .nav-link.active {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .nav-icon {
+      font-size: 1.143rem;
+      width: 20px;
+      text-align: center;
+      opacity: 0.8;
+    }
+
+    .nav-text {
+      flex: 1;
+    }
+
+    .nav-badge {
+      font-size: 0.786rem;
+      padding: 2px 6px;
+      border-radius: 10px;
+      background: var(--bg-tertiary);
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .nav-link.active .nav-badge {
+      background: var(--bg-hover);
+      color: var(--text-secondary);
+    }
+
+    /* ===== Content Area ===== */
+    .content-wrapper {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      min-width: 0;
+    }
+
+    .content {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 48px;
+    }
+
+    /* ===== Hero Section - Linear Style ===== */
+    .hero {
+      position: relative;
+      padding: 32px 0 48px;
+      margin-bottom: 8px;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      background: var(--gradient-glow);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      border-radius: 50px;
+      font-size: 0.857rem;
+      font-weight: 500;
+      color: var(--accent-purple);
+      margin-bottom: 20px;
+    }
+
+    .hero-badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10b981;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    .hero-title {
+      font-size: 3rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .hero-subtitle {
+      font-size: 1.143rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 560px;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 32px;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-value {
+      font-size: 1.714rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .stat-label {
+      font-size: 0.929rem;
+      color: var(--text-muted);
+    }
+
+    /* ===== Teaching Guide ===== */
+    .teaching-guide {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      margin: 32px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .teaching-guide::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: var(--gradient-border);
+    }
+
+    .guide-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .guide-title {
+      font-size: 1.143rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .guide-subtitle {
+      font-size: 0.929rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .guide-badge {
+      font-size: 0.786rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 50px;
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      white-space: nowrap;
+    }
+
+    .guide-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .guide-card {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      transition: all var(--transition-fast);
+    }
+
+    .guide-card:hover {
+      border-color: var(--border-default);
+      background: var(--bg-hover);
+    }
+
+    .guide-card h3 {
+      font-size: 0.929rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .guide-card ul {
+      margin-left: 16px;
+      color: var(--text-secondary);
+      font-size: 0.929rem;
+      line-height: 1.7;
+    }
+
+    .guide-card li {
+      margin-bottom: 4px;
+    }
+
+    .guide-note {
+      margin-top: 16px;
+      padding: 12px 16px;
+      border-radius: var(--radius-lg);
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.15);
+      color: var(--text-secondary);
+      font-size: 0.929rem;
+      line-height: 1.6;
+    }
+
+    .guide-note strong {
+      color: #f59e0b;
+    }
+
+    /* ===== Section ===== */
+    .section {
+      margin-bottom: 48px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      cursor: pointer;
+      padding: 8px 0;
+      user-select: none;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.143rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .section-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .section-icon.blue {
+      background: rgba(59, 130, 246, 0.12);
+      color: #3b82f6;
+    }
+
+    .section-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: inherit;
+    }
+
+    .doc-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: inherit;
+    }
+
+    .section-icon.purple {
+      background: rgba(139, 92, 246, 0.12);
+    }
+
+    .section-icon.green {
+      background: rgba(16, 185, 129, 0.12);
+    }
+
+    .section-icon.orange {
+      background: rgba(245, 158, 11, 0.12);
+    }
+
+    .section-icon.cyan {
+      background: rgba(6, 182, 212, 0.12);
+    }
+
+    .section-icon.pink {
+      background: rgba(236, 72, 153, 0.12);
+    }
+
+    .section-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-count {
+      font-size: 0.929rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .toggle-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-md);
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-default);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      color: var(--text-muted);
+      font-size: 0.857rem;
+    }
+
+    .toggle-btn:hover {
+      background: var(--bg-hover);
+      border-color: var(--border-hover);
+      color: var(--text-secondary);
+    }
+
+    .toggle-btn .icon-collapse {
+      display: block;
+    }
+
+    .toggle-btn .icon-expand {
+      display: none;
+    }
+
+    .section.collapsed .toggle-btn .icon-collapse {
+      display: none;
+    }
+
+    .section.collapsed .toggle-btn .icon-expand {
+      display: block;
+    }
+
+    .section-content {
+      overflow: hidden;
+      transition: all var(--transition-normal);
+      max-height: 3000px;
+    }
+
+    .section.collapsed .section-content {
+      max-height: 0;
+    }
+
+    /* ===== Document Grid ===== */
+    .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 12px;
+    }
+
+    .doc-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      text-decoration: none;
+      color: inherit;
+      transition: all var(--transition-fast);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .doc-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--gradient-border);
+      opacity: 0;
+      transition: opacity var(--transition-fast);
+    }
+
+    .doc-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--border-hover);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .doc-card:hover::before {
+      opacity: 1;
+    }
+
+    .doc-card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .doc-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.143rem;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .doc-icon.blue {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: white;
+    }
+
+    .doc-icon.purple {
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+      color: white;
+    }
+
+    .doc-icon.green {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+    }
+
+    .doc-icon.orange {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: white;
+    }
+
+    .doc-icon.cyan {
+      background: linear-gradient(135deg, #06b6d4, #0891b2);
+      color: white;
+    }
+
+    .doc-icon.pink {
+      background: linear-gradient(135deg, #ec4899, #db2777);
+      color: white;
+    }
+
+    .doc-icon.gray {
+      background: linear-gradient(135deg, #6b7280, #4b5563);
+      color: white;
+    }
+
+    .doc-title-wrap {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .doc-title {
+      font-size: 1.071rem;
+      font-weight: 600;
+      line-height: 1.4;
+      margin-bottom: 6px;
+      color: var(--text-primary);
+    }
+
+    .doc-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.857rem;
+      color: var(--text-muted);
+    }
+
+    .doc-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .doc-desc {
+      font-size: 0.929rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 14px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .doc-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .doc-tag {
+      font-size: 0.786rem;
+      font-weight: 500;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .doc-tag.highlight {
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+      border-color: rgba(16, 185, 129, 0.2);
+    }
+
+    /* VPN/Proxy Tags */
+    .doc-tag.vpn {
+      background: rgba(239, 68, 68, 0.12);
+      color: #ef4444;
+      border-color: rgba(239, 68, 68, 0.25);
+      font-weight: 600;
+    }
+
+    .doc-tag.novpn {
+      background: rgba(34, 197, 94, 0.12);
+      color: #22c55e;
+      border-color: rgba(34, 197, 94, 0.25);
+      font-weight: 600;
+    }
+
+    .doc-tag.mixed {
+      background: rgba(245, 158, 11, 0.12);
+      color: #f59e0b;
+      border-color: rgba(245, 158, 11, 0.25);
+      font-weight: 600;
+    }
+
+    /* Section Description */
+    .section-desc {
+      font-size: 0.929rem;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      padding: 10px 14px;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-md);
+      border-left: 3px solid var(--accent-purple);
+    }
+
+    .section-desc.vpn-desc {
+      border-left-color: #ef4444;
+      background: rgba(239, 68, 68, 0.08);
+    }
+
+    .section-desc.novpn-desc {
+      border-left-color: #22c55e;
+      background: rgba(34, 197, 94, 0.08);
+    }
+
+    /* ===== Archive Section ===== */
+    .archive-list {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .archive-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border-subtle);
+      text-decoration: none;
+      color: inherit;
+      transition: all var(--transition-fast);
+    }
+
+    .archive-item:last-child {
+      border-bottom: none;
+    }
+
+    .archive-item:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .archive-icon {
+      font-size: 1.286rem;
+      color: var(--text-muted);
+    }
+
+    .archive-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .archive-title {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .archive-date {
+      font-size: 0.857rem;
+      color: var(--text-muted);
+    }
+
+    .archive-arrow {
+      color: var(--text-muted);
+      transition: all var(--transition-fast);
+      font-size: 1rem;
+    }
+
+    .archive-item:hover .archive-arrow {
+      transform: translateX(3px);
+      color: var(--accent-purple);
+    }
+
+    /* ===== Project Docs Section ===== */
+    .project-doc-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      margin-bottom: 12px;
+      overflow: hidden;
+      transition: all var(--transition-fast);
+    }
+
+    .project-doc-card:hover {
+      border-color: var(--border-hover);
+    }
+
+    .project-doc-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .project-doc-header:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .project-doc-card.expanded {
+      border-color: var(--accent-purple);
+    }
+
+    .project-doc-card.expanded .project-doc-header {
+      background: var(--bg-tertiary);
+    }
+
+    .project-doc-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .project-doc-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .project-doc-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .project-doc-meta {
+      font-size: 0.857rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .project-doc-toggle {
+      width: 24px;
+      height: 24px;
+      border-radius: var(--radius-md);
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-default);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all var(--transition-fast);
+      font-size: 0.714rem;
+    }
+
+    .project-doc-toggle:hover {
+      background: var(--bg-hover);
+      border-color: var(--border-hover);
+      color: var(--text-secondary);
+    }
+
+    .project-doc-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height var(--transition-normal);
+    }
+
+    .project-doc-card.expanded .project-doc-content {
+      max-height: 5000px;
+    }
+
+    .project-doc-body {
+      padding: 0 20px 24px;
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--text-secondary);
+    }
+
+    .project-doc-body h2 {
+      font-size: 1.143rem;
+      font-weight: 600;
+      margin: 24px 0 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+    }
+
+    .project-doc-body h2:first-child {
+      margin-top: 0;
+    }
+
+    .project-doc-body h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 18px 0 8px;
+      color: var(--text-primary);
+    }
+
+    .project-doc-body h4 {
+      font-size: 0.929rem;
+      font-weight: 600;
+      margin: 14px 0 6px;
+      color: var(--text-secondary);
+    }
+
+    .project-doc-body p {
+      margin-bottom: 12px;
+    }
+
+    .project-doc-body ul,
+    .project-doc-body ol {
+      margin: 12px 0;
+      padding-left: 20px;
+    }
+
+    .project-doc-body li {
+      margin-bottom: 6px;
+    }
+
+    .project-doc-body code {
+      background: var(--bg-tertiary);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+      font-size: 0.929rem;
+      color: var(--accent-cyan);
+    }
+
+    .project-doc-body pre {
+      background: var(--bg-tertiary);
+      padding: 16px;
+      border-radius: var(--radius-md);
+      overflow-x: auto;
+      margin: 16px 0;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .project-doc-body pre code {
+      background: none;
+      padding: 0;
+      color: var(--text-secondary);
+    }
+
+    .project-doc-body table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.929rem;
+    }
+
+    .project-doc-body th,
+    .project-doc-body td {
+      padding: 10px 12px;
+      border: 1px solid var(--border-subtle);
+      text-align: left;
+    }
+
+    .project-doc-body th {
+      background: var(--bg-tertiary);
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .project-doc-body .status-done {
+      color: #10b981;
+    }
+
+    .project-doc-body .status-progress {
+      color: #f59e0b;
+    }
+
+    .project-doc-body .status-todo {
+      color: var(--text-muted);
+    }
+
+    /* ===== Footer ===== */
+    .footer {
+      text-align: center;
+      padding: 32px 0;
+      border-top: 1px solid var(--border-subtle);
+      margin-top: 48px;
+      color: var(--text-muted);
+      font-size: 0.929rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 12px;
+    }
+
+    .footer-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color var(--transition-fast);
+    }
+
+    .footer-link:hover {
+      color: var(--accent-purple);
+    }
+
+    /* ===== Scrollbar ===== */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-default);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-muted);
+    }
+
+    /* ===== Animations ===== */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .doc-card {
+      animation: fadeInUp 0.4s ease backwards;
+    }
+
+    .doc-card:nth-child(1) {
+      animation-delay: 0.03s;
+    }
+
+    .doc-card:nth-child(2) {
+      animation-delay: 0.06s;
+    }
+
+    .doc-card:nth-child(3) {
+      animation-delay: 0.09s;
+    }
+
+    .doc-card:nth-child(4) {
+      animation-delay: 0.12s;
+    }
+
+    .doc-card:nth-child(5) {
+      animation-delay: 0.15s;
+    }
+
+    .doc-card:nth-child(6) {
+      animation-delay: 0.18s;
+    }
+
+    /* Hidden class for search filter */
+    .hidden {
+      display: none !important;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 1024px) {
+      .sidebar {
+        display: none;
+      }
+
+      .content-wrapper {
+        margin-left: 0;
+      }
+
+      .content {
+        padding: 24px;
+      }
+
+      .guide-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        padding: 0 16px;
+      }
+
+      .search-box {
+        display: none;
+      }
+
+      .hero-title {
+        font-size: 2rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1.071rem;
+      }
+
+      .hero-stats {
+        gap: 24px;
+      }
+
+      .stat-value {
+        font-size: 1.429rem;
+      }
+
+      .doc-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .guide-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Mobile menu toggle */
+    .mobile-menu-toggle {
+      display: none;
+      width: 36px;
+      height: 36px;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 1.429rem;
+      cursor: pointer;
+      border-radius: var(--radius-md);
+    }
+
+    .mobile-menu-toggle:hover {
+      background: var(--bg-hover);
+    }
+
+    /* Mobile Sidebar Overlay */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: var(--header-height);
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 998;
+      opacity: 0;
+      transition: opacity var(--transition-normal);
+    }
+
+    .sidebar-overlay.active {
+      opacity: 1;
+    }
+
+    /* Back to Top Button */
+    .back-to-top {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-lg);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-default);
+      color: var(--text-secondary);
+      font-size: 1.286rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all var(--transition-normal);
+      z-index: 999;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .back-to-top:hover {
+      background: var(--bg-tertiary);
+      border-color: var(--accent-purple);
+      color: var(--accent-purple);
+      transform: translateY(-2px);
+    }
+
+    /* Enhanced Card Hover Glow */
+    .doc-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: var(--radius-lg);
+      background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(139, 92, 246, 0.06), transparent 40%);
+      opacity: 0;
+      transition: opacity var(--transition-fast);
+      pointer-events: none;
+    }
+
+    .doc-card:hover::after {
+      opacity: 1;
+    }
+
+    /* Loading Skeleton Animation */
+    @keyframes shimmer {
+      0% {
+        background-position: -1000px 0;
+      }
+
+      100% {
+        background-position: 1000px 0;
+      }
+    }
+
+    .skeleton {
+      background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%);
+      background-size: 1000px 100%;
+      animation: shimmer 2s infinite linear;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      padding: 12px 20px;
+      font-size: 1rem;
+      color: var(--text-primary);
+      box-shadow: var(--shadow-lg);
+      z-index: 1001;
+      opacity: 0;
+      transition: all var(--transition-normal);
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .toast.success {
+      border-color: rgba(16, 185, 129, 0.3);
+      background: rgba(16, 185, 129, 0.1);
+    }
+
+    /* Page Load Animation */
+    @keyframes pageLoad {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero,
+    .teaching-guide,
+    .section {
+      animation: pageLoad 0.6s ease-out backwards;
+    }
+
+    .teaching-guide {
+      animation-delay: 0.1s;
+    }
+
+    #ai-learning {
+      animation-delay: 0.15s;
+    }
+
+    #tech-docs {
+      animation-delay: 0.2s;
+    }
+
+    #ops-tools {
+      animation-delay: 0.25s;
+    }
+
+    #project-docs {
+      animation-delay: 0.3s;
+    }
+
+    #archives {
+      animation-delay: 0.35s;
+    }
+
+    /* Search Box Keyboard Hint */
+    .search-hint {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.786rem;
+      color: var(--text-muted);
+      background: var(--bg-tertiary);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--border-subtle);
+      font-family: monospace;
+      pointer-events: none;
+      transition: opacity var(--transition-fast);
+    }
+
+    .search-input:focus~.search-hint {
+      opacity: 0;
+    }
+
+    /* Section Icon Animations */
+    .section-icon {
+      transition: transform var(--transition-fast);
+    }
+
+    .section-header:hover .section-icon {
+      transform: scale(1.1);
+    }
+
+    /* Smooth scroll for anchor links */
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: calc(var(--header-height) + 20px);
+    }
+
+    @media (max-width: 1024px) {
+      .mobile-menu-toggle {
+        display: flex;
+      }
+
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform var(--transition-normal);
+        z-index: 999;
+      }
+
+      .sidebar.mobile-open {
+        transform: translateX(0);
+      }
+
+      .sidebar-overlay {
+        display: block;
+      }
+
+      .sidebar-overlay.active {
+        display: block;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .back-to-top {
+        bottom: 16px;
+        right: 16px;
+        width: 40px;
+        height: 40px;
+      }
+    }
+  </style>
+</head>
+
+<body data-theme="dark">
+  <!-- 统一工具栏组件 - AI知识库文档系统 -->
+  <style>
+    /* ===== 工具栏CSS变量（与doc-center.html保持一致）===== */
+    :root {
+      /* Toolbar specific */
+      --toolbar-height: 56px;
+    }
+
+    /* ===== 统一工具栏样式 ===== */
+    #unified-toolbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--toolbar-height);
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* 为页面内容添加顶部间距 */
+    body.has-unified-toolbar {
+      padding-top: var(--toolbar-height);
+    }
+
+    /* 左侧区域 */
+    .toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* 返回文档中心链接 */
+    .toolbar-back-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: var(--radius-md);
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.929rem;
+      font-weight: 500;
+      transition: all var(--transition-fast);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .toolbar-back-link:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .toolbar-back-link svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    /* 分隔线 */
+    .toolbar-divider {
+      width: 1px;
+      height: 20px;
+      background: var(--border-default);
+      flex-shrink: 0;
+    }
+
+    /* 当前文档标题 */
+    .toolbar-doc-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+      max-width: 300px;
+    }
+
+    /* 中间区域 - 搜索框 */
+    .toolbar-center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      max-width: 400px;
+    }
+
+    .toolbar-search {
+      position: relative;
+      width: 100%;
+    }
+
+    .toolbar-search-input {
+      width: 100%;
+      padding: 8px 12px 8px 36px;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      font-size: 1rem;
+      transition: all var(--transition-fast);
+      font-family: inherit;
+    }
+
+    .toolbar-search-input:focus {
+      outline: none;
+      border-color: var(--accent-purple);
+      background: var(--bg-elevated);
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+    }
+
+    .toolbar-search-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .toolbar-search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .toolbar-search-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* 右侧区域 */
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      justify-content: flex-end;
+    }
+
+    /* 工具栏按钮 */
+    .toolbar-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+      font-size: 0.929rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      font-family: inherit;
+    }
+
+    .toolbar-btn:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+      border-color: var(--border-hover);
+    }
+
+    .toolbar-btn:active {
+      transform: scale(0.96);
+    }
+
+    .toolbar-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* 图标按钮 */
+    .toolbar-btn-icon {
+      width: 36px;
+      height: 36px;
+      padding: 0;
+    }
+
+    /* 字体大小控制组 */
+    .toolbar-fontsize-group {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      padding: 2px;
+    }
+
+    .toolbar-fontsize-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 0.857rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      font-family: inherit;
+    }
+
+    .toolbar-fontsize-btn:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .toolbar-fontsize-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .toolbar-fontsize-value {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      height: 28px;
+      padding: 0 8px;
+      font-size: 0.857rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      background: var(--bg-elevated);
+      border-radius: var(--radius-sm);
+    }
+
+    /* 主题切换按钮 */
+    .toolbar-theme-btn {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .toolbar-theme-btn .icon-sun,
+    .toolbar-theme-btn .icon-moon {
+      transition: transform var(--transition-normal), opacity var(--transition-normal);
+    }
+
+    [data-theme="light"] .toolbar-theme-btn .icon-moon,
+    .toolbar-theme-btn .icon-sun {
+      opacity: 1;
+      transform: rotate(0deg) scale(1);
+    }
+
+    [data-theme="light"] .toolbar-theme-btn .icon-sun,
+    .toolbar-theme-btn .icon-moon {
+      opacity: 0;
+      transform: rotate(90deg) scale(0.5);
+      position: absolute;
+    }
+
+    /* 响应式适配 */
+    @media (max-width: 768px) {
+      #unified-toolbar {
+        padding: 0 12px;
+      }
+
+      .toolbar-doc-title {
+        max-width: 150px;
+        font-size: 0.929rem;
+      }
+
+      .toolbar-center {
+        max-width: 200px;
+      }
+
+      .toolbar-back-link span {
+        display: none;
+      }
+
+      .toolbar-fontsize-group {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .toolbar-center {
+        display: none;
+      }
+    }
+  </style>
+
+  <!-- 工具栏HTML结构 -->
+  <div id="unified-toolbar">
+    <!-- 左侧：返回链接 + 文档标题 -->
+    <div class="toolbar-left">
+      <a href="doc-center.html" class="toolbar-back-link" title="返回文档中心">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M19 12H5M12 19l-7-7 7-7" />
+        </svg>
+        <span>文档中心</span>
+      </a>
+      <div class="toolbar-divider"></div>
+      <div class="toolbar-doc-title" id="toolbar-doc-title">文档标题</div>
+    </div>
+
+    <!-- 中间：搜索框 -->
+    <div class="toolbar-center">
+      <div class="toolbar-search">
+        <div class="toolbar-search-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+        </div>
+        <input type="text" class="toolbar-search-input" id="toolbar-search-input" placeholder="搜索文档..."
+          autocomplete="off" />
+      </div>
+    </div>
+
+    <!-- 右侧：主题切换 + 字体大小调节 -->
+    <div class="toolbar-right">
+      <!-- 字体大小控制组 -->
+      <div class="toolbar-fontsize-group">
+        <button class="toolbar-fontsize-btn" id="toolbar-fontsize-minus" title="减小字体">A-</button>
+        <div class="toolbar-fontsize-value" id="toolbar-fontsize-value">100%</div>
+        <button class="toolbar-fontsize-btn" id="toolbar-fontsize-plus" title="增大字体">A+</button>
+      </div>
+
+      <!-- 主题切换按钮 -->
+      <button class="toolbar-btn toolbar-btn-icon toolbar-theme-btn" id="toolbar-theme-toggle" title="切换主题">
+        <!-- 太阳图标（亮色模式） -->
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5" />
+          <line x1="12" y1="1" x2="12" y2="3" />
+          <line x1="12" y1="21" x2="12" y2="23" />
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+          <line x1="1" y1="12" x2="3" y2="12" />
+          <line x1="21" y1="12" x2="23" y2="12" />
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+        </svg>
+        <!-- 月亮图标（暗色模式） -->
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * 统一工具栏组件脚本
+     * 功能：字体大小调节、主题切换、搜索跳转
+     * 所有状态保存到localStorage
+     */
+    (function () {
+      'use strict';
+
+      // ===== 配置常量 =====
+      const CONFIG = {
+        // localStorage键名
+        STORAGE_KEYS: {
+          FONT_SIZE: 'ai-kb-font-size',
+          THEME: 'ai-kb-theme'
+        },
+        // 字体大小设置
+        FONT_SIZE: {
+          BASE: 14,           // 基准字体大小(px)
+          MIN_PERCENT: 80,    // 最小百分比
+          MAX_PERCENT: 150,   // 最大百分比
+          STEP: 10,           // 每次调节步长(%)
+          DEFAULT: 100        // 默认百分比
+        },
+        // 主题设置
+        THEME: {
+          DARK: 'dark',
+          LIGHT: 'light',
+          DEFAULT: 'dark'
+        },
+        // 文档中心路径
+        DOC_CENTER_PATH: 'doc-center.html'
+      };
+
+      // ===== 工具函数 =====
+
+      /**
+       * 获取localStorage值
+       */
+      function getStorage(key, defaultValue) {
+        try {
+          const value = localStorage.getItem(key);
+          return value !== null ? value : defaultValue;
+        } catch (e) {
+          return defaultValue;
+        }
+      }
+
+      /**
+       * 设置localStorage值
+       */
+      function setStorage(key, value) {
+        try {
+          localStorage.setItem(key, value);
+        } catch (e) {
+          console.warn('无法保存到localStorage:', e);
+        }
+      }
+
+      /**
+       * 计算并应用字体大小
+       */
+      function applyFontSize(percent) {
+        // 限制在有效范围内
+        percent = Math.max(CONFIG.FONT_SIZE.MIN_PERCENT,
+          Math.min(CONFIG.FONT_SIZE.MAX_PERCENT, percent));
+
+        // 计算实际字体大小
+        const fontSize = (CONFIG.FONT_SIZE.BASE * percent / 100).toFixed(2);
+
+        // 应用到html元素
+        document.documentElement.style.fontSize = fontSize + 'px';
+
+        // 更新显示
+        updateFontSizeDisplay(percent);
+
+        // 保存到localStorage
+        setStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, percent.toString());
+
+        return percent;
+      }
+
+      /**
+       * 更新字体大小显示
+       */
+      function updateFontSizeDisplay(percent) {
+        const valueEl = document.getElementById('toolbar-fontsize-value');
+        const minusBtn = document.getElementById('toolbar-fontsize-minus');
+        const plusBtn = document.getElementById('toolbar-fontsize-plus');
+
+        if (valueEl) {
+          valueEl.textContent = percent + '%';
+        }
+
+        // 更新按钮禁用状态
+        if (minusBtn) {
+          minusBtn.disabled = percent <= CONFIG.FONT_SIZE.MIN_PERCENT;
+        }
+        if (plusBtn) {
+          plusBtn.disabled = percent >= CONFIG.FONT_SIZE.MAX_PERCENT;
+        }
+      }
+
+      /**
+       * 应用主题
+       */
+      function applyTheme(theme) {
+        // 验证主题值
+        if (theme !== CONFIG.THEME.DARK && theme !== CONFIG.THEME.LIGHT) {
+          theme = CONFIG.THEME.DEFAULT;
+        }
+
+        // 设置data-theme属性
+        document.documentElement.setAttribute('data-theme', theme);
+
+        // 保存到localStorage
+        setStorage(CONFIG.STORAGE_KEYS.THEME, theme);
+
+        return theme;
+      }
+
+      /**
+       * 切换主题
+       */
+      function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || CONFIG.THEME.DEFAULT;
+        const newTheme = currentTheme === CONFIG.THEME.DARK ? CONFIG.THEME.LIGHT : CONFIG.THEME.DARK;
+        applyTheme(newTheme);
+      }
+
+      /**
+       * 执行搜索
+       */
+      function performSearch(query) {
+        if (!query || !query.trim()) return;
+
+        // 构建跳转URL
+        const currentPath = window.location.pathname;
+        const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+        const targetUrl = basePath + CONFIG.DOC_CENTER_PATH + '#search=' + encodeURIComponent(query.trim());
+
+        // 跳转到文档中心
+        window.location.href = targetUrl;
+      }
+
+      /**
+       * 设置文档标题
+       */
+      function setDocumentTitle(title) {
+        const titleEl = document.getElementById('toolbar-doc-title');
+        if (titleEl && title) {
+          titleEl.textContent = title;
+        }
+      }
+
+      /**
+       * 从页面自动获取文档标题
+       */
+      function autoDetectDocumentTitle() {
+        // 优先级：1. h1标题 2. title标签 3. 文件名
+        let title = '';
+
+        // 尝试获取h1标题
+        const h1 = document.querySelector('h1');
+        if (h1 && h1.textContent.trim()) {
+          title = h1.textContent.trim();
+        } else {
+          // 尝试从title标签获取
+          const titleTag = document.querySelector('title');
+          if (titleTag && titleTag.textContent.trim()) {
+            title = titleTag.textContent.trim();
+            // 移除常见的后缀
+            title = title.replace(/[-_].*?(?:知识库|文档|AI)/i, '').trim();
+          } else {
+            // 从文件名获取
+            const path = window.location.pathname;
+            const filename = path.substring(path.lastIndexOf('/') + 1);
+            title = filename.replace(/\.html?$/i, '').replace(/[_-]/g, ' ');
+          }
+        }
+
+        setDocumentTitle(title);
+      }
+
+      // ===== 事件处理 =====
+
+      /**
+       * 初始化事件监听
+       */
+      function initEventListeners() {
+        // 字体大小减小按钮
+        const minusBtn = document.getElementById('toolbar-fontsize-minus');
+        if (minusBtn) {
+          minusBtn.addEventListener('click', function () {
+            const currentPercent = parseInt(getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString()));
+            applyFontSize(currentPercent - CONFIG.FONT_SIZE.STEP);
+          });
+        }
+
+        // 字体大小增大按钮
+        const plusBtn = document.getElementById('toolbar-fontsize-plus');
+        if (plusBtn) {
+          plusBtn.addEventListener('click', function () {
+            const currentPercent = parseInt(getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString()));
+            applyFontSize(currentPercent + CONFIG.FONT_SIZE.STEP);
+          });
+        }
+
+        // 主题切换按钮
+        const themeBtn = document.getElementById('toolbar-theme-toggle');
+        if (themeBtn) {
+          themeBtn.addEventListener('click', toggleTheme);
+        }
+
+        // 搜索框
+        const searchInput = document.getElementById('toolbar-search-input');
+        if (searchInput) {
+          // 回车键搜索
+          searchInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+              performSearch(this.value);
+            }
+          });
+        }
+      }
+
+      /**
+       * 从URL参数初始化搜索框
+       */
+      function initSearchFromURL() {
+        const hash = window.location.hash;
+        if (hash && hash.startsWith('#search=')) {
+          const query = decodeURIComponent(hash.substring(8));
+          const searchInput = document.getElementById('toolbar-search-input');
+          if (searchInput) {
+            searchInput.value = query;
+          }
+        }
+      }
+
+      // ===== 初始化 =====
+
+      /**
+       * 主初始化函数
+       */
+      function init() {
+        // 1. 恢复保存的字体大小
+        const savedFontSize = getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString());
+        applyFontSize(parseInt(savedFontSize));
+
+        // 2. 恢复保存的主题
+        const savedTheme = getStorage(CONFIG.STORAGE_KEYS.THEME, CONFIG.THEME.DEFAULT);
+        applyTheme(savedTheme);
+
+        // 3. 为body添加工具栏标识类
+        document.body.classList.add('has-unified-toolbar');
+
+        // 4. 自动检测文档标题
+        autoDetectDocumentTitle();
+
+        // 5. 初始化事件监听
+        initEventListeners();
+
+        // 6. 从URL初始化搜索框
+        initSearchFromURL();
+      }
+
+      // ===== 公共API =====
+
+      // 将工具栏API暴露到全局命名空间
+      window.UnifiedToolbar = {
+        // 设置文档标题
+        setTitle: setDocumentTitle,
+
+        // 获取/设置字体大小
+        getFontSize: function () {
+          return parseInt(getStorage(CONFIG.STORAGE_KEYS.FONT_SIZE, CONFIG.FONT_SIZE.DEFAULT.toString()));
+        },
+        setFontSize: applyFontSize,
+
+        // 获取/设置主题
+        getTheme: function () {
+          return document.documentElement.getAttribute('data-theme') || CONFIG.THEME.DEFAULT;
+        },
+        setTheme: applyTheme,
+        toggleTheme: toggleTheme,
+
+        // 执行搜索
+        search: performSearch,
+
+        // 配置常量
+        config: CONFIG
+      };
+
+      // 启动初始化
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    })();
+  </script>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <button class="mobile-menu-toggle" onclick="toggleMobileSidebar()">&#9776;</button>
+      <a href="index.html" class="header-brand">
+        <div class="logo">AI</div>
+        <span class="brand-text">知识库</span>
+      </a>
+      <div class="header-divider"></div>
+      <div class="breadcrumb">
+        <span>文档中心</span>
+        <span style="color: var(--text-muted);">/</span>
+        <span class="breadcrumb-current">首页</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="search-box">
+        <span class="search-icon">&#128269;</span>
+        <input type="text" class="search-input" id="searchInput" placeholder="搜索文档..." />
+        <span class="search-hint">⌘K</span>
+      </div>
+      <button class="btn btn-icon" id="collapseAllBtn" title="全部折叠/展开">
+        <span>&#128194;</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="main">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">AI 编程助手</div>
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="#ai-coding-overseas" class="nav-link active">
+              <span class="nav-icon">&#128308;</span>
+              <span class="nav-text">国外服务（需翻墙）</span>
+              <span class="nav-badge">4</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#ai-coding-domestic" class="nav-link">
+              <span class="nav-icon">&#128994;</span>
+              <span class="nav-text">国内工具（直连）</span>
+              <span class="nav-badge">3</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-title">学习资源</div>
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="#ai-learning" class="nav-link">
+              <span class="nav-icon">&#128218;</span>
+              <span class="nav-text">AI学习与提示工程</span>
+              <span class="nav-badge">7</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-title">技术运维</div>
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="#ops-tools" class="nav-link">
+              <span class="nav-icon">&#128736;</span>
+              <span class="nav-text">IT运维与系统工具</span>
+              <span class="nav-badge">6</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-title">项目文档</div>
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="#project-docs" class="nav-link">
+              <span class="nav-icon">&#128221;</span>
+              <span class="nav-text">项目技术文档</span>
+              <span class="nav-badge">5</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#internal-docs" class="nav-link">
+              <span class="nav-icon">&#128214;</span>
+              <span class="nav-text">知识库项目文档</span>
+              <span class="nav-badge">6</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-title">历史归档</div>
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="#archives" class="nav-link">
+              <span class="nav-icon">&#128451;</span>
+              <span class="nav-text">归档文档</span>
+              <span class="nav-badge">6</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-title">快速访问</div>
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="ai-tools-comparison.html" class="nav-link">
+              <span class="nav-icon">&#128202;</span>
+              <span class="nav-text">AI工具全景对比</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="ai-prompt-engineering.html" class="nav-link">
+              <span class="nav-icon">&#128172;</span>
+              <span class="nav-text">提示词工程指南</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Content -->
+    <div class="content-wrapper">
+      <main class="content">
+        <!-- Hero -->
+        <section class="hero">
+          <div class="hero-badge">
+            <span class="hero-badge-dot"></span>
+            <span>持续更新中</span>
+          </div>
+          <h1 class="hero-title">AI 知识库文档中心</h1>
+          <p class="hero-subtitle">
+            整合 AI 学习资源、技术文档、运维工具等内容，助你高效掌握 AI 协作技能与开发经验
+          </p>
+          <div class="hero-stats">
+            <div class="stat-item">
+              <div class="stat-value">34</div>
+              <div class="stat-label">文档总数</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value">6</div>
+              <div class="stat-label">内容分类</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value">600KB+</div>
+              <div class="stat-label">知识沉淀</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Teaching Guide -->
+        <section class="teaching-guide" id="teaching-guide">
+          <div class="guide-header">
+            <div>
+              <div class="guide-title">&#127891; 教学导览</div>
+              <div class="guide-subtitle">
+                面向分享 / 教学场景的推荐路径：先把工具跑通，再练任务拆解，最后用项目实战把流程串起来。
+              </div>
+            </div>
+            <div class="guide-badge">讲课可直接照着走</div>
+          </div>
+
+          <div class="guide-grid">
+            <div class="guide-card">
+              <h3>&#128100; 适用人群</h3>
+              <ul>
+                <li>想把 AI 作为"协作工具"的工程师 / 运维 / 产品</li>
+                <li>能看懂命令行与基础脚本，想提升效率与可复用流程</li>
+              </ul>
+            </div>
+            <div class="guide-card">
+              <h3>&#128220; 前置知识</h3>
+              <ul>
+                <li>了解基本终端/PowerShell、环境变量、代理概念</li>
+                <li>知道如何用浏览器打开本地 HTML（离线可用）</li>
+              </ul>
+            </div>
+            <div class="guide-card">
+              <h3>&#127919; 学习目标</h3>
+              <ul>
+                <li>能选对工具：Web AI / 本地 IDE / CLI 的使用边界</li>
+                <li>能写出可复用的 Prompt / 约束 / 模板</li>
+                <li>能把一次性经验沉淀为可分享的文档/流程</li>
+              </ul>
+            </div>
+            <div class="guide-card">
+              <h3>&#128338; 推荐学习路径</h3>
+              <ul>
+                <li>60 分钟：工具对比 &#8594; 提示词核心 &#8594; CLI 速查</li>
+                <li>90 分钟：加上项目实战精讲（选 1 个案例拆解）</li>
+                <li>120 分钟：加上故障排查（代理/更新失败）+ 作业布置</li>
+              </ul>
+            </div>
+            <div class="guide-card"
+              style="grid-column: 1 / -1; background: rgba(239, 68, 68, 0.08); border-color: rgba(239, 68, 68, 0.2);">
+              <h3>&#128308; 工具选择建议（重要）</h3>
+              <ul>
+                <li><strong>有翻墙条件</strong>：优先体验 Google Antigravity（免费预览）、Claude Code（专业级）</li>
+                <li><strong>无翻墙条件</strong>：直接使用 Trae（字节跳动，免费无限Claude 3.7）、Kimi CLI（月之暗面）</li>
+                <li><strong>不确定</strong>：先阅读「AI工具全景对比」文档，根据网络环境和技术需求选择</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="guide-note">
+            <strong>对外分享提醒：</strong>本知识库含少量案例型内容。分享/教学前建议先做一次脱敏检查（人名、区域、业务指标、内部路径等）。
+          </div>
+        </section>
+
+        <!-- AI Coding Assistants - Overseas (Need VPN) -->
+        <section class="section" id="ai-coding-overseas">
+          <div class="section-header" onclick="toggleSection(this)">
+            <h2 class="section-title">
+              <div class="section-icon purple">&#128308;</div>
+              <span>AI 编程助手（国外服务）</span>
+            </h2>
+            <div class="section-right">
+              <span class="section-count">4 款工具</span>
+              <div class="toggle-btn">
+                <span class="icon-collapse">&#9660;</span>
+                <span class="icon-expand">&#9658;</span>
+              </div>
+            </div>
+          </div>
+          <div class="section-desc vpn-desc">
+            &#128308; <strong>需要翻墙（梯子）</strong>：以下工具服务器位于海外，国内访问需要代理/VPN。包含 Google、Anthropic、OpenAI 等服务。
+          </div>
+          <div class="section-content">
+            <div class="doc-grid">
+              <a href="antigravity.html" class="doc-card"
+                data-keywords="antigravity google agentic ide models plans quota vpn proxy cmd+e">
+                <div class="doc-card-header">
+                  <div class="doc-icon"><img src="assets/icons/Google-Antigravity-logo.png" alt="Google Antigravity">
+                  </div>
+                  <div class="doc-title-wrap">
+                    <h3 class="doc-title">Google Antigravity</h3>
+                    <div class="doc-meta">
+                      <span class="doc-meta-item">&#128196; 27KB</span>
+                      <span class="doc-meta-item">&#128197; 2026-01-21</span>
+                    </div>
+                  </div>
+                </div>
+                <p class="doc-desc">Google 推出的 Agentic IDE，基于 Gemini 3 模型，预览期完全免费。支持 Agent Manager、Browser-in-the-Loop
+                  等先进功能。</p>
+                <div class="doc-tags">
+                  <span class="doc-tag vpn">&#128308; 需翻墙</span>
+                  <span class="doc-tag">Agentic IDE</span>
+                  <span class="doc-tag">Gemini 3</span>
+                  <span class="doc-tag highlight">免费预览</span>
+                </div>
+              </a>
+
+              <a href="codex-cli-cheatsheet-v2.html" class="doc-card" data-keywords="cli codex claude code 命令 速查 手册">
+                <div class="doc-card-header">
+                  <div class="doc-icon"><img src="assets/icons/claude-color.png" alt="Claude Code"></div>
+                  <div class="doc-title-wrap">
+                    <h3 class="doc-title">Claude Code / Codex CLI</h3>
+                    <div class="doc-meta">
+                      <span class="doc-meta-item">&#128196; 72KB</span>
+                      <span class="doc-meta-item">&#128197; 2025-11-06</span>
+                    </div>
+                  </div>
+                </div>
+                <p class="doc-desc">Anthropic Claude Code 与 OpenAI Codex CLI 的完整使用手册。Claude Code 需 Claude Pro 订阅（$20/月）。
+                </p>
+                <div class="doc-tags">
+                  <span class="doc-tag vpn">&#128308; 需翻墙</span>
+                  <span class="doc-tag">Claude Code</span>
+                  <span class="doc-tag">Codex CLI</span>
+                  <span class="doc-tag highlight">速查手册</span>
+                </div>
+              </a>
+
+              <a href="opencode-preject.html" class="doc-card"
+                data-keywords="opencode OpenCode 开源 AI coding agent TUI CLI 快捷键 keybinds 命令 agents 配置 permissions mcp lsp github /oc /opencode">
+                <div class="doc-card-header">
+                  <div class="doc-icon"><img src="assets/icons/opencode.png" alt="OpenCode"></div>
+                  <div class="doc-title-wrap">
+                    <h3 class="doc-title">OpenCode</h3>
+                    <div class="doc-meta">
+                      <span class="doc-meta-item">&#128196; 47KB</span>
+                      <span class="doc-meta-item">&#128197; 2026-01-21</span>
+                    </div>
+                  </div>
+                </div>
+                <p class="doc-desc">开源 AI 编程代理，支持多模型接入。客户端免费，但接入 Claude/GPT 等国外模型时需翻墙。</p>
+                <div class="doc-tags">
+                  <span class="doc-tag mixed">&#128993; 视模型而定</span>
+                  <span class="doc-tag">开源</span>
+                  <span class="doc-tag">TUI/CLI</span>
+                  <span class="doc-tag">多模型</span>
+                </div>
+              </a>
+
+              <a href="OpenCode-终端指令与使用说明.html" class="doc-card" data-keywords="opencode 终端 指令 使用说明">
+                <div class="doc-card-header">
+                  <div class="doc-icon"><img src="assets/icons/opencode.png" alt="OpenCode"></div>
+                  <div class="doc-title-wrap">
+                    <h3 class="doc-title">OpenCode 终端指令速查</h3>
+                    <div class="doc-meta">
+                      <span class="doc-meta-item">&#128196; 22KB</span>
+                      <span class="doc-meta-item">&#128197; 2026-01-21</span>
+                    </div>
+                  </div>
+                </div>
+                <p class="doc-desc">OpenCode 终端指令与使用说明快速参考，包含常用命令和配置说明。</p>
+                <div class="doc-tags">
+                  <span class="doc-tag mixed">&#128993; 视模型而定</span>
+                  <span class="doc-tag">指令参考</span>
+                  <span class="doc-tag">快速入门</span>
+                </div>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- AI Coding Assistants - Domestic (Direct Access) -->
+        <section class="section" id="ai-coding-domestic">
+          <div class="section-header" onclick="toggleSection(this)">
+            <h2 class="section-title">
+              <div class="section-icon green">&#128994;</div>
+              <span>国内 AI 开发工具（直连）</span>
+            </h2>
+            <div class="section-right">
+              <span class="section-count">3 款工具</span>
+              <div class="toggle-btn">
+                <span class="icon-collapse">&#9660;</span>
+                <span class="icon-expand">&#9658;</span>
+              </div>
+            </div>
+          </div>
+          <div class="section-desc novpn-desc">
+            &#128994; <strong>国内直连</strong>：以下工具由国内公司开发，服务器在国内，无需翻墙即可使用。
+          </div>
+          <div class="section-content">
+            <div class="doc-grid">
+              <a href="trae.html" class="doc-card" data-keywords="trae trae.ai solo ide billing quota models 快捷键">
+                <div class="doc-card-header">
+                  <div class="doc-icon"><img src="assets/icons/trae-color.png" alt="Trae"></div>
+                  <div class="doc-title-wrap">
+                    <h3 class="doc-title">Trae - 字节跳动 AI IDE</h3>
+                    <div class="doc-meta">
+                      <span class="doc-meta-item">&#128196; 26KB</span>
+                      <span class="doc-meta-item">&#128197; 2026-01-21</span>
+                    </div>
+                  </div>
+                </div>
+                <p class="doc-desc">字节跳动推出的 AI IDE，个人版完全免费，无限使用 Claude 3.7 和 DeepSeek R1！对标 Cursor 的国产替代方案。</p>
+                <div class="doc-tags">
+                  <span class="doc-tag novpn">&#128994; 国内直连</span>
+                  <span class="doc-tag">免费无限</span>
+                  <span class="doc-tag">Claude 3.7</span>
+                  <span class="doc-tag highlight">强烈推荐</span>
+                </div>
+              </a>
+
+              <a href="kimi-cli-commands.html" class="doc-card" data-keywords="kimi cli 命令 斜杠 快捷键 skill 会话">
+                <div class="doc-card-header">
+                  <div class="doc-icon"><img src="assets/icons/kimi-color.png" alt="Kimi CLI"></div>
+                  <div class="doc-title-wrap">
+                    <h3 class="doc-title">Kimi Code CLI</h3>
+                    <div class="doc-meta">
+                      <span class="doc-meta-item">&#128196; 15KB</span>
+                      <span class="doc-meta-item">&#128197; 2026-01-22</span>
+                    </div>
+                  </div>
+                </div>
+                <p class="doc-desc">月之暗面（Moonshot）推出的终端 AI 工具，支持斜杠命令、Skills、会话管理等，国内直接使用。</p>
+                <div class="doc-tags">
+                  <span class="doc-tag novpn">&#128994; 国内直连</span>
+                  <span class="doc-tag">Kimi K2.5</span>
+                  <span class="doc-tag">斜杠命令</span>
+                  <span class="doc-tag">命令参考</span>
+                </div>
+              </a>
+
+              <a href="cherry-studio.html" class="doc-card"
+                data-keywords="cherry studio 客户端 多模型 provider mcp 知识库 rag ollama lm studio 代理">
+                <div class="doc-card-header">
+                  <div class="doc-icon"><img src="assets/icons/cherrystudio.png" alt="Cherry Studio"></div>
+                  <div class="doc-title-wrap">
+                    <h3 class="doc-title">Cherry Studio</h3>
+                    <div class="doc-meta">
+                      <span class="doc-meta-item">&#128196; 28KB</span>
+                      <span class="doc-meta-item">&#128197; 2026-01-21</span>
+                    </div>
+                  </div>
+                </div>
+                <p class="doc-desc">开源多模型聚合客户端，支持 300+ AI 模型。客户端免费开源，接入国内模型时无需翻墙。</p>
+                <div class="doc-tags">
+                  <span class="doc-tag novpn">&#128994; 国内可用</span>
+                  <span class="doc-tag">开源免费</span>
+                  <span class="doc-tag">300+模型</span>
+                  <span class="doc-tag highlight">多合一</span>
+                </div>
+              </a>
+
+
+
+            </div>
+          </div>
+        </section>
+
+        <!-- AI Learning & Prompt Engineering Section -->
+        <section class="section" id="ai-learning">
+          <div class="section-header" onclick="toggleSection(this)">
+            <h2 class="section-title">
+              <div class="section-icon blue">&#128218;</div>
+              <span>AI 学习与提示工程</span>
+            </h2>
+            <div class="section-right">
+              <span class="section-count">7 篇文档</span>
+              <div class="toggle-btn">
+                <span class="icon-collapse">&#9660;</span>
+                <span class="icon-expand">&#9658;</span>
+              </div>
+            </div>
+          </div>
+          <div class="section-desc">
+            &#128161; <strong>学习资源</strong>：AI工具对比、提示词工程技巧、学习经验总结、实战项目案例等，帮助你系统掌握AI协作技能。
+          </div>
+          <div class="section-content">
+            <div class="doc-grid">
+              <a href="ai-tools-comparison.html" class="doc-card"
+                data-keywords="ai工具 豆包 kimi 智谱 通义 trae antigravity cherry studio opencode claude code 对比">
+                <div class="doc-card-header">
+                  <div class="doc-icon blue">&#128202;</div>
+                  <div class="doc-title-wrap">
+                    <h3 class="doc-title">AI工具全景对比</h3>
+                    <div class="doc-meta">
+                      <span class="doc-meta-item">&#128196; 45KB</span>
+                      <span class="doc-meta-item">&#128197; 2026-01-06</span>
+                    </div>
+                  </div>
+                </div>
+                <p class="doc-desc">全面对比国内外主流AI工具：Trae、Cherry Studio、Antigravity、OpenCode、Claude Code等，含模型/收费/门槛/代理维度分析
+                </p>
+                <div class="doc-tags">
+                  <span class="doc-tag">选型指南</span>
+                  <span class="doc-tag">工具对比</span>
+                  <span class="doc-tag highlight">必读</span>
+                </div>
+              </a>
+
+              <a href="ai-prompt-engineering.html" class="doc-card"
+                data-keywords="提示词 prompt claude.md 记忆文件 few-shot 模板">
+                <div class="doc-card-header">
+                  <div class="doc-icon green">&#128172;</div>
+                  <div class="doc-title-wrap">
+                    <h3 class="doc-title">AI提示词与记忆文件</h3>
+                    <div class="doc-meta">
+                      <span class="doc-meta-item">&#128196; 55KB</span>
+                      <span class="doc-meta-item">&#128197; 2026-01-06</span>
+                    </div>
+                  </div>
+                </div>
+                <p class="doc-desc">提示词工程核心技巧、CLAUDE.md等AI记忆文件规范、约束设计、输出格式控制，含实战提示词模板库</p>
+                <div class="doc-tags">
+                  <span class="doc-tag">Prompt Engineering</span>
+                  <span class="doc-tag">CLAUDE.md</span>
+                  <span class="doc-tag highlight">模板库</span>
+                </div>
+              </a>
+
+              <a href="ai-learning-experience.html" class="doc-card" data-keywords="学习 经验 路线 最佳实践 误区">
+                <div class="doc-card-header">
+                  <div class="doc-icon purple">&#127891;</div>
+                  <div class="doc-title-wrap">
+                    <h3 class="doc-title">AI学习经验总结</h3>
+                    <div class="doc-meta">
+                      <span class="doc-meta-item">&#128196; 50KB</span>
+                      <span class="doc-meta-item">&#128197; 2026-01-06</span>
+                    </div>
+                  </div>
+                </div>
+                <p class="doc-desc">AI学习路线图、核心概念理解、高效对话技巧、任务分解方法、常见误区纠正及实践心得</p>
+                <div class="doc-tags">
+                  <span class="doc-tag">学习路线</span>
+                  <span class="doc-tag">最佳实践</span>
+                  <span class="doc-tag highlight">经验总结</span>
+                </div>
+              </a>
+
+              <a href="ai-project-practice.html" class="doc-card" data-keywords="项目 实战 telegram 机器人 okr 密码 自动化">
+                <div class="doc-card-header">
+                  <div class="doc-icon orange">&#128187;</div>
+                  <div class="doc-title-wrap">
+                    <h3 class="doc-title">项目实战经验</h3>
+                    <div class="doc-meta">
+                      <span class="doc-meta-item">&#128196; 48KB</span>
+                      <span class="doc-meta-item">&#128197; 2026-01-06</span>
+                    </div>
+                  </div>
+                </div>
+                <p class="doc-desc">4个完整AI协作项目案例：Telegram监控机器人、OKR周报系统、密码策略管理器、年终汇报自动化</p>
+                <div class="doc-tags">
+                  <span class="doc-tag">实战案例</span>
+                  <span class="doc-tag">自动化</span>
+                  <span class="doc-tag highlight">完整项目</span>
+                </div>
+              </a>
+
+              <a href="ai-tutorial-ppt.html" class="doc-card" data-keywords="ppt 演示 教学 教程 幻灯片">
+                <div class="doc-card-header">
+                  <div class="doc-icon pink">&#127916;</div>
+                  <div class="doc-title-wrap">
+                    <h3 class="doc-title">AI实战教学PPT</h3>
+                    <div class="doc-meta">
+                      <span class="doc-meta-item">&#128196; 35KB</span>
+                      <span class="doc-meta-item">&#128197; 2026-01-06</span>
+                    </div>
+                  </div>
+                </div>
+                <p class="doc-desc">面向有一定基础用户的教学演示，涵盖工具选择、Claude Code实战、提示词技巧、项目案例精讲（16页PPT）</p>
+                <div class="doc-tags">
+                  <span class="doc-tag">教学PPT</span>
+                  <span class="doc-tag">演示素材</span>
+                  <span class="doc-tag highlight">进阶内容</span>
+                </div>
+              </a>
+
+              <a href="skill适用说明.html" class="doc-card"
+                data-keywords="skill 技能 SKILL.md opencode claude code 工作流 复用 权限 示例">
+                <div class="doc-card-header">
+                  <div class="doc-icon purple">SK</div>
+                  <div class="doc-title-wrap">
+                    <h3 class="doc-title">Skill 适用说明</h3>
+                    <div class="doc-meta">
+                      <span class="doc-meta-item">&#128196; 30KB</span>
+                      <span class="doc-meta-item">&#128197; 2026-01-22</span>
+                    </div>
+                  </div>
+                </div>
+                <p class="doc-desc">解释 Skill 概念与边界、发现机制与权限配置，适用于 OpenCode / Claude Code，含 2 个可复现实例</p>
+                <div class="doc-tags">
+                  <span class="doc-tag">Skills</span>
+                  <span class="doc-tag">工作流</span>
+                  <span class="doc-tag highlight">可复用</span>
+                </div>
+              </a>
+
+              <a href="../skills-catalog.zh-CN.html" class="doc-card"
+                data-keywords="skills catalog 清单 opencode skills SKILL.md 本机 离线">
+                <div class="doc-card-header">
+                  <div class="doc-icon cyan">&#129520;</div>
+                  <div class="doc-title-wrap">
+                    <h3 class="doc-title">OpenCode Skills Catalog</h3>
+                    <div class="doc-meta">
+                      <span class="doc-meta-item">&#128196; 31KB</span>
+                      <span class="doc-meta-item">&#128197; 2026-01-22</span>
+                    </div>
+                  </div>
+                </div>
+                <p class="doc-desc">本机 OpenCode 可发现的 skills 清单（来自 opencode debug skill），支持离线搜索与快速定位 SKILL.md</p>
+                <div class="doc-tags">
+                  <span class="doc-tag">Skills</span>
+                  <span class="doc-tag">Catalog</span>
+                  <span class="doc-tag highlight">离线可用</span>
+                </div>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- Project Docs & Specifications Section -->
+        <section class="section" id="project-docs">
+          <div class="section-header" onclick="toggleSection(this)">
+            <h2 class="section-title">
+              <div class="section-icon pink">&#128221;</div>
+              <span>项目文档与技术规范</span>
+            </h2>
+            <div class="section-right">
+              <span class="section-count">6 篇文档</span>
+              <div class="toggle-btn">
+                <span class="icon-collapse">&#9660;</span>
+                <span class="icon-expand">&#9658;</span>
+              </div>
+            </div>
+          </div>
+          <div class="section-desc">
+            &#128188; <strong>项目资料</strong>：知识库项目本身的技术文档、规范说明以及其他项目的技术实现文档。
+          </div>
+          <div class="section-content">
+            <div class="doc-grid">
+              <a href="AI知识库技术文档.html" class="doc-card" data-keywords="技术文档 架构 设计 知识库">
+                <div class="doc-card-header">
+                  <div class="doc-icon purple">&#128221;</div>
+                  <div class="doc-title-wrap">
+                    <h3 class="doc-title">AI知识库技术文档</h3>
+                    <div class="doc-meta">
+                      <span class="doc-meta-item">&#128196; 40KB</span>
+                      <span class="doc-meta-item">&#128197; 2026-01-06</span>
+                    </div>
+                  </div>
+                </div>
+                <p class="doc-desc">知识库项目技术文档，包含架构设计、页面说明、CSS设计系统、JavaScript模块、维护指南</p>
+                <div class="doc-tags">
+                  <span class="doc-tag">架构设计</span>
+                  <span class="doc-tag">维护指南</span>
+                </div>
+              </a>
+
+              <a href="OKR周报系统技术文档.html" class="doc-card" data-keywords="okr 周报 系统 技术文档">
+                <div class="doc-card-header">
+                  <div class="doc-icon blue">&#128203;</div>
+                  <div class="doc-title-wrap">
+                    <h3 class="doc-title">OKR周报系统技术文档</h3>
+                    <div class="doc-meta">
+                      <span class="doc-meta-item">&#128196; 16KB</span>
+                      <span class="doc-meta-item">&#128197; 2026-01-05</span>
+                    </div>
+                  </div>
+                </div>
+                <p class="doc-desc">OKR周报自动化系统的技术实现文档，包含数据结构、模板设计、自动生成逻辑</p>
+                <div class="doc-tags">
+                  <span class="doc-tag">OKR</span>
+                  <span class="doc-tag">自动化</span>
+                </div>
+              </a>
+
+              <a href="PasswordPolicyManager_TechReport_v1.4.8.html" class="doc-card"
+                data-keywords="密码 策略 管理 powershell">
+                <div class="doc-card-header">
+                  <div class="doc-icon green">&#128274;</div>
+                  <div class="doc-title-wrap">
+                    <h3 class="doc-title">Password Policy Manager 技术报告</h3>
+                    <div class="doc-meta">
+                      <span class="doc-meta-item">&#128196; 40KB</span>
+                      <span class="doc-meta-item">&#128197; 2026-01-05</span>
+                    </div>
+                  </div>
+                </div>
+                <p class="doc-desc">密码策略管理器v1.4.8技术报告，PowerShell + Batch实现，支持火绒兼容、Toast通知</p>
+                <div class="doc-tags">
+                  <span class="doc-tag">PowerShell</span>
+                  <span class="doc-tag">安全</span>
+                </div>
+              </a>
+
+              <a href="电脑管理平台数据筛选technical_doc.html" class="doc-card" data-keywords="电脑管理 数据筛选 平台">
+                <div class="doc-card-header">
+                  <div class="doc-icon orange">&#128187;</div>
+                  <div class="doc-title-wrap">
+                    <h3 class="doc-title">电脑管理平台数据筛选文档</h3>
+                    <div class="doc-meta">
+                      <span class="doc-meta-item">&#128196; 13KB</span>
+                      <span class="doc-meta-item">&#128197; 2025-12-28</span>
+                    </div>
+                  </div>
+                </div>
+                <p class="doc-desc">电脑管理平台数据筛选功能技术文档，包含筛选逻辑、数据处理、导出功能</p>
+                <div class="doc-tags">
+                  <span class="doc-tag">数据筛选</span>
+                  <span class="doc-tag">管理平台</span>
+                </div>
+              </a>
+
+              <a href="opencode-preject.html" class="doc-card"
+                data-keywords="opencode OpenCode 开源 AI coding agent TUI CLI 快捷键 keybinds 命令 agents 配置 permissions mcp lsp github /oc /opencode">
+                <div class="doc-card-header">
+                  <div class="doc-icon"><img src="assets/icons/opencode.png" alt="OpenCode"></div>
+                  <div class="doc-title-wrap">
+                    <h3 class="doc-title">OpenCode 开源项目技术说明</h3>
+                    <div class="doc-meta">
+                      <span class="doc-meta-item">&#128196; 47KB</span>
+                      <span class="doc-meta-item">&#128197; 2026-01-21</span>
+                    </div>
+                  </div>
+                </div>
+                <p class="doc-desc">整理 OpenCode（anomalyco/opencode）的安装、CLI/TUI、/命令、快捷键、Agents、配置、权限、MCP/LSP 与 GitHub
+                  集成（简中离线版）</p>
+                <div class="doc-tags">
+                  <span class="doc-tag">OpenCode</span>
+                  <span class="doc-tag">TUI/CLI</span>
+                  <span class="doc-tag">Keybinds</span>
+                  <span class="doc-tag highlight">速查</span>
+                </div>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- IT Ops & System Tools Section -->
+        <section class="section" id="ops-tools">
+          <div class="section-header" onclick="toggleSection(this)">
+            <h2 class="section-title">
+              <div class="section-icon green">&#128736;</div>
+              <span>IT运维与系统工具</span>
+            </h2>
+            <div class="section-right">
+              <span class="section-count">6 篇文档</span>
+              <div class="toggle-btn">
+                <span class="icon-collapse">&#9660;</span>
+                <span class="icon-expand">&#9658;</span>
+              </div>
+            </div>
+          </div>
+          <div class="section-desc">
+            &#128295; <strong>运维实战</strong>：IT运维问题解决方案、Telegram Bot开发、Windows系统工具等实用技术文档。
+          </div>
+          <div class="section-content">
+            <div class="doc-grid">
+              <a href="IT运维知识库_视频编码与系统服务问题集.html" class="doc-card" data-keywords="运维 视频编码 系统服务 问题">
+                <div class="doc-card-header">
+                  <div class="doc-icon green">&#128190;</div>
+                  <div class="doc-title-wrap">
+                    <h3 class="doc-title">IT运维知识库 - 视频编码与系统服务</h3>
+                    <div class="doc-meta">
+                      <span class="doc-meta-item">&#128196; 50KB</span>
+                      <span class="doc-meta-item">&#128197; 2025-11-28</span>
+                    </div>
+                  </div>
+                </div>
+                <p class="doc-desc">IT运维常见问题解决方案集，涵盖视频编码、系统服务、故障排查等内容</p>
+                <div class="doc-tags">
+                  <span class="doc-tag">运维</span>
+                  <span class="doc-tag">视频编码</span>
+                  <span class="doc-tag">故障排查</span>
+                </div>
+              </a>
+
+              <a href="telegram-bot-knowledge-base-v2.html" class="doc-card" data-keywords="telegram 机器人 bot 知识库">
+                <div class="doc-card-header">
+                  <div class="doc-icon blue">&#129302;</div>
+                  <div class="doc-title-wrap">
+                    <h3 class="doc-title">Telegram Bot 知识库 v2</h3>
+                    <div class="doc-meta">
+                      <span class="doc-meta-item">&#128196; 30KB</span>
+                      <span class="doc-meta-item">&#128197; 2025-11-23</span>
+                    </div>
+                  </div>
+                </div>
+                <p class="doc-desc">Telegram Bot开发与运维知识库，API使用、消息处理、部署运维指南</p>
+                <div class="doc-tags">
+                  <span class="doc-tag">Telegram</span>
+                  <span class="doc-tag">Bot</span>
+                  <span class="doc-tag">API</span>
+                </div>
+              </a>
+
+              <a href="TG监测vps流量情况菜单功能.html" class="doc-card" data-keywords="telegram vps 流量 监测 菜单">
+                <div class="doc-card-header">
+                  <div class="doc-icon cyan">&#128200;</div>
+                  <div class="doc-title-wrap">
+                    <h3 class="doc-title">TG监测VPS流量菜单功能</h3>
+                    <div class="doc-meta">
+                      <span class="doc-meta-item">&#128196; 31KB</span>
+                      <span class="doc-meta-item">&#128197; 2025-11-23</span>
+                    </div>
+                  </div>
+                </div>
+                <p class="doc-desc">Telegram Bot VPS流量监测功能文档，菜单交互设计、流量统计、告警配置</p>
+                <div class="doc-tags">
+                  <span class="doc-tag">VPS监控</span>
+                  <span class="doc-tag">流量统计</span>
+                </div>
+              </a>
+
+              <a href="print_spooler_diagnostic_tool.html" class="doc-card" data-keywords="打印机 spooler 诊断 工具">
+                <div class="doc-card-header">
+                  <div class="doc-icon orange">&#128424;</div>
+                  <div class="doc-title-wrap">
+                    <h3 class="doc-title">Print Spooler 诊断工具</h3>
+                    <div class="doc-meta">
+                      <span class="doc-meta-item">&#128196; 20KB</span>
+                      <span class="doc-meta-item">&#128197; 2025-09-25</span>
+                    </div>
+                  </div>
+                </div>
+                <p class="doc-desc">Windows打印服务诊断工具文档，Spooler故障排查、服务修复、日志分析</p>
+                <div class="doc-tags">
+                  <span class="doc-tag">打印机</span>
+                  <span class="doc-tag">Spooler</span>
+                  <span class="doc-tag">诊断</span>
+                </div>
+              </a>
+
+              <a href="Windows_BAT文件中文乱码完整解决方案.html" class="doc-card" data-keywords="bat 中文 乱码 编码 windows">
+                <div class="doc-card-header">
+                  <div class="doc-icon gray">&#128221;</div>
+                  <div class="doc-title-wrap">
+                    <h3 class="doc-title">Windows BAT文件中文乱码解决方案</h3>
+                    <div class="doc-meta">
+                      <span class="doc-meta-item">&#128196; 18KB</span>
+                      <span class="doc-meta-item">&#128197; 2025-12-05</span>
+                    </div>
+                  </div>
+                </div>
+                <p class="doc-desc">Windows批处理文件中文乱码完整解决方案，编码设置、chcp命令、UTF-8兼容</p>
+                <div class="doc-tags">
+                  <span class="doc-tag">BAT</span>
+                  <span class="doc-tag">中文乱码</span>
+                  <span class="doc-tag">编码</span>
+                </div>
+              </a>
+
+              <a href="windows11-powershell-proxy.html" class="doc-card"
+                data-keywords="windows11 powershell 代理 proxy claude code npm git 环境变量">
+                <div class="doc-card-header">
+                  <div class="doc-icon green">&#127760;</div>
+                  <div class="doc-title-wrap">
+                    <h3 class="doc-title">Windows 11 PowerShell 代理配置问题解决方案</h3>
+                    <div class="doc-meta">
+                      <span class="doc-meta-item">&#128196; 12KB</span>
+                      <span class="doc-meta-item">&#128197; 2026-01-21</span>
+                    </div>
+                  </div>
+                </div>
+                <p class="doc-desc">解决 Claude Code / npm 更新失败：排查端口变更、环境变量、npm 代理与一键切换函数</p>
+                <div class="doc-tags">
+                  <span class="doc-tag">PowerShell</span>
+                  <span class="doc-tag">Proxy</span>
+                  <span class="doc-tag highlight">故障排查</span>
+                </div>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- Internal Project Docs Section -->
+        <section class="section" id="internal-docs">
+          <div class="section-header" onclick="toggleSection(this)">
+            <h2 class="section-title">
+              <div class="section-icon orange">&#128214;</div>
+              <span>知识库项目文档</span>
+            </h2>
+            <div class="section-right">
+              <span class="section-count">6 篇文档</span>
+              <div class="toggle-btn">
+                <span class="icon-collapse">&#9660;</span>
+                <span class="icon-expand">&#9658;</span>
+              </div>
+            </div>
+          </div>
+          <div class="section-content">
+            <!-- 项目说明 -->
+            <div class="project-doc-card" id="project-readme">
+              <div class="project-doc-header" onclick="toggleProjectDoc(this)">
+                <div class="project-doc-title-wrap">
+                  <div class="project-doc-icon doc-icon blue">&#128214;</div>
+                  <div>
+                    <div class="project-doc-title">项目说明文档</div>
+                    <div class="project-doc-meta">技术知识库项目完整说明 | 7KB | 2025-11-01</div>
+                  </div>
+                </div>
+                <button class="project-doc-toggle">&#9660;</button>
+              </div>
+              <div class="project-doc-content">
+                <div class="project-doc-body">
+                  <h2>项目概述</h2>
+                  <p><strong>项目名称：</strong>技术知识库（Tech Knowledge Base）</p>
+                  <p><strong>创建日期：</strong>2025年</p>
+                  <p><strong>最后更新：</strong>2025-11-01</p>
+                  <p><strong>维护人员：</strong>作者</p>
+                  <p><strong>项目类型：</strong>单文件 HTML 知识库</p>
+
+                  <h2>项目目标</h2>
+                  <p>构建一个离线可用的、易于维护的技术知识库，主要收集和整理以下内容：</p>
+                  <ul>
+                    <li>Codex CLI 速查手册（安装、配置、使用）</li>
+                    <li>Claude Code 问题解决方案（认证、代理、错误代码）</li>
+                    <li>Windows 系统工具诊断（Print Spooler 等）</li>
+                    <li>其他常用技术参考资料</li>
+                  </ul>
+
+                  <h2>项目结构</h2>
+                  <pre><code>知识库/
+├── *.html              # HTML格式的知识文档
+├── AGENTS.md           # 代码库开发规范
+├── CLAUDE.md           # Claude Code 使用指南
+├── todo.md             # 任务跟踪文件
+├── 项目说明.md         # 本文件
+└── assets/             # 共享资源目录</code></pre>
+
+                  <h2>设计架构</h2>
+                  <h3>当前版本：Notion + Linear 混合风格</h3>
+                  <p><strong>布局特点：</strong></p>
+                  <ul>
+                    <li><strong>双栏布局</strong>：左侧导航栏 + 中间内容区</li>
+                    <li><strong>顶部导航</strong>：Logo、搜索框、主题切换</li>
+                    <li><strong>响应式设计</strong>：移动端自适应</li>
+                  </ul>
+                  <p><strong>主要功能：</strong></p>
+                  <ul>
+                    <li>智能搜索（实时搜索、高亮显示）</li>
+                    <li>自动目录生成（右侧 TOC）</li>
+                    <li>面包屑导航</li>
+                    <li>代码块增强（一键复制、语法高亮）</li>
+                    <li>主题切换（深色/浅色模式）</li>
+                    <li>标签系统（重要、Windows、新增等）</li>
+                    <li>离线可用（单文件 HTML）</li>
+                  </ul>
+
+                  <h2>版本历史</h2>
+                  <h3>v3.0 - 2026-01-22</h3>
+                  <p><strong>重大更新：Notion + Linear 混合风格</strong></p>
+                  <ul>
+                    <li>全新设计：Notion 布局 + Linear 配色</li>
+                    <li>深色主题优化，护眼体验</li>
+                    <li>玻璃拟态卡片效果</li>
+                    <li>紫色渐变光晕装饰</li>
+                    <li>更精细的微交互动画</li>
+                  </ul>
+
+                  <h2>技术栈</h2>
+                  <ul>
+                    <li><strong>纯 HTML5</strong>：无需构建工具</li>
+                    <li><strong>CSS3</strong>：原生 CSS，无预处理器</li>
+                    <li><strong>JavaScript (ES6+)</strong>：原生 JS，无框架依赖</li>
+                    <li><strong>设计风格</strong>：Notion + Linear 混合</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- 使用说明 -->
+            <div class="project-doc-card" id="usage-guide">
+              <div class="project-doc-header" onclick="toggleProjectDoc(this)">
+                <div class="project-doc-title-wrap">
+                  <div class="project-doc-icon doc-icon green">&#128214;</div>
+                  <div>
+                    <div class="project-doc-title">使用说明</div>
+                    <div class="project-doc-meta">Windows密码修改工具使用指南 | 2KB | 2026-01-06</div>
+                  </div>
+                </div>
+                <button class="project-doc-toggle">&#9660;</button>
+              </div>
+              <div class="project-doc-content">
+                <div class="project-doc-body">
+                  <h2>Windows密码修改工具使用说明</h2>
+                  <h3>脚本说明</h3>
+                  <p>本工具提供了两个版本的Windows密码修改脚本：</p>
+                  <ul>
+                    <li><strong>ChangePassword.ps1</strong> - PowerShell版本</li>
+                    <li><strong>ChangePassword.bat</strong> - 批处理文件版本</li>
+                  </ul>
+
+                  <h3>使用方法</h3>
+                  <h4>方法一：直接双击运行（推荐）</h4>
+                  <ol>
+                    <li>找到脚本文件（ChangePassword.bat 或 ChangePassword.ps1）</li>
+                    <li>直接双击运行</li>
+                    <li>按照提示输入新密码并确认</li>
+                    <li>等待脚本执行完成</li>
+                  </ol>
+
+                  <h4>方法二：使用命令提示符运行</h4>
+                  <ol>
+                    <li>按下 <code>Win + R</code> 键，输入 <code>cmd</code> 并按Enter</li>
+                    <li>切换到脚本所在目录：<code>cd /d d:\AI\知识库</code></li>
+                    <li>运行脚本：<code>ChangePassword.bat</code></li>
+                  </ol>
+
+                  <h3>注意事项</h3>
+                  <ul>
+                    <li><strong>权限要求</strong>：修改密码需要管理员权限，建议右键点击脚本，选择"以管理员身份运行"</li>
+                    <li><strong>密码要求</strong>：密码不能为空，建议长度至少6个字符，应包含字母、数字或特殊字符</li>
+                    <li><strong>使用安全</strong>：请确保在安全的环境中运行脚本，不要与他人共享您的密码</li>
+                  </ul>
+
+                  <h3>脚本特点</h3>
+                  <ul>
+                    <li>中文友好界面</li>
+                    <li>密码确认机制</li>
+                    <li>密码长度检查</li>
+                    <li>详细的错误提示</li>
+                    <li>支持各种Windows系统</li>
+                    <li>隐藏密码输入（PowerShell版本）</li>
+                  </ul>
+
+                  <h3>系统要求</h3>
+                  <ul>
+                    <li>Windows 7 及以上版本</li>
+                    <li>支持PowerShell 2.0+（用于密码输入隐藏功能）</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- CLAUDE.md -->
+            <div class="project-doc-card" id="claude-guide">
+              <div class="project-doc-header" onclick="toggleProjectDoc(this)">
+                <div class="project-doc-title-wrap">
+                  <div class="project-doc-icon doc-icon purple">&#129302;</div>
+                  <div>
+                    <div class="project-doc-title">Claude Code 使用指南</div>
+                    <div class="project-doc-meta">Claude Code 项目配置指南 | 2.5KB | 2025-11-01</div>
+                  </div>
+                </div>
+                <button class="project-doc-toggle">&#9660;</button>
+              </div>
+              <div class="project-doc-content">
+                <div class="project-doc-body">
+                  <h2>CLAUDE.md 文件说明</h2>
+                  <p>此文件为 Claude Code (claude.ai/code) 提供项目上下文指导。</p>
+
+                  <h2>项目概述</h2>
+                  <p>这是一个技术知识库项目，主要存储HTML格式的技术文档和参考资料。内容聚焦于Claude Code使用指南、错误代码查询、认证问题解决方案等实用文档。所有文档均为独立的HTML页面，包含嵌入式样式。
+                  </p>
+
+                  <h2>常用开发命令</h2>
+                  <h3>本地预览</h3>
+                  <pre><code># 启动本地HTTP服务器预览HTML文档
+python3 -m http.server 8000
+# 然后在浏览器访问 http://localhost:8000</code></pre>
+
+                  <h3>代码格式化</h3>
+                  <pre><code># 格式化HTML文件(需要先安装Prettier)
+npx prettier --write "*.html"
+
+# 检查HTML结构问题
+tidy -qe *.html</code></pre>
+
+                  <h2>内容组织规范</h2>
+                  <ul>
+                    <li><strong>文件命名</strong>：使用描述性的、支持中英双语的文件名，格式为 <code>&lt;主题&gt;-&lt;用途说明&gt;.html</code></li>
+                    <li><strong>文档位置</strong>：HTML知识文档直接放在根目录</li>
+                    <li><strong>共享资源</strong>：图片、CSS等共享资源应放在 <code>assets/</code> 目录下</li>
+                  </ul>
+
+                  <h2>编码规范</h2>
+                  <ul>
+                    <li>使用4个空格缩进</li>
+                    <li>内联样式集中在文档头部的单个 <code>&lt;style&gt;</code> 块中</li>
+                    <li>使用小写、连字符分隔的class和id命名（如 <code>.error-table</code>）</li>
+                    <li>优先使用语义化标签（<code>&lt;section&gt;</code>, <code>&lt;article&gt;</code>, <code>&lt;nav&gt;</code>）
+                    </li>
+                  </ul>
+
+                  <h2>测试流程</h2>
+                  <ol>
+                    <li><strong>本地预览测试</strong>：修改后使用 <code>python3 -m http.server 8000</code> 启动服务并在浏览器中预览</li>
+                    <li><strong>跨浏览器测试</strong>：在Chrome和Firefox（或Edge）中验证页面布局一致性</li>
+                    <li><strong>链接验证</strong>：手动检查所有链接和锚点目标是否可正确解析</li>
+                  </ol>
+
+                  <h2>安全注意事项</h2>
+                  <ul>
+                    <li>不要在HTML中嵌入API密钥或专有代码片段</li>
+                    <li>嵌入日志前需清理敏感信息</li>
+                    <li>如创建配置文件（如 <code>.env</code>），应添加到 <code>.gitignore</code> 中</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- AGENTS.md -->
+            <div class="project-doc-card" id="agents-guide">
+              <div class="project-doc-header" onclick="toggleProjectDoc(this)">
+                <div class="project-doc-title-wrap">
+                  <div class="project-doc-icon doc-icon cyan">&#128196;</div>
+                  <div>
+                    <div class="project-doc-title">代码库开发规范</div>
+                    <div class="project-doc-meta">Repository Guidelines (AGENTS.md) | 2.3KB | 2025-11-01</div>
+                  </div>
+                </div>
+                <button class="project-doc-toggle">&#9660;</button>
+              </div>
+              <div class="project-doc-content">
+                <div class="project-doc-body">
+                  <h2>Repository Guidelines</h2>
+
+                  <h3>Project Structure &amp; Module Organization</h3>
+                  <ul>
+                    <li>HTML knowledge articles live at repository root (e.g.,
+                      <code>claude-code-errors错误代码查询.html</code>)
+                    </li>
+                    <li>Shared styling is embedded per page; when adding common assets (images, CSS), place them under
+                      <code>assets/</code>
+                    </li>
+                    <li>Keep filenames descriptive and bilingual when appropriate:
+                      <code>&lt;topic&gt;-&lt;usage说明&gt;.html</code>
+                    </li>
+                  </ul>
+
+                  <h3>Build, Test, and Development Commands</h3>
+                  <pre><code># serve the repository locally for quick previews
+python3 -m http.server 8000
+
+# format new or edited HTML before committing
+npx prettier --write "*.html"
+
+# surface structural HTML issues
+tidy -qe *.html</code></pre>
+
+                  <h3>Coding Style &amp; Naming Conventions</h3>
+                  <ul>
+                    <li>Indent HTML and CSS with four spaces</li>
+                    <li>Keep inline styles grouped under a single <code>&lt;style&gt;</code> block near the document
+                      head</li>
+                    <li>Use lowercase, hyphenated class and id names (e.g., <code>.error-table</code>)</li>
+                    <li>Favor semantic tags (<code>&lt;section&gt;</code>, <code>&lt;article&gt;</code>,
+                      <code>&lt;nav&gt;</code>) over excessive <code>&lt;div&gt;</code> usage
+                    </li>
+                  </ul>
+
+                  <h3>Testing Guidelines</h3>
+                  <ul>
+                    <li>After changes, open the served page in Chrome and Firefox (or Edge) and confirm layout parity
+                    </li>
+                    <li>Validate links and anchor targets manually</li>
+                    <li>When adding scripts, include console logging guards and verify there are no errors in DevTools
+                    </li>
+                  </ul>
+
+                  <h3>Commit &amp; Pull Request Guidelines</h3>
+                  <ul>
+                    <li>Use Conventional Commits (e.g., <code>docs: add print spooler diagnostic guide</code>)</li>
+                    <li>Write commit bodies describing rationale, sources, and testing steps</li>
+                    <li>Pull requests must include: summary of affected pages, before/after screenshots for visual edits
+                    </li>
+                  </ul>
+
+                  <h3>Security &amp; Configuration Tips</h3>
+                  <ul>
+                    <li>Exclude API keys or proprietary snippets; scrub logs before embedding them in HTML</li>
+                    <li>Keep local <code>.env</code> or credentials files out of the repository</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- progress.md -->
+            <div class="project-doc-card" id="project-progress">
+              <div class="project-doc-header" onclick="toggleProjectDoc(this)">
+                <div class="project-doc-title-wrap">
+                  <div class="project-doc-icon doc-icon orange">&#128200;</div>
+                  <div>
+                    <div class="project-doc-title">项目进展记录</div>
+                    <div class="project-doc-meta">Progress Tracking | 5.5KB | 2025-11-06</div>
+                  </div>
+                </div>
+                <button class="project-doc-toggle">&#9660;</button>
+              </div>
+              <div class="project-doc-content">
+                <div class="project-doc-body">
+                  <h2>项目进展记录</h2>
+                  <p><strong>项目名称</strong>：技术知识库（Tech Knowledge Base）</p>
+                  <p><strong>开始时间</strong>：2025年初</p>
+                  <p><strong>预计完成</strong>：持续维护</p>
+
+                  <h2>更新历史</h2>
+
+                  <h3>[2026-01-22] - v3.0 重大更新</h3>
+                  <ul>
+                    <li>全新设计：Notion 布局 + Linear 配色风格</li>
+                    <li>深色主题全面优化，更符合开发者审美</li>
+                    <li>添加玻璃拟态卡片效果和紫色渐变光晕</li>
+                    <li>优化微交互和动画效果</li>
+                    <li>提升移动端适配体验</li>
+                  </ul>
+
+                  <h3>[2025-11-06] - v2.1 进行中</h3>
+                  <ul>
+                    <li>创建 progress.md 项目进展记录文件</li>
+                    <li>检查 codex-cli-cheatsheet.html 完整性</li>
+                    <li>准备整合 add.txt 中的新知识内容</li>
+                    <li>新增内容将标记日期时间戳</li>
+                  </ul>
+
+                  <h3>[2025-11-01] - v2.0 重大更新</h3>
+                  <ul>
+                    <li>重新设计为 Docusaurus + GitBook 混合风格</li>
+                    <li>新增三栏布局设计（左侧导航 + 中间内容 + 右侧目录）</li>
+                    <li>新增右侧目录导航（TOC）</li>
+                    <li>新增智能搜索功能（实时搜索、高亮显示）</li>
+                    <li>新增面包屑导航</li>
+                    <li>新增标签系统（重要、Windows、新增等）</li>
+                    <li>优化移动端体验</li>
+                  </ul>
+
+                  <h2>里程碑</h2>
+                  <table>
+                    <tr>
+                      <th>里程碑</th>
+                      <th>状态</th>
+                      <th>完成时间</th>
+                    </tr>
+                    <tr>
+                      <td>M1：初始版本上线（v1.0）</td>
+                      <td class="status-done">已完成</td>
+                      <td>2025年初</td>
+                    </tr>
+                    <tr>
+                      <td>M2：内容整合与修复</td>
+                      <td class="status-done">已完成</td>
+                      <td>2025-11-01</td>
+                    </tr>
+                    <tr>
+                      <td>M3：UI/UX 重新设计</td>
+                      <td class="status-done">已完成</td>
+                      <td>2025-11-01</td>
+                    </tr>
+                    <tr>
+                      <td>M4：Notion + Linear 风格重构</td>
+                      <td class="status-done">已完成</td>
+                      <td>2026-01-22</td>
+                    </tr>
+                    <tr>
+                      <td>M5：高级功能开发</td>
+                      <td class="status-todo">未开始</td>
+                      <td>-</td>
+                    </tr>
+                  </table>
+
+                  <h2>技术债务</h2>
+                  <ul>
+                    <li><strong>代码语法高亮</strong>：当前未实现真正的语法高亮，需要集成 Prism.js 或 Highlight.js</li>
+                    <li><strong>拼音搜索</strong>：计划实现但尚未开发</li>
+                    <li><strong>搜索历史</strong>：需要使用 localStorage 保存搜索记录</li>
+                    <li><strong>移动端测试</strong>：尚未进行完整的移动端测试</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- 年终述职汇报项目技术文档 -->
+            <div class="project-doc-card" id="annual-report">
+              <div class="project-doc-header" onclick="toggleProjectDoc(this)">
+                <div class="project-doc-title-wrap">
+                  <div class="project-doc-icon doc-icon pink">&#128202;</div>
+                  <div>
+                    <div class="project-doc-title">年终述职汇报AI协作指南</div>
+                    <div class="project-doc-meta">IT运维周报/年终汇报项目技术文档 | 8.5KB | 2025-12-24</div>
+                  </div>
+                </div>
+                <button class="project-doc-toggle">&#9660;</button>
+              </div>
+              <div class="project-doc-content">
+                <div class="project-doc-body">
+                  <h2>项目概述</h2>
+                  <h3>项目背景</h3>
+                  <p>这是一个用于某区域IT运维团队的<strong>工作汇报自动化处理项目</strong>，主要功能是从各类周报、OKR文档、Excel数据中提取关键信息，生成：</p>
+                  <ul>
+                    <li>年终汇报PPT（HTML格式，可直接浏览器打开）</li>
+                    <li>绩效评估文档（HTML格式，可复制到Word/飞书）</li>
+                    <li>OKR季度规划文档</li>
+                    <li>综合数据参考文档</li>
+                  </ul>
+
+                  <h3>项目所有者信息</h3>
+                  <ul>
+                    <li><strong>汇报人</strong>：示例（对外分享请脱敏）</li>
+                    <li><strong>团队</strong>：某区域IT运维团队（示例）</li>
+                    <li><strong>业务范围</strong>：多地区支持范围（示例）</li>
+                  </ul>
+
+                  <h2>关键数据指标（2025年度）</h2>
+                  <h3>工单数据</h3>
+                  <table>
+                    <tr>
+                      <th>指标</th>
+                      <th>数值</th>
+                    </tr>
+                    <tr>
+                      <td>全年工单总数</td>
+                      <td>3,000+（示例）</td>
+                    </tr>
+                    <tr>
+                      <td>平均时效</td>
+                      <td>&lt; 1h（示例）</td>
+                    </tr>
+                    <tr>
+                      <td>满意度</td>
+                      <td>&gt; 99%（示例）</td>
+                    </tr>
+                  </table>
+
+                  <h3>弱电项目数据</h3>
+                  <table>
+                    <tr>
+                      <th>指标</th>
+                      <th>数值</th>
+                    </tr>
+                    <tr>
+                      <td>项目总数</td>
+                      <td>27个</td>
+                    </tr>
+                    <tr>
+                      <td>已交付</td>
+                      <td>23个（85%）</td>
+                    </tr>
+                    <tr>
+                      <td>进行中</td>
+                      <td>3个</td>
+                    </tr>
+                  </table>
+
+                  <h2>HTML模板风格说明</h2>
+                  <h3>年终汇报PPT风格</h3>
+                  <ul>
+                    <li><strong>主题</strong>：深色科技风（深蓝背景 #1a1a2e）</li>
+                    <li><strong>主色调</strong>：青色 #00d9ff，强调色 #e94560</li>
+                    <li><strong>结构</strong>：分页式（每页一个slide）</li>
+                  </ul>
+
+                  <h3>绩效评估文档风格</h3>
+                  <ul>
+                    <li><strong>主题</strong>：白色简洁风（便于复制）</li>
+                    <li><strong>主色调</strong>：蓝色 #1890ff</li>
+                    <li><strong>特点</strong>：表格清晰、可直接选中复制</li>
+                  </ul>
+
+                  <h2>常用提示词模板</h2>
+                  <h3>更新年终汇报数据</h3>
+                  <pre><code>请读取 D:\data\2025年终述职数据汇总.xlsx 中的数据，
+更新 D:\data\2025年终汇报PPT.html 中的以下内容：
+1. 服务台季度数据表格
+2. 弱电项目数量和列表
+3. 关键指标卡片数据</code></pre>
+
+                  <h3>生成OKR规划</h3>
+                  <pre><code>请根据 D:\data 目录下的PDF周报文件，
+生成2026年Q1季度的OKR规划。
+输出为HTML格式。</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Archives Section -->
+        <section class="section" id="archives">
+          <div class="section-header" onclick="toggleSection(this)">
+            <h2 class="section-title">
+              <div class="section-icon orange">&#128451;</div>
+              <span>归档文档</span>
+            </h2>
+            <div class="section-right">
+              <span class="section-count">6 篇文档</span>
+              <div class="toggle-btn">
+                <span class="icon-collapse">&#9660;</span>
+                <span class="icon-expand">&#9658;</span>
+              </div>
+            </div>
+          </div>
+          <div class="section-content">
+            <div class="archive-list">
+              <a href="archives/claude_code相关问题解决办法.html" class="archive-item">
+                <span class="archive-icon">&#128196;</span>
+                <div class="archive-info">
+                  <div class="archive-title">Claude Code 相关问题解决办法</div>
+                  <div class="archive-date">2025-08-28 &middot; 54KB</div>
+                </div>
+                <span class="archive-arrow">&#8594;</span>
+              </a>
+              <a href="archives/claude-code-errors错误代码查询.html" class="archive-item">
+                <span class="archive-icon">&#128196;</span>
+                <div class="archive-info">
+                  <div class="archive-title">Claude Code 错误代码查询</div>
+                  <div class="archive-date">2025-09-13 &middot; 21KB</div>
+                </div>
+                <span class="archive-arrow">&#8594;</span>
+              </a>
+              <a href="archives/claude开车问题claude_code_auth_guide.html" class="archive-item">
+                <span class="archive-icon">&#128196;</span>
+                <div class="archive-info">
+                  <div class="archive-title">Claude Code 认证指南（归档，已合并到权威页）</div>
+                  <div class="archive-date">2025-08-30 &middot; 54KB &middot; 已合并</div>
+                </div>
+                <span class="archive-arrow">&#8594;</span>
+              </a>
+              <a href="archives/codex-cli-cheatsheet.html" class="archive-item">
+                <span class="archive-icon">&#128196;</span>
+                <div class="archive-info">
+                  <div class="archive-title">Codex CLI Cheatsheet (旧版)</div>
+                  <div class="archive-date">2025-11-06 &middot; 72KB</div>
+                </div>
+                <span class="archive-arrow">&#8594;</span>
+              </a>
+              <a href="archives/codex-cli-cheatsheet-backup.html" class="archive-item">
+                <span class="archive-icon">&#128196;</span>
+                <div class="archive-info">
+                  <div class="archive-title">Codex CLI Cheatsheet (备份)</div>
+                  <div class="archive-date">2025-11-01 &middot; 40KB</div>
+                </div>
+                <span class="archive-arrow">&#8594;</span>
+              </a>
+              <a href="archives/codex-cli-cheatsheet-backup-2025-11-06.html" class="archive-item">
+                <span class="archive-icon">&#128196;</span>
+                <div class="archive-info">
+                  <div class="archive-title">Codex CLI Cheatsheet (2025-11-06备份)</div>
+                  <div class="archive-date">2025-11-06 &middot; 72KB</div>
+                </div>
+                <span class="archive-arrow">&#8594;</span>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+          <p>AI 知识库文档中心 &copy; 2025-2026</p>
+          <p style="margin-top: 8px;">最后更新：2026-01-22</p>
+          <div class="footer-links">
+            <a href="index.html" class="footer-link">首页</a>
+            <a href="#project-docs" class="footer-link">项目文档</a>
+          </div>
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <!-- Mobile Sidebar Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeMobileSidebar()"></div>
+
+  <!-- Back to Top Button -->
+  <button class="back-to-top" id="backToTop" onclick="scrollToTop()" title="回到顶部">
+    &#8593;
+  </button>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // Global Elements
+    const searchInput = document.getElementById('searchInput');
+    const docCards = document.querySelectorAll('.doc-card');
+    const archiveItems = document.querySelectorAll('.archive-item');
+    const projectDocCards = document.querySelectorAll('.project-doc-card');
+    const sections = document.querySelectorAll('.section');
+    const backToTop = document.getElementById('backToTop');
+
+    // Section Toggle (Collapse/Expand)
+    function toggleSection(header) {
+      const section = header.closest('.section');
+      section.classList.toggle('collapsed');
+
+      // Save state
+      const sectionId = section.id;
+      const collapsedSections = JSON.parse(localStorage.getItem('ai-kb-collapsed') || '[]');
+
+      if (section.classList.contains('collapsed')) {
+        if (!collapsedSections.includes(sectionId)) {
+          collapsedSections.push(sectionId);
+        }
+      } else {
+        const index = collapsedSections.indexOf(sectionId);
+        if (index > -1) {
+          collapsedSections.splice(index, 1);
+        }
+      }
+
+      localStorage.setItem('ai-kb-collapsed', JSON.stringify(collapsedSections));
+    }
+
+    // Load collapsed state
+    function loadCollapsedState() {
+      const collapsedSections = JSON.parse(localStorage.getItem('ai-kb-collapsed') || '[]');
+      collapsedSections.forEach(sectionId => {
+        const section = document.getElementById(sectionId);
+        if (section) {
+          section.classList.add('collapsed');
+        }
+      });
+    }
+    loadCollapsedState();
+
+    // Collapse All / Expand All
+    const collapseAllBtn = document.getElementById('collapseAllBtn');
+    let allCollapsed = false;
+
+    collapseAllBtn.addEventListener('click', () => {
+      const sections = document.querySelectorAll('.section');
+      allCollapsed = !allCollapsed;
+
+      sections.forEach(section => {
+        if (allCollapsed) {
+          section.classList.add('collapsed');
+        } else {
+          section.classList.remove('collapsed');
+        }
+      });
+
+      // Save state
+      if (allCollapsed) {
+        const allIds = Array.from(sections).map(s => s.id);
+        localStorage.setItem('ai-kb-collapsed', JSON.stringify(allIds));
+      } else {
+        localStorage.setItem('ai-kb-collapsed', '[]');
+      }
+    });
+
+    // Project Doc Toggle (Expand/Collapse individual docs)
+    function toggleProjectDoc(header) {
+      const card = header.closest('.project-doc-card');
+      card.classList.toggle('expanded');
+
+      const toggle = header.querySelector('.project-doc-toggle');
+      toggle.innerHTML = card.classList.contains('expanded') ? '&#9650;' : '&#9660;';
+    }
+
+    // Mobile Sidebar Toggle
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      const isOpen = sidebar.classList.toggle('mobile-open');
+
+      if (isOpen) {
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      } else {
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
+    function closeMobileSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      sidebar.classList.remove('mobile-open');
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // Close sidebar when clicking nav links on mobile
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 1024) {
+          closeMobileSidebar();
+        }
+      });
+    });
+
+    // Back to Top Button
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 500) {
+        backToTop.classList.add('visible');
+      } else {
+        backToTop.classList.remove('visible');
+      }
+    });
+
+    // Card Hover Glow Effect - Track Mouse Position
+    document.querySelectorAll('.doc-card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+      });
+    });
+
+    // Toast Notification
+    function showToast(message, type = 'info') {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.className = 'toast show';
+      if (type === 'success') {
+        toast.classList.add('success');
+      }
+
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // Keyboard Shortcuts
+    document.addEventListener('keydown', (e) => {
+      // Cmd/Ctrl + K to focus search
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        searchInput.focus();
+      }
+
+      // Escape to close mobile sidebar
+      if (e.key === 'Escape') {
+        closeMobileSidebar();
+      }
+    });
+
+    // Show keyboard shortcut hint on search box (only once)
+    let searchHintShown = false;
+    searchInput.addEventListener('focus', () => {
+      if (!searchHintShown) {
+        const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+        showToast(`提示：按 ${isMac ? '⌘' : 'Ctrl'}+K 快速聚焦搜索`);
+        searchHintShown = true;
+      }
+    });
+
+    // Update search hint based on OS
+    (function updateSearchHint() {
+      const hint = document.querySelector('.search-hint');
+      if (hint) {
+        const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+        hint.textContent = isMac ? '⌘K' : 'Ctrl+K';
+      }
+    })();
+
+    // Add ripple effect to buttons
+    document.querySelectorAll('.btn, .toggle-btn').forEach(button => {
+      button.addEventListener('click', function (e) {
+        const ripple = document.createElement('span');
+        const rect = this.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = e.clientX - rect.left - size / 2;
+        const y = e.clientY - rect.top - size / 2;
+
+        ripple.style.cssText = `
+          position: absolute;
+          width: ${size}px;
+          height: ${size}px;
+          left: ${x}px;
+          top: ${y}px;
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 50%;
+          transform: scale(0);
+          animation: ripple 0.6s ease-out;
+          pointer-events: none;
+        `;
+
+        this.style.position = 'relative';
+        this.style.overflow = 'hidden';
+        this.appendChild(ripple);
+
+        setTimeout(() => ripple.remove(), 600);
+      });
+    });
+
+    // Add ripple animation keyframes
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes ripple {
+        to {
+          transform: scale(2);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Search functionality
+    searchInput.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase().trim();
+
+      if (!query) {
+        // Show all
+        docCards.forEach(card => card.classList.remove('hidden'));
+        archiveItems.forEach(item => item.classList.remove('hidden'));
+        projectDocCards.forEach(card => card.classList.remove('hidden'));
+        sections.forEach(section => section.classList.remove('hidden'));
+        return;
+      }
+
+      // Filter doc cards
+      docCards.forEach(card => {
+        const title = card.querySelector('.doc-title').textContent.toLowerCase();
+        const desc = card.querySelector('.doc-desc').textContent.toLowerCase();
+        const keywords = (card.dataset.keywords || '').toLowerCase();
+        const tags = card.querySelector('.doc-tags').textContent.toLowerCase();
+
+        const matches = title.includes(query) || desc.includes(query) || keywords.includes(query) || tags.includes(query);
+        card.classList.toggle('hidden', !matches);
+      });
+
+      // Filter archive items
+      archiveItems.forEach(item => {
+        const title = item.querySelector('.archive-title').textContent.toLowerCase();
+        const matches = title.includes(query);
+        item.classList.toggle('hidden', !matches);
+      });
+
+      // Filter project doc cards
+      projectDocCards.forEach(card => {
+        const title = card.querySelector('.project-doc-title').textContent.toLowerCase();
+        const meta = card.querySelector('.project-doc-meta').textContent.toLowerCase();
+        const body = card.querySelector('.project-doc-body');
+        const bodyText = body ? body.textContent.toLowerCase() : '';
+
+        const matches = title.includes(query) || meta.includes(query) || bodyText.includes(query);
+        card.classList.toggle('hidden', !matches);
+
+        // Auto expand if matches in body
+        if (matches && bodyText.includes(query)) {
+          card.classList.add('expanded');
+        }
+      });
+
+      // Hide empty sections
+      sections.forEach(section => {
+        const visibleCards = section.querySelectorAll('.doc-card:not(.hidden), .archive-item:not(.hidden), .project-doc-card:not(.hidden)');
+        section.classList.toggle('hidden', visibleCards.length === 0);
+      });
+    });
+
+    // Navigation highlight
+    const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
+
+    function highlightNav() {
+      const scrollY = window.scrollY + 100;
+
+      sections.forEach(section => {
+        const top = section.offsetTop;
+        const height = section.offsetHeight;
+        const id = section.getAttribute('id');
+
+        if (scrollY >= top && scrollY < top + height) {
+          navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${id}`) {
+              link.classList.add('active');
+            }
+          });
+        }
+      });
+    }
+
+    window.addEventListener('scroll', highlightNav);
+    highlightNav();
+  </script>
+</body>
+
+</html>
